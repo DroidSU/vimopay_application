@@ -10,11 +10,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        backgroundColor: Colors.white,
+        fontFamily: 'Roboto',
         primarySwatch: Colors.blue,
-        primaryColor: Color(0xff003366),
+        primaryColor: Color(0xff6600CC),
+        primaryColorLight: Color(0xffcc99cc),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashScreen(),
