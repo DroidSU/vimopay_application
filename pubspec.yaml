@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   intl: ^0.16.1
   otp_text_field: ^1.0.1
+  email_validator: '^1.0.5'
 
 dev_dependencies:
   flutter_test:

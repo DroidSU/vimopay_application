@@ -1,4 +1,4 @@
-import 'package:vimopay_application/network/password_change_response_data.dart';
+import 'file:///D:/Flutter%20Projects/vimopay_application/lib/network/models/password_change_response_data.dart';
 
 class PasswordChangeResponseModel {
   String message;

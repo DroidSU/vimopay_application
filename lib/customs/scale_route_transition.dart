@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ScaleRoute extends PageRouteBuilder {
   final Widget page;
+
   ScaleRoute({this.page})
       : super(
           pageBuilder: (

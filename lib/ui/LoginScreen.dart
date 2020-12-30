@@ -7,8 +7,8 @@ import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
-import 'package:vimopay_application/network/login_response_data.dart';
-import 'package:vimopay_application/network/login_response_model.dart';
+import 'package:vimopay_application/network/models/login_response_data.dart';
+import 'package:vimopay_application/network/models/login_response_model.dart';
 import 'package:vimopay_application/ui/DashboardScreen.dart';
 import 'package:vimopay_application/ui/ForgotPasswordScreen.dart';
 
@@ -109,7 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const Radius.circular(10.0),
                               ),
                             ),
-                            prefixIcon: Icon(Icons.lock_open_rounded),
+                            prefixIcon: Icon(
+                              Icons.lock_open_rounded,
+                            ),
                             filled: true,
                             hintStyle: new TextStyle(color: Colors.grey[800]),
                             hintText: "Password",
@@ -153,6 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   HTTPService()
                                       .loginUser(mobileNumber, password)
                                       .then((response) {
+                                    setState(() {
+                                      _showProgress = false;
+                                    });
+
                                     if (response.statusCode == 200) {
                                       LoginResponseModel loginResponseModel =
                                           LoginResponseModel.fromJson(
@@ -165,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       }
                                     } else {
                                       showErrorDialog(
-                                          'Server error occurred while registering. Error code: ${response.statusCode}');
+                                          'Server error occurred while login. Error code: ${response.statusCode}');
                                     }
                                   });
                                 } else {
@@ -197,6 +203,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             )
                           : CircularProgressIndicator(),
                     ),
+                    // Container(
+                    //   margin: EdgeInsets.fromLTRB(0, 35, 0, 0),
+                    //   child: GradientButton(
+                    //     child: Text(
+                    //       'Login',
+                    //       style: TextStyle(color: Colors.white, fontSize: 16),
+                    //     ),
+                    //     gradient: LinearGradient(
+                    //       colors: [Color(0xff00C2DB), Color(0xff407CD1)],
+                    //       begin: FractionalOffset.topLeft,
+                    //       end: FractionalOffset.bottomRight,
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
               )
