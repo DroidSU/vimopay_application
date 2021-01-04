@@ -1,10 +1,10 @@
-class BasicResponseBody {
+class BasicResponseModel {
   String message;
   bool status;
 
-  BasicResponseBody({this.message, this.status});
+  BasicResponseModel({this.message, this.status});
 
-  BasicResponseBody.fromJson(Map<String, dynamic> json) {
+  BasicResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
   }

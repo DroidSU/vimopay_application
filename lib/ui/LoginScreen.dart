@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController;
 
   bool _showProgress = false;
+  bool _obscurePassword = true;
   String mobileNumber = "";
   String password = "";
 
@@ -112,13 +113,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             prefixIcon: Icon(
                               Icons.lock_open_rounded,
                             ),
+                            suffixIcon: IconButton(
+                              icon: _obscurePassword
+                                  ? Icon(
+                                      Icons.visibility_outlined,
+                                      color: Colors.black,
+                                    )
+                                  : Icon(
+                                      Icons.visibility_off_outlined,
+                                      color: Colors.black,
+                                    ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                            ),
                             filled: true,
                             hintStyle: new TextStyle(color: Colors.grey[800]),
                             hintText: "Password",
                             fillColor: Colors.white70),
                         keyboardType: TextInputType.visiblePassword,
                         maxLines: 1,
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                         controller: passwordController,
                       ),
                     ),
@@ -252,56 +269,47 @@ class _LoginScreenState extends State<LoginScreen> {
               contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               content: Container(
                 width: 80,
-                height: 200,
+                height: 220,
                 decoration: new BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: const Color(0xFFFFFF),
                   borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
                 ),
-                child: Stack(
+                child: Column(
                   children: [
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: Icon(
-                          Icons.error_outline_rounded,
-                          size: 40,
-                          color: Colors.red,
-                        ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Icon(
+                        Icons.error_outline_rounded,
+                        size: 40,
+                        color: Colors.red,
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                        child: Text(
-                          message,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.center,
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Text(
+                        message,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              'OK',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            )),
-                      ),
-                    )
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          )),
+                    ),
                   ],
                 ),
               ),

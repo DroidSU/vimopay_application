@@ -87,7 +87,40 @@ class HTTPService {
       }),
     );
 
-    print('Change Mobile Number response: ${response.body}');
+    print('Change Email Address response: ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> updateProfileDetails(
+      String authToken,
+      String name,
+      String address,
+      String city,
+      String state,
+      String pincode,
+      String aadharNumber,
+      String panNumber,
+      String gstNumber) async {
+    http.Response response = await http.post(
+      Uri.encodeFull(APIConstants.ENDPOINT_UPDATE_PROFILE_DETAILS),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+        'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+        'A-Token': authToken,
+      },
+      body: jsonEncode({
+        'Name': name,
+        'Address': address,
+        'City': city,
+        'State': state,
+        'Pincode': pincode,
+        'Adharno': aadharNumber,
+        'Panno': panNumber,
+      }),
+    );
+
+    print('Update profile details response: ${response.body}');
     return response;
   }
 }

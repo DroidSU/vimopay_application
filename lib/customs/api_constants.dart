@@ -7,4 +7,6 @@ class APIConstants {
       BASE_URL + "Credentials/Mobilechange";
   static const ENDPOINT_CHANGE_EMAIL_ADDRESS =
       BASE_URL + "Credentials/Emailchange";
+  static const ENDPOINT_UPDATE_PROFILE_DETAILS =
+      BASE_URL + "Credentials/Profileupdate";
 }

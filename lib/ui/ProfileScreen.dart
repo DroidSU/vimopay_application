@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,8 +20,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName = "";
   String userEmail = "";
   String userMobile = "";
-  String address = "";
-  String city = "";
+  String userAddress = "";
+  String userCity = "";
+  String userState = "";
+  String pincode = "";
+  String aadharNumber = "";
+  String gstNumber = "";
+  String panNumber = "";
   String userId = "";
   String company = "";
 
@@ -36,6 +40,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController aadharCardController;
   TextEditingController pancardController;
   TextEditingController gstController;
+
+  bool _isValidName = true;
+  bool _isValidMobile = true;
+  bool _isValidEmail = true;
+  bool _isValidAddress = true;
+  bool _isValidState = true;
+  bool _isValidCity = true;
+  bool _isValidPincode = true;
+  bool _isValidPanCard = true;
+  bool _isValidAadharCard = true;
+  bool _isValidGSTNumber = true;
 
   @override
   void initState() {
@@ -72,47 +87,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Profile Details',
-            style: TextStyle(
-              color: Colors.blue[900],
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          shadowColor: Colors.white70,
-          elevation: 0,
-          leading: InkWell(
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onTap: () {
-              onBackPressed();
-            },
-          ),
-          actions: [
-            InkWell(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Icon(
-                  Icons.settings,
+    return WillPopScope(
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Profile Details',
+                style: TextStyle(
                   color: Colors.blue[900],
-                  size: 30,
                 ),
               ),
-              onTap: () {
-                Navigator.of(context).push(ScaleRoute(page: SettingsScreen()));
-              },
-            )
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              shadowColor: Colors.white70,
+              elevation: 0,
+              leading: InkWell(
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onTap: () {
+                  onBackPressed();
+                },
+              ),
+              actions: [
+                InkWell(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.settings,
+                      color: Colors.blue[900],
+                      size: 30,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(ScaleRoute(page: SettingsScreen()));
+                  },
+                )
+              ],
+            ),
+            body: SingleChildScrollView(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
@@ -167,13 +182,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
+                                  Radius.circular(10.0),
                                 ),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               filled: true,
                               hintStyle: new TextStyle(color: Colors.grey[800]),
                               hintText: "Enter name",
                               labelText: 'Name',
+                              errorText: _isValidName ? null : 'Invalid Name',
+                              errorStyle: TextStyle(color: Colors.red),
                               labelStyle: TextStyle(
                                   color: Colors.black54, fontSize: 16),
                               alignLabelWithHint: true,
@@ -197,10 +235,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   const Radius.circular(10.0),
                                 ),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                              ),
                               filled: true,
                               hintStyle: new TextStyle(color: Colors.grey[800]),
-                              hintText: "Enter mobile number",
+                              hintText: "mobile number",
                               labelText: 'Mobile Number',
+                              errorText:
+                                  _isValidMobile ? null : 'Invalid Mobile',
                               labelStyle: TextStyle(
                                   color: Colors.black54, fontSize: 18),
                               alignLabelWithHint: true,
@@ -246,13 +290,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: new InputDecoration(
                         border: new OutlineInputBorder(
                           borderRadius: const BorderRadius.all(
-                            const Radius.circular(10.0),
+                            Radius.circular(10.0),
                           ),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.red),
                         ),
                         filled: true,
                         hintStyle: new TextStyle(color: Colors.grey[800]),
                         hintText: "Enter address",
                         labelText: 'Address',
+                        errorText: _isValidAddress ? null : 'Invalid Address',
+                        errorStyle: TextStyle(color: Colors.red),
                         labelStyle:
                             TextStyle(color: Colors.black54, fontSize: 16),
                         alignLabelWithHint: true,
@@ -269,16 +332,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           maxLines: 1,
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.black, fontSize: 16),
+                          keyboardType: TextInputType.name,
                           decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
+                                  Radius.circular(10.0),
                                 ),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               filled: true,
                               hintStyle: new TextStyle(color: Colors.grey[800]),
                               hintText: "Enter state name",
                               labelText: 'State',
+                              errorText:
+                                  _isValidState ? null : 'Invalid State Name',
+                              errorStyle: TextStyle(color: Colors.red),
                               labelStyle: TextStyle(
                                   color: Colors.black54, fontSize: 16),
                               alignLabelWithHint: true,
@@ -297,13 +385,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
+                                  Radius.circular(10.0),
                                 ),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               filled: true,
                               hintStyle: new TextStyle(color: Colors.grey[800]),
                               hintText: "Enter city name",
                               labelText: 'City Name',
+                              errorText:
+                                  _isValidCity ? null : 'Invalid City Name',
+                              errorStyle: TextStyle(color: Colors.red),
                               labelStyle: TextStyle(
                                   color: Colors.black54, fontSize: 16),
                               alignLabelWithHint: true,
@@ -332,12 +444,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
+                                  Radius.circular(10.0),
                                 ),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               filled: true,
                               hintStyle: new TextStyle(color: Colors.grey[800]),
                               hintText: "Enter pincode name",
+                              errorText:
+                                  _isValidPincode ? null : 'Invalid Pincode',
+                              errorStyle: TextStyle(color: Colors.red),
                               labelText: 'Pincode',
                               labelStyle: TextStyle(
                                   color: Colors.black54, fontSize: 16),
@@ -361,12 +497,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
+                                  Radius.circular(10.0),
                                 ),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               filled: true,
                               hintStyle: new TextStyle(color: Colors.grey[800]),
                               hintText: "Pan Card",
+                              errorText:
+                                  _isValidPanCard ? null : 'Invalid PAN number',
+                              errorStyle: TextStyle(color: Colors.red),
                               labelText: 'Pan Card',
                               labelStyle: TextStyle(
                                   color: Colors.black54, fontSize: 16),
@@ -395,12 +555,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
+                                  Radius.circular(10.0),
                                 ),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               filled: true,
                               hintStyle: new TextStyle(color: Colors.grey[800]),
                               hintText: "Aadhar card",
+                              errorText: _isValidAadharCard
+                                  ? null
+                                  : 'Invalid Aadhar number',
+                              errorStyle: TextStyle(color: Colors.red),
                               labelText: 'Aadhar Card',
                               labelStyle: TextStyle(
                                   color: Colors.black54, fontSize: 16),
@@ -441,13 +626,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ],
-            ),
-          ),
-        ));
+            ))),
+        onWillPop: onBackPressed);
   }
 
-  void onBackPressed() {
-    Navigator.of(context).pop();
+  Future<bool> onBackPressed() async {
+    userName = nameController.text.trim();
+    userAddress = addressController.text.trim();
+    userCity = cityController.text.trim();
+    userState = stateController.text.trim();
+    pincode = pincodeController.text.trim();
+    aadharNumber = aadharCardController.text.trim();
+    panNumber = pancardController.text.trim();
+    gstNumber = gstController.text.trim();
+
+    if (userName.isNotEmpty &&
+        userAddress.isNotEmpty &&
+        userCity.isNotEmpty &&
+        userState.isNotEmpty &&
+        pincode.length == 6 &&
+        aadharNumber.length == 12 &&
+        panNumber.length == 10) {
+      updateProfileDetails();
+      Navigator.of(context).pop();
+
+      return true;
+    } else {
+      if (userName.isEmpty) {
+        setState(() {
+          _isValidName = false;
+        });
+      }
+      if (userAddress.isEmpty) {
+        setState(() {
+          _isValidAddress = false;
+        });
+      }
+      if (userState.isEmpty) {
+        setState(() {
+          _isValidState = false;
+        });
+      }
+      if (userCity.isEmpty) {
+        setState(() {
+          _isValidCity = false;
+        });
+      }
+      if (pincode.length != 6) {
+        setState(() {
+          _isValidPincode = false;
+        });
+      }
+      if (aadharNumber.length != 12) {
+        setState(() {
+          _isValidAadharCard = false;
+        });
+      }
+      if (panNumber.length != 10) {
+        setState(() {
+          _isValidPanCard = false;
+        });
+      }
+      return false;
+    }
   }
 
   void fetchUserDetails() async {
@@ -457,38 +698,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userEmail = sharedPreferences.getString(Constants.SHARED_PREF_EMAIL);
     userMobile = sharedPreferences.getString(Constants.SHARED_PREF_MOBILE);
     userId = sharedPreferences.getString(Constants.SHARED_PREF_USER_ID);
-    address = sharedPreferences.getString(Constants.SHARED_PREF_ADDRESS) == null
+    userAddress =
+        sharedPreferences.getString(Constants.SHARED_PREF_ADDRESS) == null
+            ? ""
+            : sharedPreferences.getString(Constants.SHARED_PREF_ADDRESS);
+    userCity = sharedPreferences.getString(Constants.SHARED_PREF_CITY) == null
         ? ""
-        : sharedPreferences.getString(Constants.SHARED_PREF_ADDRESS);
+        : sharedPreferences.getString(Constants.SHARED_PREF_CITY);
+    userState = sharedPreferences.getString(Constants.SHARED_PREF_STATE) == null
+        ? ""
+        : sharedPreferences.getString(Constants.SHARED_PREF_STATE);
+    pincode = sharedPreferences.getString(Constants.SHARED_PREF_PINCODE) == null
+        ? ""
+        : sharedPreferences.getString(Constants.SHARED_PREF_PINCODE);
+    aadharNumber =
+        sharedPreferences.getString(Constants.SHARED_PREF_AADHAR_NUMBER) == null
+            ? ""
+            : sharedPreferences.getString(Constants.SHARED_PREF_AADHAR_NUMBER);
+    panNumber =
+        sharedPreferences.getString(Constants.SHARED_PREF_PAN_NUMBER) == null
+            ? ""
+            : sharedPreferences.getString(Constants.SHARED_PREF_PAN_NUMBER);
+    gstNumber =
+        sharedPreferences.getString(Constants.SHARED_PREF_GST_NUMBER) == null
+            ? ""
+            : sharedPreferences.getString(Constants.SHARED_PREF_GST_NUMBER);
 
     setState(() {
       nameController.text = userName;
       emailController.text = userEmail;
       mobileController.text = userMobile;
-      addressController.text = address;
+      addressController.text = userAddress;
+      cityController.text = userCity;
+      stateController.text = userState;
+      pincodeController.text = pincode;
+      aadharCardController.text = aadharNumber;
+      pancardController.text = panNumber;
+      gstController.text = gstNumber;
     });
-  }
-
-  void updateMobileNumber() {
-    String mobileNumber = mobileController.text.trim();
-    if (mobileNumber != null && mobileNumber.length == 10) {
-      HTTPService()
-          .changeMobileNumber(authToken, mobileNumber)
-          .then((response) {
-        if (response.statusCode == 200) {
-          SharedPreferences.getInstance().then((preference) {
-            preference.setString(Constants.SHARED_PREF_MOBILE, mobileNumber);
-          });
-          // showSuccessDialog(context, 'Mobile number changed successfully');
-        } else {
-          BasicResponseBody basicResponseBody =
-              BasicResponseBody.fromJson(json.decode(response.body));
-          showErrorDialog(basicResponseBody.message);
-        }
-      });
-    } else {
-      showErrorDialog('Invalid mobile number');
-    }
   }
 
   void showErrorDialog(String message) {
@@ -625,28 +872,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void updateServerDetails() {
-    updateMobileNumber();
-    updateEmailAddress();
+  void updateProfileDetails() {
+    HTTPService()
+        .updateProfileDetails(authToken, userName, userAddress, userCity,
+            userState, pincode, aadharNumber, panNumber, gstNumber)
+        .then((response) {
+      if (response.statusCode == 200) {
+        BasicResponseModel basicResponseBody =
+            BasicResponseModel.fromJson(json.decode(response.body));
+        if (basicResponseBody.status) {
+          saveProfileDetails();
+        } else {
+          print(
+              'Profile details could not be updated ${basicResponseBody.message}');
+        }
+      } else {
+        print('Profile details could not be updated ${response.body}');
+      }
+    });
   }
 
-  void updateEmailAddress() {
-    String emailId = emailController.text.trim();
-    if (emailId != null && EmailValidator.validate(emailId)) {
-      HTTPService().changeEmailAddress(authToken, emailId).then((response) {
-        if (response.statusCode == 200) {
-          SharedPreferences.getInstance().then((preference) {
-            preference.setString(Constants.SHARED_PREF_EMAIL, emailId);
-          });
-          showSuccessDialog(context, 'Profile detail updated successfully');
-        } else {
-          BasicResponseBody basicResponseBody =
-              BasicResponseBody.fromJson(json.decode(response.body));
-          showErrorDialog(basicResponseBody.message);
-        }
-      });
-    } else {
-      showErrorDialog('Invalid Email Id');
-    }
+  void saveProfileDetails() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(Constants.SHARED_PREF_NAME, userName);
+    sharedPreferences.setString(Constants.SHARED_PREF_CITY, userCity);
+    sharedPreferences.setString(Constants.SHARED_PREF_ADDRESS, userAddress);
+    sharedPreferences.setString(Constants.SHARED_PREF_STATE, userState);
+    sharedPreferences.setString(Constants.SHARED_PREF_PINCODE, pincode);
+    sharedPreferences.setString(
+        Constants.SHARED_PREF_AADHAR_NUMBER, aadharNumber);
+    sharedPreferences.setString(Constants.SHARED_PREF_PAN_NUMBER, panNumber);
+    sharedPreferences.setString(Constants.SHARED_PREF_GST_NUMBER, gstNumber);
   }
 }

@@ -8,6 +8,7 @@ import 'package:vimopay_application/customs/countdown_widget.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
+import 'package:vimopay_application/ui/LoginScreen.dart';
 import 'package:vimopay_application/ui/SplashScreen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -460,7 +461,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   }
 
   Future<bool> onBackPressed() async {
-    Navigator.of(context).pushReplacement(ScaleRoute(page: SplashScreen()));
+    Navigator.of(context).pushReplacement(ScaleRoute(page: LoginScreen()));
     return true;
   }
 }

@@ -9,4 +9,10 @@ class Constants {
   static const SHARED_PREF_MATM_BALANCE = "user_matm_wallet_balance";
   static const SHARED_PREF_AEPS_BALANCE = "user_aeps_wallet_balance";
   static const SHARED_PREF_ADDRESS = "user_address";
+  static const SHARED_PREF_CITY = "user_city";
+  static const SHARED_PREF_STATE = "user_state";
+  static const SHARED_PREF_PINCODE = "user_pincode";
+  static const SHARED_PREF_AADHAR_NUMBER = "user_aadhar_number";
+  static const SHARED_PREF_PAN_NUMBER = "user_pan_number";
+  static const SHARED_PREF_GST_NUMBER = "user_gst_number";
 }
