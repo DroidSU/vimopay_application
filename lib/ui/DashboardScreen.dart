@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
@@ -9,6 +11,7 @@ import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_data.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_model.dart';
 import 'package:vimopay_application/ui/ProfileScreen.dart';
+import 'package:vimopay_application/ui/app_state_notifier.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -20,9 +23,11 @@ class _DashboardScreenState extends State<DashboardScreen>
   AnimationController _headerController;
 
   String authToken;
+  String username = '';
   String walletBalance = "";
   String mAtmBalance = "";
   String aepsBalance = "";
+  File imageFile;
 
   List<String> listOfWalletBalance = List();
   List<String> listOfWalletNames = List();
@@ -139,7 +144,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Switch(
+                      value: Provider.of<AppStateNotifier>(context).isDarkMode,
+                      onChanged: (boolVal) {
+                        Provider.of<AppStateNotifier>(context, listen: false)
+                            .updateTheme(boolVal);
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -155,13 +169,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                                     child: Container(
                                       width: 200,
                                       alignment: Alignment.centerLeft,
-                                      padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                       child: Text(
                                         'Good Morning',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                        ),
+                                        style:
+                                            Theme.of(context).textTheme.caption,
                                       ),
                                     ),
                                   ),
@@ -172,11 +184,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       alignment: Alignment.centerLeft,
                                       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                       child: Text(
-                                        'Sujoy Dutta',
-                                        style: TextStyle(
-                                          color: Colors.blue[900],
-                                          fontSize: 26,
-                                        ),
+                                        username.isNotEmpty ? username : '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1,
                                       ),
                                     ),
                                   )
@@ -190,14 +201,25 @@ class _DashboardScreenState extends State<DashboardScreen>
                           child: Container(
                               padding: EdgeInsets.all(5),
                               child: InkWell(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.asset(
-                                    'images/default_user.png',
-                                    width: 60.0,
-                                    height: 60.0,
-                                  ),
-                                ),
+                                child: imageFile == null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.asset(
+                                          'images/default_user.png',
+                                          width: 60.0,
+                                          height: 60.0,
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                        child: Image.file(
+                                          imageFile,
+                                          width: 80.0,
+                                          height: 80.0,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
                                 onTap: () {
                                   Navigator.of(context).push(
                                       SlideInTransition(page: ProfileScreen()));
@@ -210,267 +232,18 @@ class _DashboardScreenState extends State<DashboardScreen>
                   SizedBox(
                     height: 20,
                   ),
-                  // Container(
-                  //   padding: EdgeInsets.fromLTRB(10, 0, 5, 5),
-                  //   child: Text(
-                  //     'My Wallets',
-                  //     style: TextStyle(
-                  //         color: Colors.black87,
-                  //         fontSize: 18,
-                  //         fontWeight: FontWeight.bold),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //     children: [
-                  //       Material(
-                  //         borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  //         color: Color(0xff6600CC),
-                  //         child: Container(
-                  //           width: 100,
-                  //           padding: EdgeInsets.fromLTRB(5, 15, 5, 5),
-                  //           decoration: BoxDecoration(
-                  //             borderRadius:
-                  //                 BorderRadius.all(Radius.circular(10.0)),
-                  //             gradient: LinearGradient(
-                  //               colors: [Color(0xff407CD1), Color(0xff6A73C5)],
-                  //               begin: Alignment.topLeft,
-                  //               end: Alignment.bottomRight,
-                  //             ),
-                  //           ),
-                  //           child: (listOfWalletBalance != null &&
-                  //                   listOfWalletBalance.isNotEmpty)
-                  //               ? Column(
-                  //                   mainAxisAlignment: MainAxisAlignment.center,
-                  //                   crossAxisAlignment: CrossAxisAlignment.center,
-                  //                   children: [
-                  //                     SizedBox(
-                  //                       height: 10,
-                  //                     ),
-                  //                     Container(
-                  //                       child: Text(
-                  //                         '\u{20B9} ${listOfWalletBalance[0]}',
-                  //                         style: TextStyle(
-                  //                           fontSize: 15,
-                  //                           color: Colors.white,
-                  //                         ),
-                  //                         maxLines: 2,
-                  //                         overflow: TextOverflow.clip,
-                  //                       ),
-                  //                       alignment: Alignment.center,
-                  //                     ),
-                  //                     SizedBox(
-                  //                       height: 20,
-                  //                     ),
-                  //                     Row(
-                  //                       mainAxisAlignment:
-                  //                           MainAxisAlignment.spaceEvenly,
-                  //                       children: [
-                  //                         Icon(
-                  //                           Icons.account_balance_wallet_rounded,
-                  //                           color: Colors.white,
-                  //                           size: 20,
-                  //                         ),
-                  //                         Container(
-                  //                           alignment: Alignment.center,
-                  //                           child: Text(
-                  //                             '${listOfWalletNames[0]}',
-                  //                             style: TextStyle(
-                  //                               fontSize: 15,
-                  //                               color: Colors.white,
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                       ],
-                  //                     ),
-                  //                   ],
-                  //                 )
-                  //               : Container(
-                  //                   height: 30,
-                  //                   width: 30,
-                  //                   alignment: Alignment.center,
-                  //                   child: CircularProgressIndicator(
-                  //                       valueColor:
-                  //                           new AlwaysStoppedAnimation<Color>(
-                  //                               Colors.white)),
-                  //                 ),
-                  //         ),
-                  //         elevation: 10,
-                  //         shadowColor: Color(0xaa6600cc),
-                  //       ),
-                  //       Material(
-                  //         borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  //         color: Color(0xff6600CC),
-                  //         child: Container(
-                  //           width: 100,
-                  //           padding: EdgeInsets.fromLTRB(5, 15, 5, 5),
-                  //           decoration: BoxDecoration(
-                  //             borderRadius:
-                  //                 BorderRadius.all(Radius.circular(10.0)),
-                  //             gradient: LinearGradient(
-                  //               colors: [Color(0xff407CD1), Color(0xff6A73C5)],
-                  //               begin: Alignment.topLeft,
-                  //               end: Alignment.bottomRight,
-                  //             ),
-                  //           ),
-                  //           child: (listOfWalletBalance != null &&
-                  //                   listOfWalletBalance.isNotEmpty)
-                  //               ? Column(
-                  //                   mainAxisAlignment: MainAxisAlignment.center,
-                  //                   crossAxisAlignment: CrossAxisAlignment.center,
-                  //                   children: [
-                  //                     SizedBox(
-                  //                       height: 10,
-                  //                     ),
-                  //                     Container(
-                  //                       child: Text(
-                  //                         '\u{20B9} ${listOfWalletBalance[1]}',
-                  //                         style: TextStyle(
-                  //                           fontSize: 15,
-                  //                           color: Colors.white,
-                  //                         ),
-                  //                         maxLines: 2,
-                  //                         overflow: TextOverflow.clip,
-                  //                       ),
-                  //                       alignment: Alignment.center,
-                  //                     ),
-                  //                     SizedBox(
-                  //                       height: 15,
-                  //                     ),
-                  //                     Row(
-                  //                       mainAxisAlignment:
-                  //                           MainAxisAlignment.spaceEvenly,
-                  //                       children: [
-                  //                         Icon(
-                  //                           Icons.account_balance_wallet_rounded,
-                  //                           color: Colors.white,
-                  //                           size: 20,
-                  //                         ),
-                  //                         Container(
-                  //                           alignment: Alignment.center,
-                  //                           child: Text(
-                  //                             '${listOfWalletNames[1]}',
-                  //                             style: TextStyle(
-                  //                               fontSize: 15,
-                  //                               color: Colors.white,
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                       ],
-                  //                     ),
-                  //                   ],
-                  //                 )
-                  //               : Container(
-                  //                   height: 30,
-                  //                   width: 30,
-                  //                   alignment: Alignment.center,
-                  //                   child: CircularProgressIndicator(
-                  //                       valueColor:
-                  //                           new AlwaysStoppedAnimation<Color>(
-                  //                               Colors.white)),
-                  //                 ),
-                  //         ),
-                  //         elevation: 10,
-                  //         shadowColor: Color(0xaa6600cc),
-                  //       ),
-                  //       Material(
-                  //         borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  //         color: Color(0xff6600CC),
-                  //         child: Container(
-                  //           width: 100,
-                  //           padding: EdgeInsets.fromLTRB(5, 15, 5, 5),
-                  //           decoration: BoxDecoration(
-                  //             borderRadius:
-                  //                 BorderRadius.all(Radius.circular(10.0)),
-                  //             gradient: LinearGradient(
-                  //               colors: [Color(0xff407CD1), Color(0xff6A73C5)],
-                  //               begin: Alignment.topLeft,
-                  //               end: Alignment.bottomRight,
-                  //             ),
-                  //           ),
-                  //           child: (listOfWalletBalance != null &&
-                  //                   listOfWalletBalance.isNotEmpty)
-                  //               ? Column(
-                  //                   mainAxisAlignment: MainAxisAlignment.center,
-                  //                   crossAxisAlignment: CrossAxisAlignment.center,
-                  //                   children: [
-                  //                     SizedBox(
-                  //                       height: 10,
-                  //                     ),
-                  //                     Container(
-                  //                       child: Text(
-                  //                         '\u{20B9} ${listOfWalletBalance[2]}',
-                  //                         style: TextStyle(
-                  //                           fontSize: 15,
-                  //                           color: Colors.white,
-                  //                         ),
-                  //                         maxLines: 2,
-                  //                         overflow: TextOverflow.clip,
-                  //                       ),
-                  //                       alignment: Alignment.center,
-                  //                     ),
-                  //                     SizedBox(
-                  //                       height: 15,
-                  //                     ),
-                  //                     Row(
-                  //                       mainAxisAlignment:
-                  //                           MainAxisAlignment.spaceEvenly,
-                  //                       children: [
-                  //                         Icon(
-                  //                           Icons.account_balance_wallet_rounded,
-                  //                           color: Colors.white,
-                  //                           size: 20,
-                  //                         ),
-                  //                         Container(
-                  //                           alignment: Alignment.center,
-                  //                           child: Text(
-                  //                             '${listOfWalletNames[2]}',
-                  //                             style: TextStyle(
-                  //                               fontSize: 15,
-                  //                               color: Colors.white,
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                       ],
-                  //                     ),
-                  //                   ],
-                  //                 )
-                  //               : Container(
-                  //                   height: 30,
-                  //                   width: 30,
-                  //                   alignment: Alignment.center,
-                  //                   child: CircularProgressIndicator(
-                  //                       valueColor:
-                  //                           new AlwaysStoppedAnimation<Color>(
-                  //                               Colors.white)),
-                  //                 ),
-                  //         ),
-                  //         elevation: 10,
-                  //         shadowColor: Color(0xaa6600cc),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   Container(
                     alignment: Alignment.center,
                     child: Text(
                       'Our Services',
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      style: Theme.of(context).textTheme.headline2,
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.all(10),
                     child: Text(
                       'Banking',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ),
                   Container(
@@ -641,6 +414,17 @@ class _DashboardScreenState extends State<DashboardScreen>
   void getUserDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authToken = sharedPreferences.getString(Constants.SHARED_PREF_TOKEN);
+    setState(() {
+      username = sharedPreferences.getString(Constants.SHARED_PREF_NAME);
+    });
+
+    String imagePath =
+        sharedPreferences.getString(Constants.SHARED_PREF_USER_DP_PATH);
+    if (imagePath != null) {
+      setState(() {
+        imageFile = File(imagePath);
+      });
+    }
 
     HTTPService().getWallets(authToken).then((response) {
       if (response.statusCode == 200) {

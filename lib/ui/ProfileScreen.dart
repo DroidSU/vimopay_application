@@ -1,14 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/basic_response_model.dart';
-import 'package:vimopay_application/ui/SettingsScreen.dart';
+import 'package:vimopay_application/ui/ProfileSettingsScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -51,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isValidPanCard = true;
   bool _isValidAadharCard = true;
   bool _isValidGSTNumber = true;
+  File imageFile;
 
   @override
   void initState() {
@@ -121,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   onTap: () {
                     Navigator.of(context)
-                        .push(ScaleRoute(page: SettingsScreen()));
+                        .push(ScaleRoute(page: ProfileSettingsScreen()));
                   },
                 )
               ],
@@ -130,16 +133,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(
-                      'images/default_user.png',
-                      width: 80.0,
-                      height: 80.0,
-                    ),
+                InkWell(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: imageFile == null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'images/default_user.png',
+                              width: 80.0,
+                              height: 80.0,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: Image.file(
+                              imageFile,
+                              width: 80.0,
+                              height: 80.0,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                   ),
+                  onTap: () {
+                    showImagePickerDialog();
+                  },
                 ),
                 Container(
                     padding: EdgeInsets.fromLTRB(10, 20, 10, 5),
@@ -724,6 +742,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? ""
             : sharedPreferences.getString(Constants.SHARED_PREF_GST_NUMBER);
 
+    String imagePath =
+        sharedPreferences.getString(Constants.SHARED_PREF_USER_DP_PATH);
+    if (imagePath != null) imageFile = File(imagePath);
+
     setState(() {
       nameController.text = userName;
       emailController.text = userEmail;
@@ -903,5 +925,179 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Constants.SHARED_PREF_AADHAR_NUMBER, aadharNumber);
     sharedPreferences.setString(Constants.SHARED_PREF_PAN_NUMBER, panNumber);
     sharedPreferences.setString(Constants.SHARED_PREF_GST_NUMBER, gstNumber);
+  }
+
+  void showImagePickerDialog() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return SafeArea(
+            child: Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: imageFile == null
+                          ? CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('images/default_user.png'),
+                              backgroundColor: Colors.white,
+                              radius: 44,
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(40.0),
+                              child: Image.file(
+                                imageFile,
+                                width: 80.0,
+                                height: 80.0,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 90),
+                      child: Text(
+                        'Choose image from: ',
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(20, 0, 20, 30),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          RaisedButton.icon(
+                            onPressed: () {
+                              getImage(true);
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            label: Text(
+                              'Camera',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            icon: Icon(
+                              Icons.camera_enhance_rounded,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            textColor: Colors.white,
+                            splashColor: Colors.white,
+                            color: Colors.blue[600],
+                            elevation: 5,
+                          ),
+                          RaisedButton(
+                            onPressed: () {
+                              getImage(false);
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            textColor: Colors.white,
+                            splashColor: Colors.white,
+                            color: Colors.blue[600],
+                            elevation: 5,
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'images/ic_gallery.png',
+                                  height: 24,
+                                  width: 24,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  'Gallery',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future getImage(bool isFromCamera) async {
+    String imagePath = "";
+
+    if (isFromCamera) {
+      final pickedFile =
+          await ImagePicker().getImage(source: ImageSource.camera);
+
+      if (pickedFile != null) {
+        setState(() {
+          imagePath = pickedFile.path;
+          imageFile = File(imagePath);
+        });
+
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        sharedPreferences.setString(
+            Constants.SHARED_PREF_USER_DP_PATH, imagePath);
+
+        // String _base64String = base64Encode(imageFile.readAsBytesSync());
+
+        // HTTPService()
+        //     .uploadProfilePicture(authToken, _base64String)
+        //     .then((response) => {
+        //   if (response.statusCode == 200)
+        //     print('Upload successful')
+        //   else
+        //     print('Upload unsuccessful')
+        // });
+
+        Navigator.of(context).pop();
+      }
+    } else {
+      final pickedFile =
+          await ImagePicker().getImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          imagePath = pickedFile.path;
+          imageFile = File(imagePath);
+        });
+
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        sharedPreferences.setString(
+            Constants.SHARED_PREF_USER_DP_PATH, imagePath);
+
+        String _base64String = base64Encode(imageFile.readAsBytesSync());
+        print('Image string: $_base64String');
+
+        // HTTPService()
+        //     .uploadProfilePicture(authToken, _base64String)
+        //     .then((response) => {
+        //   if (response.statusCode == 200)
+        //     print('Upload successful')
+        //   else
+        //     print('Upload unsuccessful')
+        // });
+
+        Navigator.of(context).pop();
+      }
+    }
   }
 }

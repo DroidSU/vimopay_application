@@ -15,4 +15,10 @@ class Constants {
   static const SHARED_PREF_AADHAR_NUMBER = "user_aadhar_number";
   static const SHARED_PREF_PAN_NUMBER = "user_pan_number";
   static const SHARED_PREF_GST_NUMBER = "user_gst_number";
+  static const SHARED_PREF_HOLDER_NAME = "holder_name";
+  static const SHARED_PREF_ACCOUNT_NUMBER = "account_number";
+  static const SHARED_PREF_IFSC_CODE = "ifsc_code";
+  static const SHARED_PREF_BANK_NAME = "bank_name";
+
+  static const String SHARED_PREF_USER_DP_PATH = "user_dp_path";
 }

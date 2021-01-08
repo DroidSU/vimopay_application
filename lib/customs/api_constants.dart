@@ -9,4 +9,6 @@ class APIConstants {
       BASE_URL + "Credentials/Emailchange";
   static const ENDPOINT_UPDATE_PROFILE_DETAILS =
       BASE_URL + "Credentials/Profileupdate";
+  static const ENDPOINT_UPDATE_BANK_DETAILS =
+      BASE_URL + 'Credentials/Bankchange';
 }

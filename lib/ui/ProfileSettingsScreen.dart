@@ -9,12 +9,12 @@ import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/basic_response_model.dart';
 
-class SettingsScreen extends StatefulWidget {
+class ProfileSettingsScreen extends StatefulWidget {
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _ProfileSettingsScreenState createState() => _ProfileSettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   String authToken = "";
 
   String mobileNumber = "";
@@ -39,6 +39,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   TextEditingController oldPasswordController;
   TextEditingController newPasswordController;
   TextEditingController confirmPasswordController;
+
+  bool _showBankUpdateProgress = false;
+  bool _showMobileUpdateProgress = false;
+  bool _showEmailUpdateProgress = false;
 
   @override
   void initState() {
@@ -77,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              'Settings',
+              'Profile Settings',
               style: TextStyle(
                 color: Colors.blue[900],
               ),
@@ -172,15 +176,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             Container(
                               width: 90,
-                              child: RaisedButton(
-                                  onPressed: () => updateMobile(),
-                                  elevation: 10,
-                                  color: Colors.blue,
-                                  child: Text(
-                                    'Update',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )),
+                              child: _showMobileUpdateProgress
+                                  ? CircularProgressIndicator()
+                                  : RaisedButton(
+                                      onPressed: () => updateMobile(),
+                                      elevation: 10,
+                                      color: Colors.blue,
+                                      child: Text(
+                                        'Update',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      )),
                             )
                           ],
                         ),
@@ -252,15 +258,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             Container(
                               width: 90,
-                              child: RaisedButton(
-                                  onPressed: () => updateEmail(),
-                                  elevation: 10,
-                                  color: Colors.blue,
-                                  child: Text(
-                                    'Update',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )),
+                              child: _showEmailUpdateProgress
+                                  ? CircularProgressIndicator()
+                                  : RaisedButton(
+                                      onPressed: () => updateEmail(),
+                                      elevation: 10,
+                                      color: Colors.blue,
+                                      child: Text(
+                                        'Update',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      )),
                             )
                           ],
                         ),
@@ -374,7 +382,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 controller: bankNameController,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16),
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.name,
                                 decoration: new InputDecoration(
                                     border: new OutlineInputBorder(
                                       borderRadius: const BorderRadius.all(
@@ -394,16 +402,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Container(
                               alignment: Alignment.centerRight,
                               width: 90,
-                              child: RaisedButton(
-                                  onPressed: () {},
-                                  elevation: 10,
-                                  color: Colors.blue,
-                                  shape: RoundedRectangleBorder(),
-                                  child: Text(
-                                    'Update',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )),
+                              child: _showBankUpdateProgress
+                                  ? CircularProgressIndicator()
+                                  : RaisedButton(
+                                      onPressed: () {
+                                        updateBankDetails();
+                                      },
+                                      elevation: 10,
+                                      color: Colors.blue,
+                                      shape: RoundedRectangleBorder(),
+                                      child: Text(
+                                        'Update',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      )),
                             ),
                           ],
                         ),
@@ -425,10 +437,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset(
-                                  'images/ic_lock.png',
-                                  height: 30,
-                                  width: 30,
+                                Icon(
+                                  Icons.lock_outline_rounded,
+                                  size: 24,
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -467,10 +478,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
       mobileNumber = sharedPrefs.getString(Constants.SHARED_PREF_MOBILE);
       emailAddress = sharedPrefs.getString(Constants.SHARED_PREF_EMAIL);
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
+      bankHolderName =
+          sharedPrefs.getString(Constants.SHARED_PREF_HOLDER_NAME) == null
+              ? ""
+              : sharedPrefs.getString(Constants.SHARED_PREF_HOLDER_NAME);
+      accountNumber =
+          sharedPrefs.getString(Constants.SHARED_PREF_ACCOUNT_NUMBER) == null
+              ? ""
+              : sharedPrefs.getString(Constants.SHARED_PREF_ACCOUNT_NUMBER);
+      bankName = sharedPrefs.getString(Constants.SHARED_PREF_BANK_NAME) == null
+          ? ""
+          : sharedPrefs.getString(Constants.SHARED_PREF_BANK_NAME);
+      ifscCode = sharedPrefs.getString(Constants.SHARED_PREF_IFSC_CODE) == null
+          ? ""
+          : sharedPrefs.getString(Constants.SHARED_PREF_IFSC_CODE);
 
       setState(() {
         mobileController.text = mobileNumber;
         emailController.text = emailAddress;
+        holderNameController.text = bankHolderName;
+        accountNumberController.text = accountNumber;
+        bankNameController.text = bankName;
+        ifscController.text = ifscCode;
       });
     });
   }
@@ -642,9 +671,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   updateMobile() {
     String mobileNumber = mobileController.text.trim();
     if (mobileNumber != null && mobileNumber.length == 10) {
+      setState(() {
+        _showMobileUpdateProgress = true;
+      });
+
       HTTPService()
           .changeMobileNumber(authToken, mobileNumber)
           .then((response) {
+        setState(() {
+          _showMobileUpdateProgress = false;
+        });
+
         if (response.statusCode == 200) {
           SharedPreferences.getInstance().then((preference) {
             preference.setString(Constants.SHARED_PREF_MOBILE, mobileNumber);
@@ -800,7 +837,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   updateEmail() {
     String emailId = emailController.text.trim();
     if (emailId != null && EmailValidator.validate(emailId)) {
+      setState(() {
+        _showEmailUpdateProgress = true;
+      });
       HTTPService().changeEmailAddress(authToken, emailId).then((response) {
+        setState(() {
+          _showEmailUpdateProgress = false;
+        });
+
         if (response.statusCode == 200) {
           SharedPreferences.getInstance().then((preference) {
             preference.setString(Constants.SHARED_PREF_EMAIL, emailId);
@@ -817,5 +861,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _isValidEmail = false;
       });
     }
+  }
+
+  void updateBankDetails() {
+    setState(() {
+      _showBankUpdateProgress = true;
+    });
+
+    bankName = bankNameController.text.trim();
+    accountNumber = accountNumberController.text.trim();
+    ifscCode = ifscController.text.trim();
+    bankHolderName = holderNameController.text.trim();
+
+    HTTPService()
+        .updateBankDetails(
+            authToken, bankName, accountNumber, ifscCode, bankHolderName)
+        .then((response) {
+      setState(() {
+        _showBankUpdateProgress = false;
+      });
+      if (response.statusCode == 200) {
+        BasicResponseModel basicResponseModel =
+            BasicResponseModel.fromJson(json.decode(response.body));
+
+        if (basicResponseModel.status) {
+          showSuccessDialog(context, 'Bank details updated successfully');
+          SharedPreferences.getInstance().then((sharedPrefs) {
+            sharedPrefs.setString(
+                Constants.SHARED_PREF_HOLDER_NAME, bankHolderName);
+            sharedPrefs.setString(
+                Constants.SHARED_PREF_ACCOUNT_NUMBER, accountNumber);
+            sharedPrefs.setString(Constants.SHARED_PREF_IFSC_CODE, ifscCode);
+            sharedPrefs.setString(Constants.SHARED_PREF_BANK_NAME, bankName);
+          });
+        } else {
+          showErrorDialog(basicResponseModel.message);
+        }
+      } else {
+        showErrorDialog('Something went wrong! Error ${response.statusCode}');
+      }
+    });
   }
 }

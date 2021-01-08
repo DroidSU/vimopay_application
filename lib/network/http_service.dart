@@ -123,4 +123,26 @@ class HTTPService {
     print('Update profile details response: ${response.body}');
     return response;
   }
+
+  Future<http.Response> updateBankDetails(String authToken, String bankName,
+      String accountNumber, String ifsc, String holderName) async {
+    http.Response response = await http.post(
+      Uri.encodeFull(APIConstants.ENDPOINT_UPDATE_BANK_DETAILS),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+        'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+        'A-Token': authToken,
+      },
+      body: jsonEncode({
+        "Bankname": bankName,
+        "Acno": accountNumber,
+        "IFSC": ifsc,
+        "Acholder": holderName
+      }),
+    );
+
+    print('Change Update Bank response: ${response.body}');
+    return response;
+  }
 }
