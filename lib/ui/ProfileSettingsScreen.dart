@@ -676,7 +676,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       });
 
       HTTPService()
-          .changeMobileNumber(authToken, mobileNumber)
+          .changeMobileNumber(authToken, mobileNumber, '')
           .then((response) {
         setState(() {
           _showMobileUpdateProgress = false;
@@ -840,7 +840,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       setState(() {
         _showEmailUpdateProgress = true;
       });
-      HTTPService().changeEmailAddress(authToken, emailId).then((response) {
+      HTTPService().changeEmailAddress(authToken, emailId, '').then((response) {
         setState(() {
           _showEmailUpdateProgress = false;
         });

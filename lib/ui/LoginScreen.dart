@@ -25,12 +25,16 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   String mobileNumber = "";
   String password = "";
+  String fcm_token = "";
 
   @override
   void initState() {
     super.initState();
     mobileNumberController = TextEditingController();
     passwordController = TextEditingController();
+    SharedPreferences.getInstance().then((sharedPrefs) {
+      fcm_token = sharedPrefs.getString(Constants.SHARED_PREF_FCM_TOKEN);
+    });
   }
 
   @override
@@ -44,204 +48,185 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  child: Image.asset(
-                    'images/ic_logo.png',
-                    height: 200,
-                    width: 200,
+        body: SingleChildScrollView(
+      child: Stack(
+        children: [
+          Container(
+            height: 350,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                image: new DecorationImage(
+                  image: AssetImage(
+                    'images/background_clip_4.png',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+          ),
+          Container(
+            color: Colors.transparent,
+            margin: EdgeInsets.fromLTRB(0, 350, 0, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.fromLTRB(40, 20, 40, 0),
+                  child: TextField(
+                    decoration: new InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.transparent, width: 1.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        prefixIcon: Icon(Icons.phone_android_rounded),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey),
+                        hintText: "Mobile Number",
+                        fillColor: Color(0xfff2f2f2)),
+                    keyboardType: TextInputType.number,
+                    maxLines: 1,
+                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                    controller: mobileNumberController,
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 200, 0, 0),
-                alignment: Alignment.center,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: Text(
-                        'User Login',
-                        style: TextStyle(color: Colors.black, fontSize: 26),
-                      ),
-                      alignment: Alignment.center,
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                      child: TextField(
-                        decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
-                              ),
-                            ),
-                            prefixIcon: Icon(Icons.phone_android_rounded),
-                            filled: true,
-                            hintStyle: new TextStyle(color: Colors.grey[800]),
-                            hintText: "Mobile Number",
-                            fillColor: Colors.white70),
-                        keyboardType: TextInputType.number,
-                        maxLines: 1,
-                        inputFormatters: [LengthLimitingTextInputFormatter(10)],
-                        controller: mobileNumberController,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                      child: TextField(
-                        decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
-                              ),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.lock_open_rounded,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: _obscurePassword
-                                  ? Icon(
-                                      Icons.visibility_outlined,
-                                      color: Colors.black,
-                                    )
-                                  : Icon(
-                                      Icons.visibility_off_outlined,
-                                      color: Colors.black,
-                                    ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
-                            filled: true,
-                            hintStyle: new TextStyle(color: Colors.grey[800]),
-                            hintText: "Password",
-                            fillColor: Colors.white70),
-                        keyboardType: TextInputType.visiblePassword,
-                        maxLines: 1,
-                        obscureText: _obscurePassword,
-                        controller: passwordController,
-                      ),
-                    ),
-                    Container(
-                        alignment: Alignment.centerRight,
-                        margin: EdgeInsets.fromLTRB(0, 10, 40, 0),
-                        child: InkWell(
-                          child: Text(
-                            'Forgot Password?',
-                            style:
-                                TextStyle(color: Colors.black54, fontSize: 16),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(
-                                ScaleRoute(page: ForgotPasswordScreen()));
-                          },
-                        )),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0, 35, 0, 0),
-                      alignment: Alignment.center,
-                      child: !_showProgress
-                          ? RaisedButton(
-                              onPressed: () {
-                                mobileNumber =
-                                    mobileNumberController.text.trim();
-                                password = passwordController.text.trim();
-
-                                if (mobileNumber.isNotEmpty &&
-                                    mobileNumber.length == 10) {
-                                  setState(() {
-                                    _showProgress = true;
-                                  });
-
-                                  HTTPService()
-                                      .loginUser(mobileNumber, password)
-                                      .then((response) {
-                                    setState(() {
-                                      _showProgress = false;
-                                    });
-
-                                    if (response.statusCode == 200) {
-                                      LoginResponseModel loginResponseModel =
-                                          LoginResponseModel.fromJson(
-                                              json.decode(response.body));
-                                      if (loginResponseModel.status) {
-                                        saveUserData(loginResponseModel.data);
-                                      } else {
-                                        showErrorDialog(
-                                            loginResponseModel.message);
-                                      }
-                                    } else {
-                                      showErrorDialog(
-                                          'Server error occurred while login. Error code: ${response.statusCode}');
-                                    }
-                                  });
-                                } else {
-                                  setState(() {
-                                    _showProgress = false;
-                                  });
-
-                                  if (mobileNumber.isEmpty)
-                                    showErrorDialog(
-                                        'Mobile number should not be empty');
-                                  else if (mobileNumber.length != 10)
-                                    showErrorDialog(
-                                        'Please enter a valid mobile number');
-                                  else if (password.isEmpty)
-                                    showErrorDialog(
-                                        'Please enter your password');
-                                }
-                              },
-                              // color: Color(0xff6600CC),
-                              color: Colors.blue,
-                              padding: EdgeInsets.all(12),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                            )
-                          : CircularProgressIndicator(),
-                    ),
-                    // Container(
-                    //   margin: EdgeInsets.fromLTRB(0, 35, 0, 0),
-                    //   child: GradientButton(
-                    //     child: Text(
-                    //       'Login',
-                    //       style: TextStyle(color: Colors.white, fontSize: 16),
-                    //     ),
-                    //     gradient: LinearGradient(
-                    //       colors: [Color(0xff00C2DB), Color(0xff407CD1)],
-                    //       begin: FractionalOffset.topLeft,
-                    //       end: FractionalOffset.bottomRight,
-                    //     ),
-                    //   ),
-                    // )
-                  ],
+                SizedBox(
+                  height: 30,
                 ),
-              )
-            ],
+                Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: TextField(
+                    decoration: new InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.transparent, width: 1.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.lock_open_rounded,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: _obscurePassword
+                              ? Icon(
+                                  Icons.visibility_outlined,
+                                  color: Colors.black,
+                                )
+                              : Icon(
+                                  Icons.visibility_off_outlined,
+                                  color: Colors.black,
+                                ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                        filled: true,
+                        hintStyle: new TextStyle(color: Colors.grey),
+                        hintText: "Password",
+                        fillColor: Colors.grey[200]),
+                    keyboardType: TextInputType.visiblePassword,
+                    maxLines: 1,
+                    obscureText: _obscurePassword,
+                    controller: passwordController,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 35, 0, 0),
+                  alignment: Alignment.center,
+                  child: !_showProgress
+                      ? RaisedButton(
+                          onPressed: () {
+                            mobileNumber = mobileNumberController.text.trim();
+                            password = passwordController.text.trim();
+
+                            if (mobileNumber.isNotEmpty &&
+                                mobileNumber.length == 10) {
+                              setState(() {
+                                _showProgress = true;
+                              });
+
+                              HTTPService()
+                                  .loginUser(mobileNumber, password, fcm_token)
+                                  .then((response) {
+                                setState(() {
+                                  _showProgress = false;
+                                });
+
+                                if (response.statusCode == 200) {
+                                  LoginResponseModel loginResponseModel =
+                                      LoginResponseModel.fromJson(
+                                          json.decode(response.body));
+                                  if (loginResponseModel.status) {
+                                    saveUserData(loginResponseModel.data);
+                                  } else {
+                                    showErrorDialog(loginResponseModel.message);
+                                  }
+                                } else {
+                                  showErrorDialog(
+                                      'Server error occurred while login. Error code: ${response.statusCode}');
+                                }
+                              });
+                            } else {
+                              setState(() {
+                                _showProgress = false;
+                              });
+
+                              if (mobileNumber.isEmpty)
+                                showErrorDialog(
+                                    'Mobile number should not be empty');
+                              else if (mobileNumber.length != 10)
+                                showErrorDialog(
+                                    'Please enter a valid mobile number');
+                              else if (password.isEmpty)
+                                showErrorDialog('Please enter your password');
+                            }
+                          },
+                          // color: Color(0xff6600CC),
+                          color: Color(0xff133374),
+                          padding: EdgeInsets.all(12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        )
+                      : CircularProgressIndicator(),
+                ),
+                Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    child: InkWell(
+                      child: Text(
+                        'Forgot your password?',
+                        style: TextStyle(color: Colors.black54, fontSize: 16),
+                      ),
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(ScaleRoute(page: ForgotPasswordScreen()));
+                      },
+                    )),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
-    );
+    ));
   }
 
   void saveUserData(LoginResponseData data) async {
@@ -257,7 +242,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _showProgress = false;
     });
 
-    Navigator.of(context).pushReplacement(ScaleRoute(page: DashboardScreen()));
+    Navigator.of(context).pushAndRemoveUntil(
+        ScaleRoute(page: DashboardScreen()), (route) => false);
   }
 
   void showErrorDialog(String message) {

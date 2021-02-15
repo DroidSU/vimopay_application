@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
-import 'package:vimopay_application/ui/DashboardScreen.dart';
 import 'package:vimopay_application/ui/LoginScreen.dart';
+
+import 'DashboardScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,14 +48,63 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ScaleTransition(
-          scale: _animation,
-          child: Image.asset(
-            'images/ic_logo.png',
-            height: 120,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xff7c94b6),
+              image: new DecorationImage(
+                image: AssetImage(
+                  'images/splash_background.png',
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              height: 180,
+              width: 200,
+              // child: ScaleTransition(
+              //     scale: _animation,
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         Image.asset(
+              //           'images/ic_logo_2x.png',
+              //           height: 80,
+              //         ),
+              //         Text(
+              //           'Payments Everywhere',
+              //           style: TextStyle(
+              //             color: Color(0xff133374),
+              //             fontSize: 18,
+              //           ),
+              //         )
+              //       ],
+              //     )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'images/ic_logo_2x.png',
+                    height: 120,
+                  ),
+                  Text(
+                    'Payments Everywhere',
+                    style: TextStyle(
+                        color: Color(0xff133374),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
       ),
       backgroundColor: Colors.white,
     );

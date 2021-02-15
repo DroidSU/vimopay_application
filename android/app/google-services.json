@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "252435205244",
+    "project_id": "vimopay-3468a",
+    "storage_bucket": "vimopay-3468a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252435205244:android:a34a2f69d3f82cef3c0df9",
+        "android_client_info": {
+          "package_name": "com.brixham.vimopay_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "252435205244-cmmlbv44bp898dmfqet1fajcv7pu2d6k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEjbkOJAggBDdIzjupgJgyQZQevwHcYcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "252435205244-cmmlbv44bp898dmfqet1fajcv7pu2d6k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

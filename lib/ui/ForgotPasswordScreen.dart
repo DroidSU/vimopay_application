@@ -52,10 +52,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
   @override
   void dispose() {
-    super.dispose();
-
     mobileController.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,17 +67,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: [
+                  // Align(
+                  //   alignment: Alignment.topCenter,
+                  //   child: Container(
+                  //     child: Image.asset(
+                  //       'images/ic_logo.png',
+                  //       height: 200,
+                  //       width: 200,
+                  //     ),
+                  //   ),
+                  // ),
+                  // pagerState == 0 ? showMobileNumberField() : showPinField(),
                   Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.topLeft,
                     child: Container(
-                      child: Image.asset(
-                        'images/ic_logo.png',
-                        height: 200,
-                        width: 200,
+                      margin: EdgeInsets.fromLTRB(10, 40, 0, 0),
+                      child: InkWell(
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 24,
+                          color: Colors.black,
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
                     ),
                   ),
-                  pagerState == 0 ? showMobileNumberField() : showPinField(),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 80, 0, 0),
+                    width: MediaQuery.of(context).size.width,
+                    child: pagerState == 0
+                        ? showMobileNumberField()
+                        : showPinField(),
+                  ),
                 ],
               ),
             ),
@@ -93,32 +115,74 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(
+            'Reset Password',
+            style: TextStyle(color: Colors.black, fontSize: 22),
+            textAlign: TextAlign.center,
+          ),
           Container(
             child: Text(
-              'Forgot Password',
-              style: TextStyle(color: Colors.black, fontSize: 26),
+              'Enter 10 digit mobile number to receive confirmation code to change password',
+              style:
+                  TextStyle(color: Colors.black.withOpacity(0.3), fontSize: 14),
+              textAlign: TextAlign.center,
             ),
-          ),
-          SizedBox(
-            height: 50,
+            padding: EdgeInsets.all(5),
+            margin: EdgeInsets.fromLTRB(30, 10, 30, 0),
           ),
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+            margin: EdgeInsets.fromLTRB(40, 40, 40, 0),
             child: TextField(
-              decoration: new InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(10.0),
-                    ),
-                  ),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      )),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      )),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      )),
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      )),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      )),
+                  disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      )),
                   prefixIcon: Icon(Icons.phone_android_rounded),
                   filled: true,
-                  hintStyle: new TextStyle(color: Colors.grey[800]),
+                  hintStyle: new TextStyle(color: Colors.grey),
                   hintText: "Mobile Number",
-                  fillColor: Colors.white70),
+                  fillColor: Colors.grey[200]),
               keyboardType: TextInputType.number,
               maxLines: 1,
               inputFormatters: [LengthLimitingTextInputFormatter(10)],
@@ -158,8 +222,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         }
                       }
                     },
-                    // color: Color(0xff6600CC),
-                    color: Colors.blue,
+                    color: Color(0xff133374),
                     padding: EdgeInsets.all(12),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
@@ -177,17 +240,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
   Widget showPinField() {
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
       alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            child: Text(
-              'Enter OTP received',
-              style: TextStyle(color: Colors.black, fontSize: 26),
-            ),
+          Text(
+            'We have sent an OTP to your mobile',
+            style: TextStyle(color: Colors.black, fontSize: 22),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Please enter the otp received to continue resetting your password',
+            style:
+                TextStyle(color: Colors.black.withOpacity(0.3), fontSize: 14),
+            textAlign: TextAlign.center,
           ),
           SizedBox(
             height: 50,

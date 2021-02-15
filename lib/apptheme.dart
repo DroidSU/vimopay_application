@@ -5,7 +5,7 @@ class AppTheme {
 
   static final ThemeData lightTheme = ThemeData(
       scaffoldBackgroundColor: Colors.white,
-      fontFamily: 'Roboto',
+      fontFamily: 'Segoe',
       appBarTheme: AppBarTheme(
         // color: Colors.blue[400],
         color: Color(0xFFd3d3d3),
@@ -34,7 +34,7 @@ class AppTheme {
 
   static final ThemeData darkTheme = ThemeData(
       scaffoldBackgroundColor: Colors.deepPurple[900],
-      fontFamily: 'Roboto',
+      fontFamily: 'Segoe',
       appBarTheme: AppBarTheme(
         // color: Colors.deepPurple[700],
         color: Color(0xFFacacac),

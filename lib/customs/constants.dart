@@ -21,4 +21,8 @@ class Constants {
   static const SHARED_PREF_BANK_NAME = "bank_name";
 
   static const String SHARED_PREF_USER_DP_PATH = "user_dp_path";
+
+  static const COMPANY_NAME = "company_name";
+
+  static const SHARED_PREF_FCM_TOKEN = "fcm_token";
 }

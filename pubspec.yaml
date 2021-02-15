@@ -35,6 +35,11 @@ dependencies:
   email_validator: '^1.0.5'
   image_picker: ^0.6.7+15
   provider: ^4.3.2+3
+  carousel_pro: ^1.0.0
+#  firebase_messaging: ^8.0.0-dev.14
+  firebase_messaging: ^7.0.3
+  firebase_core:  ^0.5.0+1
+
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +75,14 @@ flutter:
     - family: Roboto
       fonts:
         - asset: fonts/roboto_slab.ttf
+    - family: Segoe
+      fonts:
+        - asset: fonts/segoe_ui.ttf
+        - asset: fonts/segoe_ui_bold.ttf
+          weight: 700
+        - asset: fonts/segoe_ui_italic.ttf
+          style: italic
+
 #        - asset: fonts/Schyler-Italic.ttf
 #          style: italic
   #   - family: Trajan Pro

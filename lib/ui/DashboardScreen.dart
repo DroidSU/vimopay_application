@@ -1,17 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
-import 'package:vimopay_application/customs/slide_in_transition.dart';
+import 'package:vimopay_application/customs/recharge_types.dart';
+import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
+import 'package:vimopay_application/network/models/get_banner_response_model.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_data.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_model.dart';
-import 'package:vimopay_application/ui/ProfileScreen.dart';
-import 'package:vimopay_application/ui/app_state_notifier.dart';
+import 'package:vimopay_application/ui/MoneyTransferScreen.dart';
+import 'package:vimopay_application/ui/ProfileScreenNew.dart';
+import 'package:vimopay_application/ui/RechargeScreen.dart';
+import 'package:vimopay_application/ui/WalletScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -31,6 +35,8 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   List<String> listOfWalletBalance = List();
   List<String> listOfWalletNames = List();
+  List<String> bannerUrl = List();
+  List<String> redirectUrl = List();
 
   List<String> bankingImages = [
     "images/ic_aadhar_atm.png",
@@ -60,12 +66,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   ];
 
   List<String> billsUtilitiesTitles = [
-    'Prepaid',
-    'DTH',
-    'Electric',
-    'Broadband',
-    'Postpaid',
-    'Fastag'
+    RechargeTypes.PREPAID,
+    RechargeTypes.DTH,
+    RechargeTypes.Electric,
+    RechargeTypes.BROADBAND,
+    RechargeTypes.POSTPAID,
+    RechargeTypes.FASTAG
   ];
 
   List<String> insuranceImages = [
@@ -84,6 +90,42 @@ class _DashboardScreenState extends State<DashboardScreen>
     'Health',
     'Life Policy',
     'Child Policy'
+  ];
+
+  List<String> travelImages = [
+    "images/ic_railbooking.png",
+    "images/ic_flight.png",
+    "images/ic_busbooking.png",
+    "images/ic_hotel.png",
+    "images/ic_movie.png",
+    "images/ic_metro.png",
+  ];
+
+  List<String> travelTitles = [
+    'Rail Booking',
+    'Flight',
+    'Bus Booking',
+    'Hotel',
+    'Movie Ticket',
+    'Metro Ticket'
+  ];
+
+  List<String> taxesImages = [
+    "images/ic_new_gst.png",
+    "images/ic_gst_return.png",
+    "images/ic_it_return.png",
+    "images/ic_trade_mark.png",
+    "images/ic_food_license.png",
+    "images/ic_company.png",
+  ];
+
+  List<String> taxesTitles = [
+    'Taxes',
+    'GST Return',
+    'IT Return',
+    'Trade Mark',
+    'Food License',
+    'Company'
   ];
 
   @override
@@ -107,308 +149,576 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: Icon(
-            Icons.menu_rounded,
+    return SafeArea(
+      child: Scaffold(
+          backgroundColor: Color(0xfff1fafc),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: 0,
+            backgroundColor: Colors.grey,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.blue[900],
+            selectedLabelStyle: TextStyle(color: Colors.blue[900]),
+            unselectedLabelStyle: TextStyle(color: Colors.white),
+            unselectedItemColor: Colors.white,
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                  break;
+                case 1:
+                  Navigator.of(context).push(ScaleRoute(page: WalletScreen()));
+                  break;
+                case 2:
+                  break;
+                case 3:
+                  break;
+              }
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                  size: 24,
+                ),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_balance_wallet_rounded),
+                label: 'Wallet',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.account_circle_rounded,
+                  size: 24,
+                  color: Colors.white,
+                ),
+                label: 'Profile',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.menu_open_outlined,
+                  color: Colors.white,
+                  size: 24,
+                ),
+                label: 'More',
+              ),
+            ],
           ),
-          title: Image.asset(
-            'images/ic_logo.png',
-          ),
-          centerTitle: true,
-          actions: [
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: Icon(Icons.notification_important_rounded),
-            )
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-              child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xff7c94b6),
-                  image: new DecorationImage(
-                    image: AssetImage(
-                      'images/background_png.png',
+          appBar: PreferredSize(
+            preferredSize: Size(double.infinity, 100),
+            child: Container(
+              height: 60,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                        'images/header_bg.png',
+                      ))),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                      width: 80,
+                      child: InkWell(
+                        child: Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'images/default_user.png',
+                              height: 40,
+                              width: 44,
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                              ScaleRoute(page: ProfileScreenNew()));
+                        },
+                      )),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: VerticalDivider(
+                      width: 1,
+                      color: Colors.white,
                     ),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                  ),
+                  Container(
+                    child: Center(
+                      child: Image.asset(
+                        'images/logo_text_1.png',
+                        height: 40,
+                        width: 200,
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                              icon: Icon(
+                                Icons.support_agent_rounded,
+                                size: 26,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {}),
+                          Icon(
+                            Icons.menu_rounded,
+                            size: 26,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          body: Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/bg_7.png'),
+                    ),
                   ),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: Switch(
-                      value: Provider.of<AppStateNotifier>(context).isDarkMode,
-                      onChanged: (boolVal) {
-                        Provider.of<AppStateNotifier>(context, listen: false)
-                            .updateTheme(boolVal);
-                      },
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              child: Column(
-                                children: [
-                                  FadeTransition(
-                                    opacity: _headerController,
-                                    child: Container(
-                                      width: 200,
-                                      alignment: Alignment.centerLeft,
-                                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                      child: Text(
-                                        'Good Morning',
-                                        style:
-                                            Theme.of(context).textTheme.caption,
-                                      ),
-                                    ),
-                                  ),
-                                  FadeTransition(
-                                    opacity: _headerController,
-                                    child: Container(
-                                      width: 200,
-                                      alignment: Alignment.centerLeft,
-                                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                      child: Text(
-                                        username.isNotEmpty ? username : '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1,
-                                      ),
-                                    ),
-                                  )
-                                ],
+              SingleChildScrollView(
+                child: Container(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 135,
+                        child: bannerUrl != null && bannerUrl.isNotEmpty
+                            ? Container(
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(color: Colors.white)),
+                                child: Carousel(
+                                    dotSize: 5.0,
+                                    dotSpacing: 20.0,
+                                    dotIncreasedColor: Colors.blue,
+                                    dotColor: Colors.white,
+                                    indicatorBgPadding: 10.0,
+                                    dotBgColor: Colors.transparent,
+                                    borderRadius: true,
+                                    noRadiusForIndicator: true,
+                                    images: bannerUrl
+                                        .map((url) => InkWell(
+                                              child: ClipRRect(
+                                                child: Image.network(
+                                                  url,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
+                                              ),
+                                              onTap: () {},
+                                            ))
+                                        .toList()),
+                              )
+                            : Container(
+                                width: 180,
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(),
                               ),
-                            ),
-                          ],
-                        ),
-                        FadeTransition(
-                          opacity: _headerController,
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 10),
+                        child: Material(
+                          elevation: 10,
+                          color: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
                           child: Container(
-                              padding: EdgeInsets.all(5),
-                              child: InkWell(
-                                child: imageFile == null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: Image.asset(
-                                          'images/default_user.png',
-                                          width: 60.0,
-                                          height: 60.0,
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(5, 5, 2, 0),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.transparent,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Banking',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Container(
+                                  height: 70,
+                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: 100,
+                                        child: InkWell(
+                                          child: Stack(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topCenter,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.asset(
+                                                    bankingImages[index],
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Text(
+                                                  bankingServiceTitles[index],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          onTap: () {
+                                            if (index == 2) {
+                                              Navigator.of(context).push(
+                                                  ScaleRoute(
+                                                      page:
+                                                          MoneyTransferScreen()));
+                                            }
+                                          },
                                         ),
-                                      )
-                                    : ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(40.0),
-                                        child: Image.file(
-                                          imageFile,
-                                          width: 80.0,
-                                          height: 80.0,
-                                          fit: BoxFit.fill,
+                                      );
+                                    },
+                                    itemCount: bankingImages.length,
+                                    shrinkWrap: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        child: Material(
+                          elevation: 10,
+                          color: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(5, 5, 2, 0),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.transparent,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Bills & Utility',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Container(
+                                  height: 70,
+                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                          width: 100,
+                                          child: InkWell(
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: Image.asset(
+                                                      billsUtilitiesImages[
+                                                          index],
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Text(
+                                                    billsUtilitiesTitles[index],
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  ScaleRoute(
+                                                      page: RechargeScreen(
+                                                          rechargeType:
+                                                              billsUtilitiesTitles[
+                                                                  index])));
+                                            },
+                                          ));
+                                    },
+                                    itemCount: bankingImages.length,
+                                    shrinkWrap: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        child: Material(
+                          elevation: 10,
+                          color: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(5, 5, 2, 0),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.transparent,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Insurance',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Container(
+                                  height: 70,
+                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: 100,
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topCenter,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.asset(
+                                                  insuranceImages[index],
+                                                  height: 50,
+                                                  width: 50,
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Text(
+                                                insuranceTitles[index],
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                      SlideInTransition(page: ProfileScreen()));
-                                },
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Our Services',
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Text(
-                      'Banking',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                  ),
-                  Container(
-                    height: 250,
-                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: GridView.builder(
-                      itemCount: bankingServiceTitles.length,
-                      physics: new NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                      ),
-                      itemBuilder: (BuildContext buildContext, int index) {
-                        return Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                                      );
+                                    },
+                                    itemCount: bankingImages.length,
+                                    shrinkWrap: true,
+                                  ),
+                                ),
+                              ],
                             ),
-                            child: Material(
-                              elevation: 2,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              shadowColor: Colors.grey[800],
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    bankingImages[index],
-                                    height: 50,
-                                    width: 50,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    bankingServiceTitles[index],
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 12),
-                                    maxLines: 2,
-                                  ),
-                                ],
-                              ),
-                            ));
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Text(
-                      'Bills & Utility',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    height: 250,
-                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: GridView.builder(
-                      itemCount: billsUtilitiesTitles.length,
-                      physics: new NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                          ),
+                        ),
                       ),
-                      itemBuilder: (BuildContext buildContext, int index) {
-                        return Container(
-                            padding: EdgeInsets.all(5),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        child: Material(
+                          elevation: 10,
+                          color: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(5, 5, 2, 0),
+                            width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.transparent,
                             ),
-                            child: Material(
-                              elevation: 2,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              shadowColor: Colors.grey[800],
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    billsUtilitiesImages[index],
-                                    height: 50,
-                                    width: 50,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Travel & Ticketing',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Container(
+                                  height: 70,
+                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: 100,
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topCenter,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.asset(
+                                                  travelImages[index],
+                                                  height: 50,
+                                                  width: 50,
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Text(
+                                                travelTitles[index],
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    itemCount: bankingImages.length,
+                                    shrinkWrap: true,
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    billsUtilitiesTitles[index],
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 12),
-                                    maxLines: 2,
-                                  ),
-                                ],
-                              ),
-                            ));
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Text(
-                      'Insurance',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    height: 250,
-                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: GridView.builder(
-                      itemCount: billsUtilitiesTitles.length,
-                      physics: new NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      itemBuilder: (BuildContext buildContext, int index) {
-                        return Container(
-                            padding: EdgeInsets.all(5),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        child: Material(
+                          elevation: 10,
+                          color: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(5, 5, 2, 0),
+                            width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.transparent,
                             ),
-                            child: Material(
-                              elevation: 2,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              shadowColor: Colors.grey[800],
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    insuranceImages[index],
-                                    height: 50,
-                                    width: 50,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Taxes',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Container(
+                                  height: 70,
+                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: 100,
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topCenter,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.asset(
+                                                  taxesImages[index],
+                                                  height: 50,
+                                                  width: 50,
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Text(
+                                                taxesTitles[index],
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    itemCount: bankingImages.length,
+                                    shrinkWrap: true,
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    insuranceTitles[index],
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 12),
-                                    maxLines: 2,
-                                  ),
-                                ],
-                              ),
-                            ));
-                      },
-                    ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           )),
-        ));
+    );
   }
 
   void getUserDetails() async {
@@ -458,10 +768,43 @@ class _DashboardScreenState extends State<DashboardScreen>
           saveWalletBalance(getWalletResponseData);
         } else {
           showErrorDialog(walletsResponseModel.message);
+          SharedPreferences.getInstance().then((sharedPrefs) {
+            sharedPrefs.setString(
+                Constants.SHARED_PREF_MAIN_WALLET_BALANCE, '0');
+            sharedPrefs.setString(Constants.SHARED_PREF_AEPS_BALANCE, '0');
+            sharedPrefs.setString(Constants.SHARED_PREF_MATM_BALANCE, '0');
+          });
         }
       } else {
         showErrorDialog(
             'Server error occurred while fetching wallet data. Error code ${response.statusCode}');
+        SharedPreferences.getInstance().then((sharedPrefs) {
+          sharedPrefs.setString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE, '0');
+          sharedPrefs.setString(Constants.SHARED_PREF_AEPS_BALANCE, '0');
+          sharedPrefs.setString(Constants.SHARED_PREF_MATM_BALANCE, '0');
+        });
+      }
+    });
+
+    HTTPService().getBanner(authToken).then((response) {
+      if (response.statusCode == 200) {
+        BannerResponseModel bannerResponseModel =
+            BannerResponseModel.fromJson(json.decode(response.body));
+
+        List<String> urlList = List();
+        List<String> redirectUrlList = List();
+
+        for (int i = 0; i < bannerResponseModel.data.length; i++) {
+          urlList.add(bannerResponseModel.data[i].photo);
+          redirectUrlList.add(bannerResponseModel.data[i].description);
+        }
+
+        setState(() {
+          bannerUrl = urlList;
+          redirectUrl = redirectUrlList;
+        });
+      } else {
+        print('Could not fetch image');
       }
     });
   }
