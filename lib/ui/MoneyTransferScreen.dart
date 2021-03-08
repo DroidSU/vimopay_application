@@ -7,6 +7,8 @@ import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/basic_response_model.dart';
+import 'package:vimopay_application/network/models/money_transfer_request_data.dart';
+import 'package:vimopay_application/network/models/money_transfer_response_model.dart';
 
 class MoneyTransferScreen extends StatefulWidget {
   @override
@@ -18,12 +20,22 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   String ifscCode = "";
   String authToken = "";
   String beneficiaryName = "";
+  String amount = "";
+  String mobileNumber = "";
+
+  List<String> listOfModes = ['IMPS', 'NEFT', 'RTGS'];
+  String mode = '';
 
   TextEditingController accountNumberController;
   TextEditingController ifscController;
   TextEditingController beneficiaryController;
+  TextEditingController amountController;
+  TextEditingController mobileController;
 
   bool _isVerifiedIFSC = false;
+  bool _showProgress = false;
+  bool _showProgress1 = false;
+  String mainWalletBalance = "";
 
   @override
   void initState() {
@@ -31,9 +43,15 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
 
     getUserDetails();
 
+    setState(() {
+      mode = listOfModes[0];
+    });
+
     accountNumberController = TextEditingController();
     ifscController = TextEditingController();
     beneficiaryController = TextEditingController();
+    amountController = TextEditingController();
+    mobileController = TextEditingController();
   }
 
   @override
@@ -41,6 +59,8 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     accountNumberController.dispose();
     ifscController.dispose();
     beneficiaryController.dispose();
+    amountController.dispose();
+    mobileController.dispose();
 
     super.dispose();
   }
@@ -92,7 +112,6 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
           ),
           body: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
               padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
@@ -306,12 +325,19 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                   ),
                   _isVerifiedIFSC
                       ? Container(
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: Column(
                             children: [
-                              Text(
-                                'Beneficiary Name',
-                                style: TextStyle(
-                                    color: Colors.grey.withOpacity(0.3)),
+                              Container(
+                                child: Text(
+                                  'Beneficiary Name',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
+                                width: MediaQuery.of(context).size.width,
                               ),
                               SizedBox(
                                 height: 10,
@@ -355,18 +381,199 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal),
-                                // onChanged: (value) {
-                                //   if (value.length == 11) {
-                                //     ifscCode = ifscController.text.trim();
-                                //     accountNumber = accountNumberController.text.trim();
-                                //     verifyIFSC();
-                                //   }
-                                // },
                               ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                child: Text(
+                                  'Amount',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  hintText: 'Amount',
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  filled: false,
+                                ),
+                                controller: amountController,
+                                keyboardType: TextInputType.number,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                child: Text(
+                                  'Mobile Number',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  hintText: 'Mobile Number',
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  filled: false,
+                                ),
+                                controller: mobileController,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(10),
+                                ],
+                                keyboardType: TextInputType.phone,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                child: Text(
+                                  'Mode',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DropdownButton(
+                                isExpanded: true,
+                                items: listOfModes.map((e) {
+                                  return DropdownMenuItem(
+                                    child: Text(
+                                      e,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                          fontFamily: ''),
+                                    ),
+                                    value: e,
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    mode = value;
+                                  });
+                                },
+                                value: mode,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                                child: _showProgress
+                                    ? CircularProgressIndicator()
+                                    : MaterialButton(
+                                        onPressed: () {
+                                          startMoneyTransfer();
+                                        },
+                                        color: Color(0xff133374),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          'Submit',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ),
+                              )
                             ],
                           ),
                         )
-                      : Container(),
+                      : _showProgress1
+                          ? Container(
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : Container(),
                 ],
               ),
             ),
@@ -386,9 +593,17 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     if (accountNumber.isNotEmpty &&
         ifscCode.isNotEmpty &&
         ifscCode.length == 11) {
+      setState(() {
+        _showProgress1 = true;
+      });
+
       HTTPService()
           .verifyIFSC(authToken, ifscCode, accountNumber)
           .then((response) {
+        setState(() {
+          _showProgress1 = false;
+        });
+
         if (response.statusCode == 200) {
           BasicResponseModel responseModel =
               BasicResponseModel.fromJson(json.decode(response.body));
@@ -404,13 +619,18 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
         }
       });
     } else {
-      showErrorDialog('Invalid IFSC');
+      if (ifscCode.length != 11)
+        showErrorDialog('Invalid IFSC');
+      else
+        showErrorDialog('Account number is empty');
     }
   }
 
   void getUserDetails() {
     SharedPreferences.getInstance().then((sharedPrefs) {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
+      mainWalletBalance =
+          sharedPrefs.getString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE);
     });
   }
 
@@ -422,7 +642,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
             return CustomAlertDialog(
               contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               content: Container(
-                height: 170,
+                height: 190,
                 decoration: new BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: const Color(0xFFFFFF),
@@ -523,6 +743,76 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
               ),
             );
           });
+    }
+  }
+
+  void startMoneyTransfer() {
+    accountNumber = accountNumberController.text.trim();
+    ifscCode = ifscController.text.trim();
+    beneficiaryName = beneficiaryController.text.trim();
+    amount = amountController.text.trim();
+    mobileNumber = mobileController.text.trim();
+
+    int balance = double.parse(mainWalletBalance).toInt();
+
+    if (accountNumber.isNotEmpty &&
+        ifscCode.isNotEmpty &&
+        ifscCode.length == 11 &&
+        beneficiaryName.isNotEmpty &&
+        amount.isNotEmpty &&
+        int.parse(amount) >= 10 &&
+        mobileNumber.isNotEmpty &&
+        mobileNumber.length == 10 &&
+        int.parse(amount) <= balance) {
+      setState(() {
+        _showProgress = true;
+      });
+
+      HTTPService()
+          .moneyTransfer(
+              authToken: authToken,
+              accountNumber: accountNumber,
+              ifscCode: ifscCode,
+              beneficiaryName: beneficiaryName,
+              amount: amount,
+              mode: mode,
+              narration: '')
+          .then((response) {
+        setState(() {
+          _showProgress = false;
+        });
+        if (response.statusCode == 200) {
+          MoneyTransferResponseModel responseModel =
+              MoneyTransferResponseModel.fromJson(json.decode(response.body));
+          MoneyTransferRequestData requestData =
+              MoneyTransferRequestData.fromJson(
+                  json.decode(responseModel.message));
+          if (responseModel.status) {
+            String message =
+                "Rs.${requestData.data.transferRequest.amount} transferred to ${requestData.data.transferRequest.beneficiaryAccountNumber}";
+            showSuccess(message);
+          } else {
+            showErrorDialog(responseModel.message);
+          }
+        } else {
+          showErrorDialog('Error occurred ${response.statusCode}');
+        }
+      });
+    } else {
+      if (accountNumber.isEmpty)
+        showErrorDialog('Account number cannot be empty');
+      else if (ifscCode.isEmpty || ifscCode.length != 11)
+        showErrorDialog('Invalid IFSC code');
+      else if (beneficiaryName.isEmpty)
+        showErrorDialog('Beneficiary name cannot be empty');
+      else if (amount.isEmpty)
+        showErrorDialog('Amount cannot be empty');
+      else if (int.parse(amount) < 10)
+        showErrorDialog('Amount should be more than Rs.10');
+      else if (mobileNumber.isEmpty || mobileNumber.length != 10)
+        showErrorDialog('Invalid mobile number');
+      else if (int.parse(amount) > balance)
+        showErrorDialog('Not enough wallet balance');
     }
   }
 }

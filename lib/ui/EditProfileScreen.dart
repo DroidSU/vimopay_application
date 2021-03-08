@@ -321,6 +321,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               fontFamily: 'Segoe'),
                         ),
                         controller: addressController,
+                        enabled: false,
                       ),
                       SizedBox(
                         height: 20,
@@ -359,6 +360,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               fontFamily: 'Segoe'),
                         ),
                         controller: cityController,
+                        enabled: false,
                       ),
                       SizedBox(
                         height: 20,
@@ -397,6 +399,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               fontFamily: 'Segoe'),
                         ),
                         controller: stateController,
+                        enabled: false,
                       ),
                       SizedBox(
                         height: 20,
@@ -439,6 +442,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                         keyboardType: TextInputType.number,
                         controller: pincodeController,
+                        enabled: false,
                       ),
                       SizedBox(
                         height: 20,
@@ -477,6 +481,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               fontFamily: 'Segoe'),
                         ),
                         controller: aadharController,
+                        enabled: false,
                       ),
                       SizedBox(
                         height: 20,
@@ -515,6 +520,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               fontFamily: 'Segoe'),
                         ),
                         controller: panController,
+                        enabled: false,
                       ),
                       SizedBox(
                         height: 20,
@@ -553,6 +559,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               fontFamily: 'Segoe'),
                         ),
                         controller: gstController,
+                        enabled: false,
                       ),
                       SizedBox(
                         height: 20,
@@ -571,7 +578,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               color: Colors.blue[900],
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                       SizedBox(
                         height: 15,

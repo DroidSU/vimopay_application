@@ -7,7 +7,7 @@ class Constants {
   static const SHARED_PREF_TOKEN = "user_token";
   static const SHARED_PREF_MAIN_WALLET_BALANCE = "user_main_wallet_balance";
   static const SHARED_PREF_MATM_BALANCE = "user_matm_wallet_balance";
-  static const SHARED_PREF_AEPS_BALANCE = "user_aeps_wallet_balance";
+  static const SHARED_PREF_ATM_BALANCE = "user_atm_wallet_balance";
   static const SHARED_PREF_ADDRESS = "user_address";
   static const SHARED_PREF_CITY = "user_city";
   static const SHARED_PREF_STATE = "user_state";
@@ -19,10 +19,13 @@ class Constants {
   static const SHARED_PREF_ACCOUNT_NUMBER = "account_number";
   static const SHARED_PREF_IFSC_CODE = "ifsc_code";
   static const SHARED_PREF_BANK_NAME = "bank_name";
+  static const SHARED_PREF_CMS_PARTNER_ID = "1000012140";
 
   static const String SHARED_PREF_USER_DP_PATH = "user_dp_path";
 
   static const COMPANY_NAME = "company_name";
 
   static const SHARED_PREF_FCM_TOKEN = "fcm_token";
+
+  static const SHARED_PREF_PASSWORD = "user_password";
 }

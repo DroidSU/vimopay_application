@@ -6,9 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/customs/recharge_types.dart';
+import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/PrepaidRecharResponse.dart';
 import 'package:vimopay_application/network/models/prepaid_recharge_response_model.dart';
+import 'package:vimopay_application/ui/DashboardScreen.dart';
 
 class RechargeScreen extends StatefulWidget {
   final String rechargeType;
@@ -35,6 +37,8 @@ class _RechargeScreenState extends State<RechargeScreen> {
   String selectedOperator = "";
 
   bool _showProgress = false;
+  String mainWalletBalance = "";
+  String atmWalletBalance = "";
 
   @override
   void initState() {
@@ -43,6 +47,10 @@ class _RechargeScreenState extends State<RechargeScreen> {
 
     SharedPreferences.getInstance().then((sharedPrefs) {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
+      mainWalletBalance =
+          sharedPrefs.getString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE);
+      atmWalletBalance =
+          sharedPrefs.getString(Constants.SHARED_PREF_ATM_BALANCE);
     });
 
     if (rechargeType == RechargeTypes.PREPAID) {
@@ -274,7 +282,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
   }
 
   Future<bool> onBackPressed() async {
-    Navigator.of(context).pop();
+    Navigator.of(context).pushReplacement(ScaleRoute(page: DashboardScreen()));
     return true;
   }
 
@@ -341,7 +349,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
             return CustomAlertDialog(
               contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               content: Container(
-                height: 170,
+                height: 190,
                 decoration: new BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: const Color(0xFFFFFF),
@@ -447,41 +455,50 @@ class _RechargeScreenState extends State<RechargeScreen> {
 
   void startPrepaidRecharge() {
     if (mounted) {
-      setState(() {
-        _showProgress = true;
-      });
-
-      HTTPService()
-          .prepaidRecharge(authToken, mobileNumber,
-              operatorsMap[selectedOperator], amount.toString())
-          .then((response) {
+      int balance = double.parse(mainWalletBalance).toInt();
+      if (amount <= balance) {
         setState(() {
-          _showProgress = false;
+          _showProgress = true;
         });
 
-        if (response.statusCode == 200) {
-          PrepaidRechargeResponse responseModel =
-              PrepaidRechargeResponse.fromJson(json.decode(response.body));
+        HTTPService()
+            .prepaidRecharge(authToken, mobileNumber,
+                operatorsMap[selectedOperator], amount.toString())
+            .then((response) {
+          setState(() {
+            _showProgress = false;
+          });
 
-          PrepaidRechargeResponseModel model =
-              PrepaidRechargeResponseModel.fromJson(
-                  json.decode(responseModel.message));
+          if (response.statusCode == 200) {
+            PrepaidRechargeResponse responseModel =
+                PrepaidRechargeResponse.fromJson(json.decode(response.body));
 
-          PrepaidRechargeResponseData responseData = model.data;
-          // PrepaidRechargeResponseData.fromJson(
-          //     json.decode((model.data).toString()));
+            try {
+              PrepaidRechargeResponseModel model =
+                  PrepaidRechargeResponseModel.fromJson(
+                      json.decode(responseModel.message));
 
-          if (responseData.status.toLowerCase() != "failure") {
-            showSuccess('Recharge requested');
+              PrepaidRechargeResponseData responseData = model.data;
+
+              if (responseData.status.toLowerCase() != "failure") {
+                showSuccess('Your recharge of Rs.$amount is successful');
+              } else {
+                showErrorDialog('Recharge request failed');
+              }
+            } catch (exception) {
+              showErrorDialog('Recharge request failed');
+            }
+            // PrepaidRechargeResponseData.fromJson(
+            //     json.decode((model.data).toString()));
           } else {
-            showErrorDialog('Recharge request failed');
+            showServerError(
+                'Our servers encountered an error. Please try again later');
+            print(response.statusCode);
           }
-        } else {
-          showServerError(
-              'Our servers encountered an error. Please try again later');
-          print(response.statusCode);
-        }
-      });
+        });
+      } else {
+        showErrorDialog('Not enough balance in main wallet');
+      }
     }
   }
 
@@ -536,17 +553,22 @@ class _RechargeScreenState extends State<RechargeScreen> {
           PrepaidRechargeResponse responseModel =
               PrepaidRechargeResponse.fromJson(json.decode(response.body));
 
-          PrepaidRechargeResponseModel model =
-              PrepaidRechargeResponseModel.fromJson(
-                  json.decode(responseModel.message));
+          try {
+            PrepaidRechargeResponseModel model =
+                PrepaidRechargeResponseModel.fromJson(
+                    json.decode(responseModel.message));
 
-          PrepaidRechargeResponseData responseData = model.data;
-          // PrepaidRechargeResponseData.fromJson(
-          //     json.decode((model.data).toString()));
+            PrepaidRechargeResponseData responseData = model.data;
 
-          if (responseData.status.toLowerCase() != "failure") {
-            showSuccess('Recharge requested');
-          } else {
+            // PrepaidRechargeResponseData.fromJson(
+            //     json.decode((model.data).toString()));
+
+            if (responseData.status.toLowerCase() != "failure") {
+              showSuccess('Your recharge of Rs.$amount is successful');
+            } else {
+              showErrorDialog('Recharge request failed');
+            }
+          } catch (exception) {
             showErrorDialog('Recharge request failed');
           }
         } else {

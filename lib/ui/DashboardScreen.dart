@@ -3,19 +3,27 @@ import 'dart:io';
 
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/customs/recharge_types.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
+import 'package:vimopay_application/network/models/all_commissions_response_model.dart';
 import 'package:vimopay_application/network/models/get_banner_response_model.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_data.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_model.dart';
+import 'package:vimopay_application/network/models/notice_response_model.dart';
+import 'package:vimopay_application/ui/CMSServiceScreen.dart';
 import 'package:vimopay_application/ui/MoneyTransferScreen.dart';
 import 'package:vimopay_application/ui/ProfileScreenNew.dart';
-import 'package:vimopay_application/ui/RechargeScreen.dart';
+import 'package:vimopay_application/ui/ReportScreenUI.dart';
+import 'package:vimopay_application/ui/SupportScreen.dart';
 import 'package:vimopay_application/ui/WalletScreen.dart';
+import 'package:vimopay_application/ui/bbps_screens/BBPS_ElectricityRechargeScreen.dart';
+
+import 'RechargeScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -28,15 +36,20 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   String authToken;
   String username = '';
-  String walletBalance = "";
-  String mAtmBalance = "";
-  String aepsBalance = "";
+  String userId = "";
+  String noticeString = "";
+  String youEarned = "";
+  String transactionCount = "";
+  String totalTxnAmount = "";
   File imageFile;
 
-  List<String> listOfWalletBalance = List();
-  List<String> listOfWalletNames = List();
+  bool _showWallet = false;
+  String mainWalletBalance = "";
+  String atmWalletBalance = "";
+
   List<String> bannerUrl = List();
   List<String> redirectUrl = List();
+  bool _showCommissions = false;
 
   List<String> bankingImages = [
     "images/ic_aadhar_atm.png",
@@ -48,12 +61,30 @@ class _DashboardScreenState extends State<DashboardScreen>
   ];
 
   List<String> bankingServiceTitles = [
-    'AADHAR ATM',
-    'MINI ATM',
-    'MONEY',
-    'AADHAR PAY',
-    'NEW ACCOUNT',
-    'UPI MONEY'
+    'Aadhar ATM',
+    'Mini ATM',
+    'Money Transfer',
+    'Aadhar Pay',
+    'New Account',
+    'UPI Money Transfer'
+  ];
+
+  List<String> bbpsServiceTitles = [
+    'Prepaid',
+    'DTH',
+    'Electricity',
+    'Broadband',
+    'Postpaid',
+    'FASTAG',
+  ];
+
+  List<String> bbpsServiceImages = [
+    "images/ic_prepaid.png",
+    "images/ic_dth.png",
+    "images/ic_electric.png",
+    "images/ic_broadband.png",
+    "images/ic_postpaid.png",
+    "images/ic_fastag.png",
   ];
 
   List<String> billsUtilitiesImages = [
@@ -128,6 +159,24 @@ class _DashboardScreenState extends State<DashboardScreen>
     'Company'
   ];
 
+  List<String> otherServicesImage = [
+    'images/ic_cms.png',
+    'images/ic_pan_card.png',
+    'images/ic_buy_gold.png',
+    'images/ic_mutual_fund.png',
+    'images/ic_apply_loan.png',
+    'images/ic_shopping.png',
+  ];
+
+  List<String> otherServicesTitles = [
+    'CMS Service',
+    'PAN Card',
+    'Buy Gold',
+    'Mutual Fund',
+    'Apply Loan',
+    'Shopping',
+  ];
+
   @override
   void initState() {
     _headerController = AnimationController(
@@ -154,10 +203,10 @@ class _DashboardScreenState extends State<DashboardScreen>
           backgroundColor: Color(0xfff1fafc),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: 0,
-            backgroundColor: Colors.grey,
+            backgroundColor: Color(0xff133374),
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.blue[900],
-            selectedLabelStyle: TextStyle(color: Colors.blue[900]),
+            selectedItemColor: Colors.yellowAccent,
+            selectedLabelStyle: TextStyle(color: Colors.yellowAccent),
             unselectedLabelStyle: TextStyle(color: Colors.white),
             unselectedItemColor: Colors.white,
             onTap: (index) {
@@ -168,9 +217,15 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Navigator.of(context).push(ScaleRoute(page: WalletScreen()));
                   break;
                 case 2:
+                  Navigator.of(context)
+                      .push(ScaleRoute(page: ReportScreenUI()));
                   break;
                 case 3:
+                  Navigator.of(context)
+                      .pushReplacement(ScaleRoute(page: ProfileScreenNew()));
                   break;
+                case 4:
+                  Navigator.of(context).push(ScaleRoute(page: SupportScreen()));
               }
             },
             items: [
@@ -182,97 +237,61 @@ class _DashboardScreenState extends State<DashboardScreen>
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.account_balance_wallet_rounded),
+                icon: Icon(
+                  Icons.account_balance_wallet_rounded,
+                  size: 24,
+                ),
                 label: 'Wallet',
               ),
               BottomNavigationBarItem(
+                icon: Image.asset(
+                  'images/ic_report.png',
+                  height: 20,
+                  width: 20,
+                ),
+                label: 'Report',
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.account_circle_rounded,
-                  size: 24,
+                  Icons.supervisor_account_rounded,
                   color: Colors.white,
+                  size: 24,
                 ),
                 label: 'Profile',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.menu_open_outlined,
+                  Icons.support_agent_outlined,
                   color: Colors.white,
                   size: 24,
                 ),
-                label: 'More',
+                label: 'Support',
               ),
             ],
           ),
           appBar: PreferredSize(
             preferredSize: Size(double.infinity, 100),
             child: Container(
-              height: 60,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        'images/header_bg.png',
-                      ))),
+              height: 50,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                      width: 80,
-                      child: InkWell(
-                        child: Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'images/default_user.png',
-                              height: 40,
-                              width: 44,
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(
-                              ScaleRoute(page: ProfileScreenNew()));
-                        },
-                      )),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: VerticalDivider(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Image.asset(
-                        'images/logo_text_1.png',
-                        height: 40,
-                        width: 200,
-                      ),
+                    child: Image.asset(
+                      'images/ic_logo_with_text_2.png',
+                      height: 50,
+                      width: 200,
                     ),
                     alignment: Alignment.center,
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                              icon: Icon(
-                                Icons.support_agent_rounded,
-                                size: 26,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {}),
-                          Icon(
-                            Icons.menu_rounded,
-                            size: 26,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
+                  Container(
+                    width: 60,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.notifications_active_rounded,
+                      color: Color(0xff133374),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -295,12 +314,44 @@ class _DashboardScreenState extends State<DashboardScreen>
                 child: Container(
                   child: Column(
                     children: [
+                      noticeString == ""
+                          ? Container()
+                          : Container(
+                              margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: EdgeInsets.all(5),
+                              child: Center(
+                                child: Marquee(
+                                  text: noticeString,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  scrollAxis: Axis.horizontal,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  blankSpace: 20.0,
+                                  velocity: 20.0,
+                                  pauseAfterRound: Duration(seconds: 1),
+                                  showFadingOnlyWhenScrolling: true,
+                                  fadingEdgeStartFraction: 0.1,
+                                  fadingEdgeEndFraction: 0.1,
+                                  startPadding: 10.0,
+                                  accelerationDuration: Duration(seconds: 1),
+                                  accelerationCurve: Curves.linear,
+                                  decelerationDuration:
+                                      Duration(milliseconds: 500),
+                                  decelerationCurve: Curves.easeOut,
+                                ),
+                              ),
+                            ),
                       SizedBox(
-                        height: 5,
+                        height: 2,
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 135,
+                        height: 100,
                         child: bannerUrl != null && bannerUrl.isNotEmpty
                             ? Container(
                                 decoration: BoxDecoration(
@@ -337,7 +388,209 @@ class _DashboardScreenState extends State<DashboardScreen>
                               ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 5, 5, 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(width: 0.3, color: Colors.grey),
+                          ),
+                          height: 60,
+                          margin: EdgeInsets.fromLTRB(5, 10, 5, 2),
+                          child: Material(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  height: 70,
+                                  alignment: Alignment.bottomCenter,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Atm Wallet',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        '\u20B9$atmWalletBalance',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                VerticalDivider(
+                                  color: Colors.grey,
+                                  thickness: 0.3,
+                                ),
+                                Container(
+                                  height: 70,
+                                  alignment: Alignment.bottomCenter,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Main Wallet',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        '\u20B9$mainWalletBalance',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                          )),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Material(
+                          child: Column(
+                            children: [
+                              InkWell(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        child: Text(
+                                          'Commissions Earned',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(0, 10, 20, 0),
+                                      child: Icon(
+                                        !_showCommissions
+                                            ? Icons.navigate_next_rounded
+                                            : Icons.keyboard_arrow_down,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _showCommissions = !_showCommissions;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              _showCommissions
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'You Earned',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              Text(
+                                                youEarned,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Total Transactions',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              Text(
+                                                transactionCount,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Total Txn Amt',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              Text(
+                                                totalTxnAmount,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Container()
+                            ],
+                          ),
+                          elevation: 8,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
                         child: Material(
                           elevation: 10,
                           color: Colors.transparent,
@@ -361,20 +614,18 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Container(
-                                  height: 70,
-                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        width: 100,
-                                        child: InkWell(
-                                          child: Stack(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: ClipRRect(
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: 100,
+                                          child: InkWell(
+                                            child: Column(
+                                              children: [
+                                                ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                   child: Image.asset(
@@ -383,33 +634,29 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                     width: 50,
                                                   ),
                                                 ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Text(
+                                                Text(
                                                   bankingServiceTitles[index],
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14,
                                                   ),
                                                 ),
-                                              )
-                                            ],
+                                              ],
+                                            ),
+                                            onTap: () {
+                                              if (index == 2) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            MoneyTransferScreen()));
+                                              }
+                                            },
                                           ),
-                                          onTap: () {
-                                            if (index == 2) {
-                                              Navigator.of(context).push(
-                                                  ScaleRoute(
-                                                      page:
-                                                          MoneyTransferScreen()));
-                                            }
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    itemCount: bankingImages.length,
-                                    shrinkWrap: true,
+                                        );
+                                      },
+                                      itemCount: bankingImages.length,
+                                      shrinkWrap: true,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -418,7 +665,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
                         child: Material(
                           elevation: 10,
                           color: Colors.transparent,
@@ -434,67 +681,66 @@ class _DashboardScreenState extends State<DashboardScreen>
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Bills & Utility',
+                                  'Bills and Utilities',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
                                 ),
-                                Container(
-                                  height: 70,
-                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Container(
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
                                           width: 100,
                                           child: InkWell(
-                                            child: Stack(
+                                            child: Column(
                                               children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    child: Image.asset(
-                                                      billsUtilitiesImages[
-                                                          index],
-                                                      height: 50,
-                                                      width: 50,
-                                                    ),
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.asset(
+                                                    billsUtilitiesImages[index],
+                                                    height: 50,
+                                                    width: 50,
                                                   ),
                                                 ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  child: Text(
-                                                    billsUtilitiesTitles[index],
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
+                                                Text(
+                                                  billsUtilitiesTitles[index],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                             onTap: () {
-                                              Navigator.of(context).push(
-                                                  ScaleRoute(
-                                                      page: RechargeScreen(
-                                                          rechargeType:
-                                                              billsUtilitiesTitles[
-                                                                  index])));
+                                              if (index == 0) {
+                                                Navigator.of(context)
+                                                    .push(ScaleRoute(
+                                                        page: RechargeScreen(
+                                                  rechargeType:
+                                                      RechargeTypes.PREPAID,
+                                                )));
+                                              } else if (index == 1) {
+                                                Navigator.of(context)
+                                                    .push(ScaleRoute(
+                                                        page: RechargeScreen(
+                                                  rechargeType:
+                                                      RechargeTypes.DTH,
+                                                )));
+                                              }
                                             },
-                                          ));
-                                    },
-                                    itemCount: bankingImages.length,
-                                    shrinkWrap: true,
+                                          ),
+                                        );
+                                      },
+                                      itemCount: billsUtilitiesTitles.length,
+                                      shrinkWrap: true,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -503,7 +749,82 @@ class _DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        child: Material(
+                          elevation: 10,
+                          color: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(5, 5, 2, 0),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.transparent,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'BBPS Services',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: 100,
+                                          child: InkWell(
+                                            child: Column(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.asset(
+                                                    bbpsServiceImages[index],
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  bbpsServiceTitles[index],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            onTap: () {
+                                              if (index == 2) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSElectricityRechargeScreen()));
+                                              }
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      itemCount: bbpsServiceTitles.length,
+                                      shrinkWrap: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                         child: Material(
                           elevation: 10,
                           color: Colors.transparent,
@@ -527,44 +848,46 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Container(
-                                  height: 70,
-                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        width: 100,
-                                        child: Stack(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topCenter,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child: Image.asset(
-                                                  insuranceImages[index],
-                                                  height: 50,
-                                                  width: 50,
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: 100,
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topCenter,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.asset(
+                                                    insuranceImages[index],
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: Text(
-                                                insuranceTitles[index],
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Text(
+                                                  insuranceTitles[index],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                  ),
                                                 ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    itemCount: bankingImages.length,
-                                    shrinkWrap: true,
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      itemCount: insuranceTitles.length,
+                                      shrinkWrap: true,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -573,7 +896,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                         child: Material(
                           elevation: 10,
                           color: Colors.transparent,
@@ -597,44 +920,46 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Container(
-                                  height: 70,
-                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        width: 100,
-                                        child: Stack(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topCenter,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child: Image.asset(
-                                                  travelImages[index],
-                                                  height: 50,
-                                                  width: 50,
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: 100,
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topCenter,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.asset(
+                                                    travelImages[index],
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: Text(
-                                                travelTitles[index],
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Text(
+                                                  travelTitles[index],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                  ),
                                                 ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    itemCount: bankingImages.length,
-                                    shrinkWrap: true,
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      itemCount: travelTitles.length,
+                                      shrinkWrap: true,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -643,7 +968,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                         child: Material(
                           elevation: 10,
                           color: Colors.transparent,
@@ -667,44 +992,130 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Container(
-                                  height: 70,
-                                  margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        width: 100,
-                                        child: Stack(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topCenter,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child: Image.asset(
-                                                  taxesImages[index],
-                                                  height: 50,
-                                                  width: 50,
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: 100,
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topCenter,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.asset(
+                                                    taxesImages[index],
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
                                                 ),
                                               ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Text(
+                                                  taxesTitles[index],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      itemCount: taxesTitles.length,
+                                      shrinkWrap: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        child: Material(
+                          elevation: 10,
+                          color: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(5, 5, 2, 0),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.transparent,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Other Services',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: 100,
+                                          child: InkWell(
+                                            child: Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: Image.asset(
+                                                      otherServicesImage[index],
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Text(
+                                                    otherServicesTitles[index],
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: Text(
-                                                taxesTitles[index],
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    itemCount: bankingImages.length,
-                                    shrinkWrap: true,
+                                            onTap: () {
+                                              if (index == 0) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            CMSServiceScreen()));
+                                              }
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      itemCount: otherServicesTitles.length,
+                                      shrinkWrap: true,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -724,6 +1135,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   void getUserDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     authToken = sharedPreferences.getString(Constants.SHARED_PREF_TOKEN);
+    userId = sharedPreferences.getString(Constants.SHARED_PREF_USER_ID);
+
     setState(() {
       username = sharedPreferences.getString(Constants.SHARED_PREF_NAME);
     });
@@ -742,45 +1155,45 @@ class _DashboardScreenState extends State<DashboardScreen>
             GetWalletsResponseModel.fromJson(json.decode(response.body));
 
         if (walletsResponseModel.status) {
-          List<String> walletBalanceList = List();
-          List<String> walletNameList = List();
-
-          walletBalanceList.add(walletsResponseModel.data.wBalance);
-          walletNameList.add('Main');
-
-          walletBalanceList.add(walletsResponseModel.data.aBalance);
-          walletNameList.add('AEPS');
-
-          walletBalanceList.add(walletsResponseModel.data.mBalance);
-          walletNameList.add('MATM');
-
-          setState(() {
-            walletBalance = walletsResponseModel.data.wBalance;
-            aepsBalance = walletsResponseModel.data.aBalance;
-            mAtmBalance = walletsResponseModel.data.mBalance;
-
-            listOfWalletBalance = walletBalanceList;
-            listOfWalletNames = walletNameList;
-          });
-
           GetWalletResponseData getWalletResponseData =
               walletsResponseModel.data;
-          saveWalletBalance(getWalletResponseData);
+
+          setState(() {
+            mainWalletBalance = getWalletResponseData.wBalance;
+            atmWalletBalance = getWalletResponseData.aBalance;
+          });
+          SharedPreferences.getInstance().then((sharedPrefs) {
+            sharedPrefs.setString(
+                Constants.SHARED_PREF_MAIN_WALLET_BALANCE, mainWalletBalance);
+            sharedPrefs.setString(
+                Constants.SHARED_PREF_ATM_BALANCE, atmWalletBalance);
+          });
+
+          setState(() {
+            _showWallet = true;
+          });
         } else {
           showErrorDialog(walletsResponseModel.message);
           SharedPreferences.getInstance().then((sharedPrefs) {
             sharedPrefs.setString(
                 Constants.SHARED_PREF_MAIN_WALLET_BALANCE, '0');
-            sharedPrefs.setString(Constants.SHARED_PREF_AEPS_BALANCE, '0');
+            sharedPrefs.setString(Constants.SHARED_PREF_ATM_BALANCE, '0');
             sharedPrefs.setString(Constants.SHARED_PREF_MATM_BALANCE, '0');
+          });
+
+          setState(() {
+            _showWallet = true;
           });
         }
       } else {
+        setState(() {
+          _showWallet = true;
+        });
         showErrorDialog(
             'Server error occurred while fetching wallet data. Error code ${response.statusCode}');
         SharedPreferences.getInstance().then((sharedPrefs) {
           sharedPrefs.setString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE, '0');
-          sharedPrefs.setString(Constants.SHARED_PREF_AEPS_BALANCE, '0');
+          sharedPrefs.setString(Constants.SHARED_PREF_ATM_BALANCE, '0');
           sharedPrefs.setString(Constants.SHARED_PREF_MATM_BALANCE, '0');
         });
       }
@@ -805,6 +1218,44 @@ class _DashboardScreenState extends State<DashboardScreen>
         });
       } else {
         print('Could not fetch image');
+      }
+    });
+
+    HTTPService().getNotice(authToken).then((response) {
+      if (response.statusCode == 200) {
+        NoticeResponseModel responseModel =
+            NoticeResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.status) {
+          List<NoticeResponseData> listOfNotices = List();
+          listOfNotices = responseModel.data;
+          if (listOfNotices.isNotEmpty) {
+            setState(() {
+              noticeString = listOfNotices[0].description;
+            });
+          }
+        } else {
+          showErrorDialog(responseModel.message);
+        }
+      } else {
+        showErrorDialog('Error occurred ${response.statusCode}');
+      }
+    });
+
+    HTTPService().getAllCommissions(authToken).then((response) {
+      if (response.statusCode == 200) {
+        AllCommissionsResponseModel responseModel =
+            AllCommissionsResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.status) {
+          setState(() {
+            youEarned = responseModel.data.youearned;
+            transactionCount = responseModel.data.transcationcount;
+            totalTxnAmount = responseModel.data.totaltxn;
+          });
+        } else {
+          showErrorDialog(responseModel.message);
+        }
+      } else {
+        showErrorDialog('Error occurred while fetching commission');
       }
     });
   }
@@ -950,6 +1401,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     sharedPreferences.setString(
         Constants.SHARED_PREF_MATM_BALANCE, getWalletResponseData.mBalance);
     sharedPreferences.setString(
-        Constants.SHARED_PREF_AEPS_BALANCE, getWalletResponseData.aBalance);
+        Constants.SHARED_PREF_ATM_BALANCE, getWalletResponseData.aBalance);
   }
 }

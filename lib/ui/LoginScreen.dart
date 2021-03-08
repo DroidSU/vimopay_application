@@ -236,6 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
     sharedPreferences.setString(Constants.SHARED_PREF_MOBILE, data.mobile);
     sharedPreferences.setString(Constants.SHARED_PREF_USER_ID, data.userid);
     sharedPreferences.setString(Constants.SHARED_PREF_TOKEN, data.token);
+    sharedPreferences.setString(Constants.SHARED_PREF_PASSWORD, password);
     // sharedPreferences.setString(Constants.SHARED_PREF_PROFILE_IMAGE, data.profileimage);
 
     setState(() {

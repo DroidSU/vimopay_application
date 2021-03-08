@@ -204,7 +204,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         });
 
                         HTTPService()
-                            .changePassword(mobile, "")
+                            .forgotPassword(mobile, "")
                             .then((response) {
                           if (response.statusCode == 200) {
                             showSuccessDialog(
@@ -285,7 +285,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                     timer.cancel();
                   });
 
-                  HTTPService().changePassword(mobile, otp).then((response) {
+                  HTTPService().forgotPassword(mobile, otp).then((response) {
                     if (response.statusCode == 200) {
                       showSuccessDialog(
                           context, 'New password successfully sent!');

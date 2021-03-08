@@ -172,11 +172,17 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
                                             ),
                                           ),
                                           onTap: () {
-                                            setState(() {
-                                              mobileNumber =
-                                                  mobileController.text.trim();
-                                            });
-                                            updateMobile(otp: '');
+                                            String newNumber =
+                                                mobileController.text.trim();
+                                            if (newNumber != mobileNumber) {
+                                              setState(() {
+                                                mobileNumber = newNumber;
+                                              });
+                                              updateMobile(otp: '');
+                                            } else {
+                                              showErrorDialog(
+                                                  'New number cannot be same as old number');
+                                            }
                                           },
                                         )),
                                   ),
@@ -400,10 +406,6 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
     if (mobileNumber.isEmpty) mobileNumber = mobileController.text.trim();
 
     if (mobileNumber != null && mobileNumber.length == 10) {
-      setState(() {
-        _showMobileUpdateProgress = true;
-      });
-
       HTTPService()
           .changeMobileNumber(authToken, mobileNumber, otp)
           .then((response) {
@@ -411,17 +413,31 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
           BasicResponseModel basicResponseBody =
               BasicResponseModel.fromJson(json.decode(response.body));
 
-          if (mobileOTP.isNotEmpty) {
-            SharedPreferences.getInstance().then((preference) {
-              preference.setString(Constants.SHARED_PREF_MOBILE, mobileNumber);
-            });
+          if (otp.isEmpty && basicResponseBody.status) {
             setState(() {
-              _showMobileUpdateProgress = false;
-              mobileOTP = "";
+              _showMobileUpdateProgress = true;
             });
+          } else {
+            if (otp.isNotEmpty && basicResponseBody.status) {
+              SharedPreferences.getInstance().then((preference) {
+                preference.setString(
+                    Constants.SHARED_PREF_MOBILE, mobileNumber);
+              });
+              setState(() {
+                _showMobileUpdateProgress = false;
+                mobileOTP = "";
+              });
+              showSuccessDialog(context, basicResponseBody.message);
+            } else if (otp.isNotEmpty && basicResponseBody.status == false) {
+              showErrorDialog(basicResponseBody.message);
+              setState(() {
+                _showMobileUpdateProgress = false;
+                mobileOTP = "";
+              });
+            } else {
+              showErrorDialog(basicResponseBody.message);
+            }
           }
-
-          showSuccessDialog(context, basicResponseBody.message);
         } else {
           BasicResponseModel basicResponseBody =
               BasicResponseModel.fromJson(json.decode(response.body));
