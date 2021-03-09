@@ -227,9 +227,12 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                               showDatePicker(
                                                       context: context,
                                                       initialDate: toDate,
-                                                      firstDate: toDate
-                                                          .subtract(Duration(
-                                                              days: 365)),
+                                                      firstDate:
+                                                          toDate.subtract(
+                                                        Duration(
+                                                          days: 365,
+                                                        ),
+                                                      ),
                                                       lastDate: toDate)
                                                   .then((selectedDate) {
                                                 if (selectedDate != null) {
@@ -252,7 +255,9 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

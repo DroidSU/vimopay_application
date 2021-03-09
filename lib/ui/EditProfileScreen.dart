@@ -171,396 +171,499 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'Email Address',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: emailController,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'Mobile Number',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: mobileController,
-                        inputFormatters: [LengthLimitingTextInputFormatter(10)],
-                        keyboardType: TextInputType.number,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'Full Name',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: nameController,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'Address',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: addressController,
-                        enabled: false,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'City',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: cityController,
-                        enabled: false,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'State',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: stateController,
-                        enabled: false,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'Pincode',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(6),
-                        ],
-                        keyboardType: TextInputType.number,
-                        controller: pincodeController,
-                        enabled: false,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'Aadhar Number',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: aadharController,
-                        enabled: false,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'PAN Number',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: panController,
-                        enabled: false,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          fillColor: Colors.grey.withOpacity(0.3),
-                          filled: true,
-                          hintText: 'GST Number',
-                          hintStyle: TextStyle(
-                              color: Colors.black54.withOpacity(0.3),
-                              fontFamily: 'Segoe'),
-                        ),
-                        controller: gstController,
-                        enabled: false,
-                      ),
+                      emailAddress != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'Email Address',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: emailController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      mobileNumber != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      mobileNumber != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'Mobile Number',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: mobileController,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(10)
+                              ],
+                              keyboardType: TextInputType.number,
+                              enabled: false,
+                            )
+                          : Container(),
+                      fullName.isNotEmpty
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      fullName.isNotEmpty
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'Full Name',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: nameController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      address != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      address != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'Address',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: addressController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      city != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      city != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'City',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: cityController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      state != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      state != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'State',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: stateController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      pincode != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      pincode != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'Pincode',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(6),
+                              ],
+                              keyboardType: TextInputType.number,
+                              controller: pincodeController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      aadharNumber != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      aadharNumber != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'Aadhar Number',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: aadharController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      panNumber != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      panNumber != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'PAN Number',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: panController,
+                              enabled: false,
+                            )
+                          : Container(),
+                      gstNumber != null
+                          ? SizedBox(
+                              height: 20,
+                            )
+                          : Container(),
+                      gstNumber != null
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                fillColor: Colors.grey.withOpacity(0.3),
+                                filled: true,
+                                hintText: 'GST Number',
+                                hintStyle: TextStyle(
+                                    color: Colors.black54.withOpacity(0.3),
+                                    fontFamily: 'Segoe'),
+                              ),
+                              controller: gstController,
+                              enabled: false,
+                            )
+                          : Container(),
                       SizedBox(
                         height: 20,
                       ),

@@ -620,9 +620,12 @@ class _SupportScreenState extends State<SupportScreen> {
                                                                           messageController.text =
                                                                               "";
                                                                         });
+                                                                        String
+                                                                            message =
+                                                                            'Thank You\n ${responseModel.message}';
                                                                         showSuccessDialog(
                                                                             buildContext,
-                                                                            responseModel.message);
+                                                                            message);
                                                                       } else {
                                                                         Navigator.of(context)
                                                                             .pop();

@@ -33,8 +33,8 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
     'Customize'
   ];
 
-  List<String> listOfTxnStatus = ['Success', 'Fail', 'Pending'];
-  String txnStatus = "Success";
+  List<String> listOfTxnStatus = ['Pending', 'Fail', 'Success'];
+  String txnStatus = "Pending";
 
   String currentDateAsString = "";
   DateTime currentDate;
@@ -459,24 +459,61 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                           ),
                                         ),
                                         Container(
-                                          alignment: Alignment.centerRight,
-                                          child: MaterialButton(
-                                            onPressed: () {
-                                              showComplainDialog(index);
-                                            },
-                                            child: Text(
-                                              'Complain',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            color: Colors.redAccent,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        ),
+                                            width: double.infinity,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                MaterialButton(
+                                                  onPressed: () {},
+                                                  child: Row(
+                                                    children: [
+                                                      Image.asset(
+                                                        'images/ic_printer.png',
+                                                        height: 20,
+                                                        width: 20,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        'Print',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  color: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                MaterialButton(
+                                                  onPressed: () {
+                                                    showComplainDialog(index);
+                                                  },
+                                                  child: Text(
+                                                    'Complain',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  color: Colors.redAccent,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
                                       ],
                                     ),
                                   ),
@@ -707,6 +744,9 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                               BasicResponseModel.fromJson(
                                                   json.decode(response.body));
                                           if (responseModel.status) {
+                                            setState(() {
+                                              descController.text = "";
+                                            });
                                             showSuccessDialog(
                                                 context, responseModel.message);
                                           } else {
@@ -722,7 +762,8 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                   },
                                   color: Color(0xff133374),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                   child: Text(
                                     'Submit',
                                     style: TextStyle(

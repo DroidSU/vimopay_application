@@ -14,6 +14,8 @@ import 'package:vimopay_application/ui/EditBankDetailsScreen.dart';
 import 'package:vimopay_application/ui/EditProfileScreen.dart';
 import 'package:vimopay_application/ui/LoginScreen.dart';
 
+import 'ChangeCredentialsScreen.dart';
+
 class ProfileScreenNew extends StatefulWidget {
   @override
   _ProfileScreenNewState createState() => _ProfileScreenNewState();
@@ -276,50 +278,56 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                   ScaleRoute(page: EditBankDetailScreen()));
                             },
                           )),
-                      // Container(
-                      //   margin: EdgeInsets.fromLTRB(10, 10, 20, 0),
-                      //   padding: EdgeInsets.all(10),
-                      //   child: InkWell(
-                      //     child: Material(
-                      //       child: Container(
-                      //         margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                      //         padding: EdgeInsets.fromLTRB(20, 20, 5, 20),
-                      //         decoration: BoxDecoration(
-                      //             borderRadius: BorderRadius.circular(15)),
-                      //         child: Row(
-                      //           crossAxisAlignment: CrossAxisAlignment.center,
-                      //           mainAxisAlignment: MainAxisAlignment.start,
-                      //           children: [
-                      //             SizedBox(
-                      //               width: 20,
-                      //             ),
-                      //             Icon(
-                      //               Icons.lock,
-                      //               size: 26,
-                      //               color: Colors.black,
-                      //             ),
-                      //             SizedBox(
-                      //               width: 15,
-                      //             ),
-                      //             Text(
-                      //               'Change Credentials',
-                      //               style: TextStyle(
-                      //                   color: Colors.black,
-                      //                   fontSize: 18,
-                      //                   fontWeight: FontWeight.normal),
-                      //             )
-                      //           ],
-                      //         ),
-                      //       ),
-                      //       borderRadius: BorderRadius.circular(15),
-                      //       elevation: 10,
-                      //     ),
-                      //     onTap: () {
-                      //       Navigator.of(context).push(
-                      //           ScaleRoute(page: ChangeCredentialsScreen()));
-                      //     },
-                      //   ),
-                      // ),
+                      Container(
+                          margin: EdgeInsets.fromLTRB(10, 0, 20, 0),
+                          padding: EdgeInsets.all(5),
+                          child: InkWell(
+                            child: Material(
+                                elevation: 10,
+                                borderRadius: BorderRadius.circular(15),
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                  padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        Icons.lock,
+                                        size: 26,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          'Change Credentials',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 50,
+                                        child: Icon(
+                                          Icons.navigate_next_sharp,
+                                          color: Colors.black,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                  ScaleRoute(page: ChangeCredentialsScreen()));
+                            },
+                          )),
                       Container(
                         margin: EdgeInsets.fromLTRB(15, 10, 20, 0),
                         child: InkWell(
