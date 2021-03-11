@@ -760,7 +760,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
         ifscCode.length == 11 &&
         beneficiaryName.isNotEmpty &&
         amount.isNotEmpty &&
-        int.parse(amount) >= 10 &&
+        // int.parse(amount) >= 10 &&
         mobileNumber.isNotEmpty &&
         mobileNumber.length == 10 &&
         int.parse(amount) <= balance) {

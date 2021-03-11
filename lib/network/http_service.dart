@@ -704,4 +704,26 @@ class HTTPService {
     print('Fetch Biller Details : ${response.body}');
     return response;
   }
+
+  Future<http.Response> getVerifiedAccounts(
+      String authToken, String fromDate, String toDate, String status) async {
+    http.Response response = await http.post(
+        Uri.encodeFull(APIConstants.ENDPOINT_DMT_VERIFIED_ACCOUTNS),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+          'A-Token': authToken,
+        },
+        body: jsonEncode(
+            {'status': status, 'dateform': fromDate, 'dateto': toDate}));
+
+    print('Request: ${jsonEncode({
+      'status': status,
+      'dateform': fromDate,
+      'dateto': toDate
+    })}');
+    print('DMT Verified Accounts : ${response.body}');
+    return response;
+  }
 }

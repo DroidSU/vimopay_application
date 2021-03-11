@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/ui/ATMTransactionReportScreen.dart';
+import 'package:vimopay_application/ui/DMTReportScreen.dart';
 import 'package:vimopay_application/ui/RechargeReportScreen.dart';
 import 'package:vimopay_application/ui/TransactionReportScreen.dart';
 
@@ -177,21 +178,27 @@ class _ReportScreenUIState extends State<ReportScreenUI> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           padding: EdgeInsets.all(15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'DMT Report',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              Icon(
-                                Icons.navigate_next_rounded,
-                                color: Colors.black,
-                              ),
-                            ],
+                          child: InkWell(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'DMT Report',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                Icon(
+                                  Icons.navigate_next_rounded,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.of(context)
+                                  .push(ScaleRoute(page: DMTReportScreen()));
+                            },
                           )),
                     ),
                   ),
