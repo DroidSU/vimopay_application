@@ -1,0 +1,3 @@
+include ':mahagram-aeps-sdk'
+include ':mahagram-sdk'
+include ':app'

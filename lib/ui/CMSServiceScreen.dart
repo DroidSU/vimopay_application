@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
@@ -31,6 +32,8 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
   List<Fields> listOfFields = List();
   String mainWalletBalance = "";
   String authToken = "";
+  String sessionId = "";
+  String billActionType = "";
 
   @override
   void initState() {
@@ -150,10 +153,11 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                                     alignment: Alignment.center,
                                     child: MaterialButton(
                                       onPressed: () {
-                                        fetchBillDetails();
+                                        if (billActionType == "FETCH")
+                                          fetchBillDetails();
                                       },
                                       child: Text(
-                                        'Submit',
+                                        billActionType,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -194,7 +198,6 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
             selectedBiller = listOfBillers[0];
             selectedBillerUrl = listOfBillers[0].fetchUrl;
             selectedBillerName = listOfBillers[0].name;
-
             fetchBillerDetails(selectedBillerUrl);
           });
         } else {}
@@ -212,17 +215,25 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      listOfFields[index].label,
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 18,
-                      ),
-                    ),
+                    listOfFields[index].type != "FETCH" &&
+                            listOfFields[index].type != "SUBMIT"
+                        ? Text(
+                            listOfFields[index].label,
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 18,
+                            ),
+                          )
+                        : SizedBox(
+                            height: 1,
+                            width: 1,
+                          ),
                     Container(
                       height: 50,
                       margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: listOfFields[index].type != "D"
+                      child: listOfFields[index].type != "D" &&
+                              listOfFields[index].type != "FETCH" &&
+                              listOfFields[index].type != "SUBMIT"
                           ? TextField(
                               controller: listOfControllers[index],
                               decoration: InputDecoration(
@@ -244,12 +255,18 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                                   ? true
                                   : false,
                             )
-                          : Container(),
+                          : SizedBox(
+                              height: 1,
+                              width: 1,
+                            ),
                     ),
                   ],
                 ),
               )
-            : Container();
+            : SizedBox(
+                height: 1,
+                width: 1,
+              );
       },
       itemCount: listOfFields.length,
       shrinkWrap: true,
@@ -275,10 +292,16 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
 
         responseModel.data.fields.forEach((field) {
           TextEditingController textEditingController = TextEditingController();
-          if (field.isVisible == "true") {
+          if (field.type != "SUBMIT" &&
+              field.type != "FETCH" &&
+              field.isVisible == "true") {
             list.add(field);
             listOfControllers.add(textEditingController);
             listOfPostKeys.add(field.postKey);
+          }
+
+          if (field.type == "SUBMIT" || field.type == "FETCH") {
+            billActionType = field.type;
           }
         });
 
@@ -295,18 +318,53 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
       _showProgress = true;
     });
 
-    HashMap<String, String> hashMap = HashMap();
+    String partnerTxnId = DateTime.now().microsecondsSinceEpoch.toString();
+
+    HashMap<String, String> bodyMap = HashMap();
 
     for (int i = 0; i < listOfFields.length; i++) {
       Fields field = listOfFields[i];
       TextEditingController textEditingController = listOfControllers[i];
 
       Map<String, String> map = Map();
-      map[field.postKey] = textEditingController.text;
-      hashMap.addAll(map);
+      if (textEditingController.text.isEmpty)
+        map[field.postKey] = field.value;
+      else
+        map[field.postKey] = textEditingController.text;
+
+      bodyMap.addAll(map);
     }
 
-    print(hashMap.toString());
+    String hash = generateHash();
+
+    Map<String, String> sessionMap = Map();
+    sessionMap['feSessionId'] = sessionId;
+    bodyMap.addAll(sessionMap);
+
+    Map<String, String> hashMap = Map();
+    hashMap['hash'] = hash;
+    bodyMap.addAll(hashMap);
+
+    Map<String, String> partnerTxnMap = Map();
+    partnerTxnMap['partnerTxnId'] = partnerTxnId;
+    bodyMap.addAll(partnerTxnMap);
+
+    Map<String, String> partnerIdMap = Map();
+    partnerIdMap['partnerId'] = partnerId;
+    bodyMap.addAll(partnerIdMap);
+
+    selectedBillerUrl =
+        "/billers${selectedBillerUrl.substring(selectedBillerUrl.lastIndexOf("/"))}";
+
+    HTTPService()
+        .fetchBillDetails(partnerId, selectedBillerUrl, bodyMap.toString())
+        .then((response) {
+      setState(() {
+        _showProgress = false;
+      });
+      if (response.statusCode == 200) {
+      } else {}
+    });
   }
 
   void getUserDetails() {
@@ -315,5 +373,17 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
       mainWalletBalance =
           sharedPrefs.getString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE);
     });
+  }
+
+  String generateHash() {
+    sessionId = DateTime.now().microsecondsSinceEpoch.toString();
+    String partnerTxnID =
+        "Txn_${DateTime.now().millisecondsSinceEpoch.toString()}";
+    String salt = "7fabdc58";
+
+    var bytes = utf8.encode('$sessionId#$partnerId#$partnerTxnID#$salt');
+    Digest sha512Result = sha512.convert(bytes);
+
+    return sha512Result.toString();
   }
 }

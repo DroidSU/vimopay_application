@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
@@ -21,8 +23,8 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
   List<TransactionReportResponseData> transactionList;
   bool _showProgress = true;
 
-  List<String> listOfTxnStatus = ['Pending', 'Success', 'Fail'];
-  String selectedTxn = 'Pending';
+  List<String> listOfTxnStatus = ['Success', 'Fail', 'Pending'];
+  String selectedTxn = 'Success';
 
   String complainStatus = "";
   String complainDescription = "";
@@ -451,27 +453,64 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                           height: 10,
                                         ),
                                         Container(
-                                          alignment: Alignment.centerRight,
-                                          child: MaterialButton(
-                                            onPressed: () {
-                                              showComplainDialog(index);
-                                            },
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            color: Colors.red,
-                                            padding: EdgeInsets.all(2),
-                                            child: Text(
-                                              'Complain',
-                                              style: TextStyle(
+                                            width: double.infinity,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                MaterialButton(
+                                                  onPressed: () {
+                                                    printReceipt(
+                                                        transactionList[index]);
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Image.asset(
+                                                        'images/ic_printer.png',
+                                                        height: 20,
+                                                        width: 20,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        'Print',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                   color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                          ),
-                                        )
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                MaterialButton(
+                                                  onPressed: () {
+                                                    showComplainDialog(index);
+                                                  },
+                                                  child: Text(
+                                                    'Complain',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  color: Colors.redAccent,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
                                       ],
                                     ),
                                   ),
@@ -492,6 +531,89 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
   Future<bool> onBackPressed() async {
     Navigator.of(context).pop();
     return true;
+  }
+
+  void printReceipt(TransactionReportResponseData transactionList) async {
+    final doc = pw.Document();
+    // ImageProvider image = Image.asset('images/').image;
+    ImageProvider image = AssetImage('images/ic_logo.png');
+
+    doc.addPage(pw.Page(build: (pw.Context context) {
+      return pw.Center(
+        child: pw.SizedBox(
+          height: 400,
+          width: 500,
+          child: pw.Container(
+            width: 500,
+            alignment: pw.Alignment.center,
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text('Transaction Receipt',
+                    style: pw.TextStyle(
+                      fontSize: 20,
+                    )),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Id'),
+                      pw.Text(
+                          transactionList.transactionId != null
+                              ? transactionList.transactionId
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Amount'),
+                      pw.Text(
+                          transactionList.amount != null
+                              ? transactionList.amount
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Date'),
+                      pw.Text(
+                          transactionList.createDate != null
+                              ? UtilityMethods()
+                                  .beautifyDateTime(transactionList.createDate)
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Container(
+                  child: pw.Text('Thank You',
+                      style: pw.TextStyle(
+                        fontSize: 30,
+                      )),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    })); // Page
+
+    await Printing.layoutPdf(onLayout: (pdfPageFormat) {
+      return doc.save();
+    });
   }
 
   void getTransactionDetails() {

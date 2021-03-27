@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
@@ -36,7 +35,7 @@ class _WalletScreenState extends State<WalletScreen> {
   List<MainTransactionResponseData> mainTransactionsList = List();
 
   LinearGradient mainWalletGradient;
-  LinearGradient walletGradient;
+  LinearGradient atmWalletGradient;
 
   ScrollController _scrollController;
 
@@ -49,11 +48,11 @@ class _WalletScreenState extends State<WalletScreen> {
     super.initState();
     _scrollController = ScrollController();
 
-    backgroundImageList.add('images/ic_main_wallet_bg.png');
     backgroundImageList.add('images/ic_aeps_bg.png');
+    backgroundImageList.add('images/ic_main_wallet_bg.png');
 
-    walletIconList.add('images/ic_main_wallet.png');
     walletIconList.add('images/ic_aeps_wallet.png');
+    walletIconList.add('images/ic_main_wallet.png');
 
     mainWalletGradient = LinearGradient(
       colors: [
@@ -63,7 +62,7 @@ class _WalletScreenState extends State<WalletScreen> {
       ],
     );
 
-    walletGradient = LinearGradient(
+    atmWalletGradient = LinearGradient(
       colors: [
         Color(0xffA927F9),
         Color(0xff801EBC),
@@ -77,9 +76,9 @@ class _WalletScreenState extends State<WalletScreen> {
       print('Selected : ${_scrollController.position.pixels}');
 
       if (_scrollController.position.pixels == 0) {
-        fetchMainWalletTransactions();
+        fetchATMWalletTransactions();
       } else if (_scrollController.position.pixels > 300) {
-        fetchWalletTransactions();
+        fetchMainWalletTransactions();
       }
     });
   }
@@ -201,20 +200,20 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
               ),
             ),
-            floatingActionButton: selectedWallet == 0
-                ? FloatingActionButton(
-                    child: Icon(
-                      Icons.add,
-                      size: 32,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Color(0xff133374),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(ScaleRoute(page: AddMoneyWalletScreen()));
-                    },
-                  )
-                : null,
+            // floatingActionButton: selectedWallet == 1
+            //     ? FloatingActionButton(
+            //         child: Icon(
+            //           Icons.add,
+            //           size: 32,
+            //           color: Colors.white,
+            //         ),
+            //         backgroundColor: Color(0xff133374),
+            //         onPressed: () {
+            //           Navigator.of(context)
+            //               .push(ScaleRoute(page: AddMoneyWalletScreen()));
+            //         },
+            //       )
+            //     : null,
             body: Container(
               height: MediaQuery.of(context).size.height,
               child: Column(
@@ -239,7 +238,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   gradient: index == 0
                                       ? mainWalletGradient
-                                      : walletGradient,
+                                      : atmWalletGradient,
                                 ),
                                 child: InkWell(
                                   child: Material(
@@ -252,37 +251,75 @@ class _WalletScreenState extends State<WalletScreen> {
                                               BorderRadius.circular(10),
                                           gradient: index == 0
                                               ? mainWalletGradient
-                                              : walletGradient,
+                                              : atmWalletGradient,
                                         ),
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                              child: Row(
+                                              child: Stack(
                                                 children: [
-                                                  Material(
-                                                    shape: CircleBorder(),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10),
-                                                      child: Image.asset(
-                                                        walletIconList[index],
-                                                        height: 24,
-                                                        width: 24,
-                                                      ),
-                                                    ),
-                                                    color: Colors.white,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 12,
-                                                  ),
-                                                  Text(
-                                                    walletNames[index],
-                                                    style: TextStyle(
+                                                  Row(
+                                                    children: [
+                                                      Material(
+                                                        shape: CircleBorder(),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          child: Image.asset(
+                                                            walletIconList[
+                                                                index],
+                                                            height: 24,
+                                                            width: 24,
+                                                          ),
+                                                        ),
                                                         color: Colors.white,
-                                                        fontSize: 18),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 12,
+                                                      ),
+                                                      Text(
+                                                        walletNames[index],
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 18),
+                                                      ),
+                                                    ],
                                                   ),
+                                                  selectedWallet == 1
+                                                      ? Align(
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          child: Material(
+                                                            shape:
+                                                                CircleBorder(),
+                                                            child: InkWell(
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(5),
+                                                                child:
+                                                                    Image.asset(
+                                                                  'images/ic_add_money.png',
+                                                                  height: 24,
+                                                                  width: 24,
+                                                                ),
+                                                              ),
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .push(ScaleRoute(
+                                                                        page:
+                                                                            AddMoneyWalletScreen()));
+                                                              },
+                                                            ),
+                                                            elevation: 10,
+                                                            color: Colors.white,
+                                                          ),
+                                                        )
+                                                      : Container()
                                                 ],
                                               ),
                                               margin: EdgeInsets.fromLTRB(
@@ -429,16 +466,16 @@ class _WalletScreenState extends State<WalletScreen> {
       });
 
       if (selectedWallet == 0)
-        fetchMainWalletTransactions();
+        fetchATMWalletTransactions();
       else
-        fetchWalletTransactions();
+        fetchMainWalletTransactions();
     });
   }
 
   void fetchMainWalletTransactions() {
     setState(() {
       _showTransactionProgress = true;
-      selectedWallet = 0;
+      selectedWallet = 1;
       mainTransactionsList.clear();
     });
 
@@ -464,9 +501,9 @@ class _WalletScreenState extends State<WalletScreen> {
     });
   }
 
-  void fetchWalletTransactions() {
+  void fetchATMWalletTransactions() {
     setState(() {
-      selectedWallet = 1;
+      selectedWallet = 0;
       _showTransactionProgress = true;
       mainTransactionsList.clear();
     });

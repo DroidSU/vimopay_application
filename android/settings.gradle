@@ -1,3 +1,5 @@
+include ':mahagram-aeps-sdk'
+include ':mahagram-sdk'
 include ':app'
 
 def localPropertiesFile = new File(rootProject.projectDir, "local.properties")

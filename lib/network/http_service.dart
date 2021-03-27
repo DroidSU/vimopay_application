@@ -352,7 +352,7 @@ class HTTPService {
     http.Response response = await http
         .post(
           Uri.encodeFull(
-              APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/login'),
+              APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/bill/fetch'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'jwt_token': jwt_token,
@@ -705,6 +705,23 @@ class HTTPService {
     return response;
   }
 
+  Future<http.Response> fetchBillDetails(
+      String partnerId, String billerURL, String keyValuePairs) async {
+    String url =
+        "https://apbuat.airtelbank.com:5050/v1/openCms/partner/$partnerId$billerURL/fetch";
+    http.Response response = await http.post(Uri.encodeFull(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Basic b2JjbXM6b2JjbXMxMzM3',
+        },
+        body: jsonEncode(keyValuePairs));
+
+    print('Url : $url');
+    print('Bill details request : $keyValuePairs');
+    print('Fetch Bill Details : ${response.body}');
+    return response;
+  }
+
   Future<http.Response> getVerifiedAccounts(
       String authToken, String fromDate, String toDate, String status) async {
     http.Response response = await http.post(
@@ -724,6 +741,47 @@ class HTTPService {
       'dateto': toDate
     })}');
     print('DMT Verified Accounts : ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> getDMTReports(
+      String authToken, String fromDate, String toDate, String status) async {
+    http.Response response = await http.post(
+        Uri.encodeFull(APIConstants.ENDPOINT_DMT_REPORTS),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+          'A-Token': authToken,
+        },
+        body: jsonEncode(
+            {'status': status, 'dateform': fromDate, 'dateto': toDate}));
+
+    print('Request: ${jsonEncode({
+      'status': status,
+      'dateform': fromDate,
+      'dateto': toDate
+    })}');
+    print('DMT Report : ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> getAEPSToken() async {
+    http.Response response =
+        await http.post(Uri.encodeFull(APIConstants.AEPS_TOKEN_FETCH),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({
+              'bc_id': 'BC319061250',
+              'phone1': '8145661425',
+              'ip': '104.98.216.00',
+              'userid': '814566',
+              'saltkey': '8C3327E8D9D5CE419247DC3826806427',
+              'secretkey': 'MH2503191003444694137MK'
+            }));
+
+    print('AEPS Token : ${response.body}');
     return response;
   }
 }

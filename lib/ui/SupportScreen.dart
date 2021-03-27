@@ -662,206 +662,206 @@ class _SupportScreenState extends State<SupportScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
-                    child: Material(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                        padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Raise New Complain',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ),
-                                Container(
-                                    width: 50,
-                                    child: InkWell(
-                                      child: Icon(
-                                        !_showComplainUI
-                                            ? Icons.navigate_next_sharp
-                                            : Icons.arrow_downward_rounded,
-                                        color: Colors.black,
-                                      ),
-                                      onTap: () {
-                                        setState(() {
-                                          _showComplainUI = !_showComplainUI;
-                                        });
-                                      },
-                                    ))
-                              ],
-                            ),
-                            _showComplainUI
-                                ? Container(
-                                    margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                          child: DropdownButton(
-                                            isExpanded: true,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                complainStatus = value;
-                                              });
-                                            },
-                                            value: complainStatus,
-                                            items: listOfStatus.map((e) {
-                                              return DropdownMenuItem(
-                                                child: Text(
-                                                  e,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.normal),
-                                                ),
-                                                value: e,
-                                              );
-                                            }).toList(),
-                                          ),
-                                          margin:
-                                              EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        TextField(
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            errorBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            focusedErrorBorder:
-                                                OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            disabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            hintText: 'Complain Description',
-                                            hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.normal),
-                                            filled: true,
-                                            fillColor:
-                                                Colors.white.withOpacity(0.3),
-                                          ),
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                          controller: descController,
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        _showComplaintProgress
-                                            ? CircularProgressIndicator()
-                                            : MaterialButton(
-                                                onPressed: () {
-                                                  complainDescription =
-                                                      descController.text
-                                                          .trim();
-                                                  if (listOfStatus.contains(
-                                                          complainStatus) &&
-                                                      complainDescription
-                                                          .isNotEmpty) {
-                                                    setState(() {
-                                                      _showComplaintProgress =
-                                                          true;
-                                                    });
-
-                                                    HTTPService()
-                                                        .sendComplain(
-                                                            authToken,
-                                                            complainStatus,
-                                                            complainDescription)
-                                                        .then((response) {
-                                                      setState(() {
-                                                        _showComplaintProgress =
-                                                            false;
-                                                        _showComplainUI = false;
-                                                      });
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                        BasicResponseModel
-                                                            responseModel =
-                                                            BasicResponseModel
-                                                                .fromJson(json
-                                                                    .decode(response
-                                                                        .body));
-                                                        if (responseModel
-                                                            .status) {
-                                                          showSuccessDialog(
-                                                              context,
-                                                              responseModel
-                                                                  .message);
-                                                        } else {
-                                                          showErrorDialog(
-                                                              responseModel
-                                                                  .message);
-                                                        }
-                                                      } else {
-                                                        showErrorDialog(
-                                                            'Error occurred ${response.statusCode}');
-                                                      }
-                                                    });
-                                                  }
-                                                },
-                                                color: Color(0xff133374),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Text(
-                                                  'Submit',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.normal),
-                                                ),
-                                              ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        ),
-                      ),
-                      elevation: 8,
-                    ),
-                  ),
+                  // Container(
+                  //   margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                  //   child: Material(
+                  //     borderRadius: BorderRadius.circular(15),
+                  //     child: Container(
+                  //       margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                  //       padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
+                  //       decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(15)),
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         mainAxisSize: MainAxisSize.max,
+                  //         children: [
+                  //           Row(
+                  //             children: [
+                  //               Expanded(
+                  //                 child: Text(
+                  //                   'Raise New Complain',
+                  //                   style: TextStyle(
+                  //                       color: Colors.black,
+                  //                       fontSize: 18,
+                  //                       fontWeight: FontWeight.normal),
+                  //                 ),
+                  //               ),
+                  //               Container(
+                  //                   width: 50,
+                  //                   child: InkWell(
+                  //                     child: Icon(
+                  //                       !_showComplainUI
+                  //                           ? Icons.navigate_next_sharp
+                  //                           : Icons.arrow_downward_rounded,
+                  //                       color: Colors.black,
+                  //                     ),
+                  //                     onTap: () {
+                  //                       setState(() {
+                  //                         _showComplainUI = !_showComplainUI;
+                  //                       });
+                  //                     },
+                  //                   ))
+                  //             ],
+                  //           ),
+                  //           _showComplainUI
+                  //               ? Container(
+                  //                   margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
+                  //                   child: Column(
+                  //                     children: [
+                  //                       SizedBox(
+                  //                         height: 10,
+                  //                       ),
+                  //                       Container(
+                  //                         child: DropdownButton(
+                  //                           isExpanded: true,
+                  //                           onChanged: (value) {
+                  //                             setState(() {
+                  //                               complainStatus = value;
+                  //                             });
+                  //                           },
+                  //                           value: complainStatus,
+                  //                           items: listOfStatus.map((e) {
+                  //                             return DropdownMenuItem(
+                  //                               child: Text(
+                  //                                 e,
+                  //                                 style: TextStyle(
+                  //                                     color: Colors.black,
+                  //                                     fontWeight:
+                  //                                         FontWeight.normal),
+                  //                               ),
+                  //                               value: e,
+                  //                             );
+                  //                           }).toList(),
+                  //                         ),
+                  //                         margin:
+                  //                             EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  //                       ),
+                  //                       SizedBox(
+                  //                         height: 20,
+                  //                       ),
+                  //                       TextField(
+                  //                         decoration: InputDecoration(
+                  //                           border: OutlineInputBorder(
+                  //                             borderRadius:
+                  //                                 BorderRadius.circular(10),
+                  //                           ),
+                  //                           errorBorder: OutlineInputBorder(
+                  //                             borderRadius:
+                  //                                 BorderRadius.circular(10),
+                  //                           ),
+                  //                           focusedBorder: OutlineInputBorder(
+                  //                             borderRadius:
+                  //                                 BorderRadius.circular(10),
+                  //                           ),
+                  //                           focusedErrorBorder:
+                  //                               OutlineInputBorder(
+                  //                             borderRadius:
+                  //                                 BorderRadius.circular(10),
+                  //                           ),
+                  //                           disabledBorder: OutlineInputBorder(
+                  //                             borderRadius:
+                  //                                 BorderRadius.circular(10),
+                  //                           ),
+                  //                           enabledBorder: OutlineInputBorder(
+                  //                             borderRadius:
+                  //                                 BorderRadius.circular(10),
+                  //                           ),
+                  //                           hintText: 'Complain Description',
+                  //                           hintStyle: TextStyle(
+                  //                               color: Colors.grey,
+                  //                               fontWeight: FontWeight.normal),
+                  //                           filled: true,
+                  //                           fillColor:
+                  //                               Colors.white.withOpacity(0.3),
+                  //                         ),
+                  //                         style: TextStyle(
+                  //                           color: Colors.black,
+                  //                           fontWeight: FontWeight.normal,
+                  //                         ),
+                  //                         textAlign: TextAlign.center,
+                  //                         controller: descController,
+                  //                       ),
+                  //                       SizedBox(
+                  //                         height: 20,
+                  //                       ),
+                  //                       _showComplaintProgress
+                  //                           ? CircularProgressIndicator()
+                  //                           : MaterialButton(
+                  //                               onPressed: () {
+                  //                                 complainDescription =
+                  //                                     descController.text
+                  //                                         .trim();
+                  //                                 if (listOfStatus.contains(
+                  //                                         complainStatus) &&
+                  //                                     complainDescription
+                  //                                         .isNotEmpty) {
+                  //                                   setState(() {
+                  //                                     _showComplaintProgress =
+                  //                                         true;
+                  //                                   });
+                  //
+                  //                                   HTTPService()
+                  //                                       .sendComplain(
+                  //                                           authToken,
+                  //                                           complainStatus,
+                  //                                           complainDescription)
+                  //                                       .then((response) {
+                  //                                     setState(() {
+                  //                                       _showComplaintProgress =
+                  //                                           false;
+                  //                                       _showComplainUI = false;
+                  //                                     });
+                  //
+                  //                                     if (response.statusCode ==
+                  //                                         200) {
+                  //                                       BasicResponseModel
+                  //                                           responseModel =
+                  //                                           BasicResponseModel
+                  //                                               .fromJson(json
+                  //                                                   .decode(response
+                  //                                                       .body));
+                  //                                       if (responseModel
+                  //                                           .status) {
+                  //                                         showSuccessDialog(
+                  //                                             context,
+                  //                                             responseModel
+                  //                                                 .message);
+                  //                                       } else {
+                  //                                         showErrorDialog(
+                  //                                             responseModel
+                  //                                                 .message);
+                  //                                       }
+                  //                                     } else {
+                  //                                       showErrorDialog(
+                  //                                           'Error occurred ${response.statusCode}');
+                  //                                     }
+                  //                                   });
+                  //                                 }
+                  //                               },
+                  //                               color: Color(0xff133374),
+                  //                               shape: RoundedRectangleBorder(
+                  //                                   borderRadius:
+                  //                                       BorderRadius.circular(
+                  //                                           10)),
+                  //                               child: Text(
+                  //                                 'Submit',
+                  //                                 style: TextStyle(
+                  //                                     color: Colors.white,
+                  //                                     fontSize: 16,
+                  //                                     fontWeight:
+                  //                                         FontWeight.normal),
+                  //                               ),
+                  //                             ),
+                  //                     ],
+                  //                   ),
+                  //                 )
+                  //               : Container(),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     elevation: 8,
+                  //   ),
+                  // ),
                 ],
               ),
             ),

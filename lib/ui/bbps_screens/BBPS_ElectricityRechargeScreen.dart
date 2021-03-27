@@ -7,6 +7,7 @@ import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/bbps_bill_fetch_failed_model.dart';
+import 'package:vimopay_application/network/models/bbps_bill_fetched_response_model.dart';
 import 'package:vimopay_application/network/models/bbps_login_failed_model.dart';
 import 'package:vimopay_application/network/models/bbps_login_response_model.dart';
 import 'package:vimopay_application/network/models/biller_list_response_model.dart';
@@ -33,6 +34,8 @@ class _BBPSElectricityRechargeScreenState
   TextEditingController mobileNumberController;
 
   bool _isFetchingBill = false;
+  bool _isBillFetched = false;
+  BBPSBillFetchResponseModel billModel;
 
   @override
   void initState() {
@@ -259,46 +262,178 @@ class _BBPSElectricityRechargeScreenState
                           ],
                         )
                       : Container(),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: !_isFetchingBill
-                        ? MaterialButton(
-                            onPressed: () {
-                              fieldValue = fieldController.text.trim();
-                              mobileNumber = mobileNumberController.text.trim();
+                  !_isBillFetched
+                      ? Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          child: !_isFetchingBill
+                              ? MaterialButton(
+                                  onPressed: () {
+                                    fieldValue = fieldController.text.trim();
+                                    mobileNumber =
+                                        mobileNumberController.text.trim();
 
-                              if (selectedBillerName.isNotEmpty &&
-                                  fieldValue.isNotEmpty &&
-                                  mobileNumber.length == 10) {
-                                setState(() {
-                                  _isFetchingBill = true;
-                                });
-                                fetchBill();
-                              } else {
-                                if (selectedBillerName.isEmpty)
-                                  showErrorDialog('Please select a biller');
-                                else if (fieldValue.isNotEmpty)
-                                  showErrorDialog('Please enter $fieldName');
-                                else if (mobileNumber.length != 10)
-                                  showErrorDialog('Invalid mobile number');
-                              }
-                            },
-                            child: Text(
-                              'Fetch Bill',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                                    if (selectedBillerName.isNotEmpty &&
+                                        fieldValue.isNotEmpty &&
+                                        mobileNumber.length == 10) {
+                                      setState(() {
+                                        _isFetchingBill = true;
+                                      });
+                                      fetchBill();
+                                    } else {
+                                      if (selectedBillerName.isEmpty)
+                                        showErrorDialog(
+                                            'Please select a biller');
+                                      else if (fieldValue.isNotEmpty)
+                                        showErrorDialog(
+                                            'Please enter $fieldName');
+                                      else if (mobileNumber.length != 10)
+                                        showErrorDialog(
+                                            'Invalid mobile number');
+                                    }
+                                  },
+                                  child: Text(
+                                    'Fetch Bill',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  color: Colors.green,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  minWidth: 100,
+                                )
+                              : CircularProgressIndicator(),
+                        )
+                      : SizedBox(),
+                  _isBillFetched
+                      ? Container(
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          child: Material(
+                            elevation: 10,
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Biller Id',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Text(
+                                        billModel.data.billerDetails.billerId,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Customer Name',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Container(
+                                        width: 150,
+                                        child: Text(
+                                          billModel
+                                              .data.billDetails.customerName,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Due Date',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Text(
+                                        billModel.data.billDetails.dueDate,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Total Amount',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Text(
+                                        billModel.data.billDetails.amount
+                                            .toString(),
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  MaterialButton(
+                                    onPressed: () {},
+                                    color: Colors.green,
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Text(
+                                      'Pay now',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            color: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            minWidth: 100,
-                          )
-                        : CircularProgressIndicator(),
-                  )
+                          ),
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -470,7 +605,14 @@ class _BBPSElectricityRechargeScreenState
         _isFetchingBill = false;
       });
       if (response.statusCode == 200) {
-        print('OK');
+        BBPSBillFetchResponseModel responseModel =
+            BBPSBillFetchResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.status.toLowerCase() == "success") {
+          setState(() {
+            _isBillFetched = true;
+            billModel = responseModel;
+          });
+        }
       } else {
         BBPSBillFetchFailed responseModel =
             BBPSBillFetchFailed.fromJson(json.decode(response.body));

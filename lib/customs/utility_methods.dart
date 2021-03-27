@@ -46,5 +46,7 @@ class UtilityMethods {
     }
   }
 
-  String getDate(String createdDate) {}
+  String beautifyDateTime(String createdDate) {
+    return '${createdDate.substring(0, 10)} ${UtilityMethods().beautifyTime(createdDate.substring(12))}';
+  }
 }

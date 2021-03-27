@@ -25,6 +25,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
   String name = "";
   String email = "";
   String mobile = "";
+  String userId = "";
 
   File imageFile;
   String authToken = "";
@@ -179,7 +180,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  mobile,
+                                  userId,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
@@ -187,6 +188,13 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                 ),
                                 SizedBox(
                                   height: 12,
+                                ),
+                                Text(
+                                  mobile,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
                                 ),
                                 Text(
                                   name,
@@ -898,6 +906,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
         email = sharedPrefs.getString(Constants.SHARED_PREF_EMAIL);
         mobile = sharedPrefs.getString(Constants.SHARED_PREF_MOBILE);
         authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
+        userId = sharedPrefs.getString(Constants.SHARED_PREF_USER_ID);
 
         String imagePath =
             sharedPrefs.getString(Constants.SHARED_PREF_USER_DP_PATH);

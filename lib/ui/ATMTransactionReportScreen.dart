@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
@@ -22,9 +24,9 @@ class _ATMTransactionReportScreenState
   String authToken = "";
   List<ATMRechargeReportData> atmTransactionsList = List();
 
-  List<String> listOfTxnStatus = ['Pending', 'Success', 'Fail'];
+  List<String> listOfTxnStatus = ['Success', 'Fail', 'Pending'];
   String txnStatus = "1";
-  String selectedStatus = "Pending";
+  String selectedStatus = "Success";
 
   String currentDateAsString = "";
   DateTime currentDate;
@@ -279,13 +281,14 @@ class _ATMTransactionReportScreenState
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
-                              if (value == "Pending")
+                              if (value == "Success")
                                 txnStatus = '1';
-                              else if (value == "Success")
+                              else if (value == "Pending")
                                 txnStatus = '2';
                               else if (value == "Fail") txnStatus = '3';
 
                               atmTransactionsList.clear();
+                              selectedStatus = value;
                             });
 
                             fetchATMTransactions();
@@ -468,24 +471,63 @@ class _ATMTransactionReportScreenState
                                         ),
                                       ),
                                       Container(
-                                        alignment: Alignment.centerRight,
-                                        child: MaterialButton(
-                                          onPressed: () {
-                                            showComplainDialog(index);
-                                          },
-                                          child: Text(
-                                            'Complain',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          color: Colors.redAccent,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                        ),
-                                      ),
+                                          width: double.infinity,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  printReceipt(
+                                                      atmTransactionsList[
+                                                          index]);
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Image.asset(
+                                                      'images/ic_printer.png',
+                                                      height: 20,
+                                                      width: 20,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      'Print',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                color: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  showComplainDialog(index);
+                                                },
+                                                child: Text(
+                                                  'Complain',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                color: Colors.redAccent,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                            ],
+                                          )),
                                     ],
                                   ),
                                 ),
@@ -818,5 +860,88 @@ class _ATMTransactionReportScreenState
             );
           });
     }
+  }
+
+  void printReceipt(ATMRechargeReportData atmTransactionsList) async {
+    final doc = pw.Document();
+    // ImageProvider image = Image.asset('images/').image;
+    ImageProvider image = AssetImage('images/ic_logo.png');
+
+    doc.addPage(pw.Page(build: (pw.Context context) {
+      return pw.Center(
+        child: pw.SizedBox(
+          height: 400,
+          width: 500,
+          child: pw.Container(
+            width: 500,
+            alignment: pw.Alignment.center,
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text('Transaction Receipt',
+                    style: pw.TextStyle(
+                      fontSize: 20,
+                    )),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Id'),
+                      pw.Text(
+                          atmTransactionsList.trxnId != null
+                              ? atmTransactionsList.trxnId
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Amount'),
+                      pw.Text(
+                          atmTransactionsList.amount != null
+                              ? atmTransactionsList.amount
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Date'),
+                      pw.Text(
+                          atmTransactionsList.createDate != null
+                              ? UtilityMethods().beautifyDateTime(
+                                  atmTransactionsList.createDate)
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Container(
+                  child: pw.Text('Thank You',
+                      style: pw.TextStyle(
+                        fontSize: 30,
+                      )),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    })); // Page
+
+    await Printing.layoutPdf(onLayout: (pdfPageFormat) {
+      return doc.save();
+    });
   }
 }

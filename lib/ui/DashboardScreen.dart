@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:marquee/marquee.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
@@ -644,11 +645,15 @@ class _DashboardScreenState extends State<DashboardScreen>
                                               ],
                                             ),
                                             onTap: () {
-                                              if (index == 2) {
+                                              if (index == 0) {
+                                                startAEPSTransaction();
+                                              } else if (index == 2) {
                                                 Navigator.of(context).push(
                                                     ScaleRoute(
                                                         page:
                                                             MoneyTransferScreen()));
+                                              } else {
+                                                showComingSoon("Coming soon!");
                                               }
                                             },
                                           ),
@@ -733,6 +738,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                   rechargeType:
                                                       RechargeTypes.DTH,
                                                 )));
+                                              } else {
+                                                showComingSoon("Coming soon!");
                                               }
                                             },
                                           ),
@@ -808,6 +815,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                     ScaleRoute(
                                                         page:
                                                             BBPSElectricityRechargeScreen()));
+                                              } else {
+                                                showComingSoon("Coming soon!");
                                               }
                                             },
                                           ),
@@ -855,35 +864,41 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context, index) {
                                         return Container(
-                                          width: 100,
-                                          child: Column(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.asset(
-                                                    insuranceImages[index],
-                                                    height: 50,
-                                                    width: 50,
+                                            width: 100,
+                                            child: InkWell(
+                                              child: Column(
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.topCenter,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      child: Image.asset(
+                                                        insuranceImages[index],
+                                                        height: 50,
+                                                        width: 50,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.bottomCenter,
+                                                    child: Text(
+                                                      insuranceTitles[index],
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Text(
-                                                  insuranceTitles[index],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        );
+                                              onTap: () {
+                                                showComingSoon("Coming Soon!");
+                                              },
+                                            ));
                                       },
                                       itemCount: insuranceTitles.length,
                                       shrinkWrap: true,
@@ -927,35 +942,41 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context, index) {
                                         return Container(
-                                          width: 100,
-                                          child: Column(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.asset(
-                                                    travelImages[index],
-                                                    height: 50,
-                                                    width: 50,
+                                            width: 100,
+                                            child: InkWell(
+                                              child: Column(
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.topCenter,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      child: Image.asset(
+                                                        travelImages[index],
+                                                        height: 50,
+                                                        width: 50,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.bottomCenter,
+                                                    child: Text(
+                                                      travelTitles[index],
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Text(
-                                                  travelTitles[index],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        );
+                                              onTap: () {
+                                                showComingSoon('Coming soon!');
+                                              },
+                                            ));
                                       },
                                       itemCount: travelTitles.length,
                                       shrinkWrap: true,
@@ -999,35 +1020,41 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context, index) {
                                         return Container(
-                                          width: 100,
-                                          child: Column(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.asset(
-                                                    taxesImages[index],
-                                                    height: 50,
-                                                    width: 50,
+                                            width: 100,
+                                            child: InkWell(
+                                              child: Column(
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.topCenter,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      child: Image.asset(
+                                                        taxesImages[index],
+                                                        height: 50,
+                                                        width: 50,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.bottomCenter,
+                                                    child: Text(
+                                                      taxesTitles[index],
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Text(
-                                                  taxesTitles[index],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        );
+                                              onTap: () {
+                                                showComingSoon('Coming soon!');
+                                              },
+                                            ));
                                       },
                                       itemCount: taxesTitles.length,
                                       shrinkWrap: true,
@@ -1108,6 +1135,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                     ScaleRoute(
                                                         page:
                                                             CMSServiceScreen()));
+                                              } else {
+                                                showComingSoon('Coming Soon!');
                                               }
                                             },
                                           ),
@@ -1327,6 +1356,73 @@ class _DashboardScreenState extends State<DashboardScreen>
     }
   }
 
+  void showComingSoon(String message) {
+    if (mounted) {
+      showDialog(
+          context: context,
+          builder: (buildContext) {
+            return CustomAlertDialog(
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              content: Container(
+                width: 80,
+                height: 150,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: const Color(0xFFFFFF),
+                  borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Icon(
+                          Icons.info_outline_rounded,
+                          size: 40,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Text(
+                          message,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+  }
+
   void showSuccessDialog(BuildContext buildContext, String message) {
     if (mounted) {
       showDialog(
@@ -1396,11 +1492,25 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   void saveWalletBalance(GetWalletResponseData getWalletResponseData) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     sharedPreferences.setString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE,
         getWalletResponseData.wBalance);
+
     sharedPreferences.setString(
         Constants.SHARED_PREF_MATM_BALANCE, getWalletResponseData.mBalance);
+
     sharedPreferences.setString(
         Constants.SHARED_PREF_ATM_BALANCE, getWalletResponseData.aBalance);
+  }
+
+  void startAEPSTransaction() {
+    const platformChannel = const MethodChannel("com.brixham.vimopay");
+    try {
+      platformChannel.invokeMethod("AEPS").then((result) {
+        print(result.toString());
+      });
+    } on PlatformException catch (error) {
+      print('AEPS error : $error');
+    }
   }
 }

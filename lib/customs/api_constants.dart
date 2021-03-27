@@ -44,6 +44,9 @@ class APIConstants {
   static const ENDPOINT_ATM_REPORT = BASE_URL + "Balance/GetAllATMWalletReport";
   static const ENDPOINT_DMT_VERIFIED_ACCOUTNS =
       BASE_URL + "Balance/DMTAll_VerifyAccDetails";
+  static const ENDPOINT_DMT_REPORTS =
+      BASE_URL + "Balance/DMTAll_TransactionDetails";
+  static const AEPS_TOKEN_FETCH = "http://uat.dhansewa.com/AEPS/BCInitiate";
 
   // BBPS APIS
   // static const BBPS_BASE_URL = "https://digitalproxy-staging.paytm.com/billpay/";

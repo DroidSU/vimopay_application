@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
@@ -33,8 +35,8 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
     'Customize'
   ];
 
-  List<String> listOfTxnStatus = ['Pending', 'Fail', 'Success'];
-  String txnStatus = "Pending";
+  List<String> listOfTxnStatus = ['Success', 'Fail', 'Pending'];
+  String txnStatus = "Success";
 
   String currentDateAsString = "";
   DateTime currentDate;
@@ -465,7 +467,11 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 MaterialButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    printReceipt(
+                                                        rechargeReportList[
+                                                            index]);
+                                                  },
                                                   child: Row(
                                                     children: [
                                                       Image.asset(
@@ -846,5 +852,88 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
             );
           });
     }
+  }
+
+  void printReceipt(RechargeReportResponseData rechargeReportList) async {
+    final doc = pw.Document();
+    // ImageProvider image = Image.asset('images/').image;
+    ImageProvider image = AssetImage('images/ic_logo.png');
+
+    doc.addPage(pw.Page(build: (pw.Context context) {
+      return pw.Center(
+        child: pw.SizedBox(
+          height: 400,
+          width: 500,
+          child: pw.Container(
+            width: 500,
+            alignment: pw.Alignment.center,
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text('Transaction Receipt',
+                    style: pw.TextStyle(
+                      fontSize: 20,
+                    )),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Id'),
+                      pw.Text(
+                          rechargeReportList.trxnId != null
+                              ? rechargeReportList.trxnId
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Amount'),
+                      pw.Text(
+                          rechargeReportList.amount != null
+                              ? rechargeReportList.amount
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                      pw.Text('Transaction Date'),
+                      pw.Text(
+                          rechargeReportList.createDate != null
+                              ? UtilityMethods().beautifyDateTime(
+                                  rechargeReportList.createDate)
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                          )),
+                    ]),
+                pw.SizedBox(height: 10),
+                pw.Container(
+                  child: pw.Text('Thank You',
+                      style: pw.TextStyle(
+                        fontSize: 30,
+                      )),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    })); // Page
+
+    await Printing.layoutPdf(onLayout: (pdfPageFormat) {
+      return doc.save();
+    });
   }
 }

@@ -318,13 +318,18 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                setState(() {
-                                                  email = emailAddressController
-                                                      .text
-                                                      .trim();
-                                                });
-
-                                                updateEmail();
+                                                String newEmail =
+                                                    emailAddressController.text
+                                                        .trim();
+                                                if (newEmail != email) {
+                                                  setState(() {
+                                                    email = newEmail;
+                                                  });
+                                                  updateEmail(otp: '');
+                                                } else {
+                                                  showErrorDialog(
+                                                      'New email cannot be same as old email');
+                                                }
                                               },
                                             )),
                                       ),
@@ -362,7 +367,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
                                               style: TextStyle(fontSize: 16),
                                               onCompleted: (pin) {
                                                 emailOTP = pin;
-                                                updateEmail();
+                                                updateEmail(otp: emailOTP);
                                               },
                                             ),
                                             SizedBox(
@@ -449,7 +454,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
     }
   }
 
-  updateEmail() {
+  updateEmail({String otp}) {
     if (email.isEmpty) email = emailAddressController.text.trim();
 
     if (email != null) {
