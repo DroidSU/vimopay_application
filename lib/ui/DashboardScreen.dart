@@ -22,9 +22,16 @@ import 'package:vimopay_application/ui/ProfileScreenNew.dart';
 import 'package:vimopay_application/ui/ReportScreenUI.dart';
 import 'package:vimopay_application/ui/SupportScreen.dart';
 import 'package:vimopay_application/ui/WalletScreen.dart';
+import 'package:vimopay_application/ui/bbps_screens/BBPSGasRechargeScreen.dart';
+import 'package:vimopay_application/ui/bbps_screens/BBPS_BroadbandRechargeScreen.dart';
+import 'package:vimopay_application/ui/bbps_screens/BBPS_DTHRechargeScreen.dart';
 import 'package:vimopay_application/ui/bbps_screens/BBPS_ElectricityRechargeScreen.dart';
+import 'package:vimopay_application/ui/bbps_screens/BBPS_FastagRechargeScreen.dart';
+import 'package:vimopay_application/ui/bbps_screens/BBPS_PostpaidRechargeScreen.dart';
+import 'package:vimopay_application/ui/bbps_screens/BBPS_PrepaidRechargeScreen.dart';
 
 import 'RechargeScreen.dart';
+import 'bbps_screens/BBPS_WaterRechargeScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -55,10 +62,10 @@ class _DashboardScreenState extends State<DashboardScreen>
   List<String> bankingImages = [
     "images/ic_aadhar_atm.png",
     "images/ic_mini_atm.png",
-    "images/ic_money.png",
+    "images/ic_money_transfer.png",
     "images/ic_aadhar_pay.png",
     "images/ic_new_account.png",
-    "images/ic_bank.png",
+    "images/ic_upi_money.png",
   ];
 
   List<String> bankingServiceTitles = [
@@ -73,10 +80,10 @@ class _DashboardScreenState extends State<DashboardScreen>
   List<String> bbpsServiceTitles = [
     'Prepaid',
     'DTH',
-    'Electricity',
-    'Broadband',
-    'Postpaid',
-    'FASTAG',
+    'Water',
+    'Gas',
+    'Insurance',
+    'Loan',
   ];
 
   List<String> bbpsServiceImages = [
@@ -88,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     "images/ic_fastag.png",
   ];
 
-  List<String> billsUtilitiesImages = [
+  List<String> rechargesBillsImages = [
     "images/ic_prepaid.png",
     "images/ic_dth.png",
     "images/ic_electric.png",
@@ -97,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     "images/ic_fastag.png",
   ];
 
-  List<String> billsUtilitiesTitles = [
+  List<String> rechargesBillsTitles = [
     RechargeTypes.PREPAID,
     RechargeTypes.DTH,
     RechargeTypes.Electric,
@@ -107,12 +114,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   ];
 
   List<String> insuranceImages = [
-    "images/ic_two_wheeler.png",
+    "images/ic_two_wheeler_insurance.png",
     "images/ic_four_wheeler.png",
-    "images/ic_term_plan.png",
-    "images/ic_health.png",
+    "images/ic_term_plan_insurance.png",
+    "images/ic_health_insurance.png",
     "images/ic_life_insurance.png",
-    "images/ic_child_policy.png",
+    "images/ic_child_insurance.png",
   ];
 
   List<String> insuranceTitles = [
@@ -125,12 +132,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   ];
 
   List<String> travelImages = [
-    "images/ic_railbooking.png",
-    "images/ic_flight.png",
-    "images/ic_busbooking.png",
-    "images/ic_hotel.png",
-    "images/ic_movie.png",
-    "images/ic_metro.png",
+    "images/ic_rail_booking.png",
+    "images/ic_flight_booking.png",
+    "images/ic_bus_booking.png",
+    "images/ic_hotel_booking.png",
+    "images/ic_movie_booking.png",
+    "images/ic_metro_booking.png",
   ];
 
   List<String> travelTitles = [
@@ -143,7 +150,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   ];
 
   List<String> taxesImages = [
-    "images/ic_new_gst.png",
+    "images/ic_taxes.png",
     "images/ic_gst_return.png",
     "images/ic_it_return.png",
     "images/ic_trade_mark.png",
@@ -161,7 +168,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   ];
 
   List<String> otherServicesImage = [
-    'images/ic_cms.png',
+    'images/ic_cms_service.png',
     'images/ic_pan_card.png',
     'images/ic_buy_gold.png',
     'images/ic_mutual_fund.png',
@@ -215,7 +222,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                 case 0:
                   break;
                 case 1:
-                  Navigator.of(context).push(ScaleRoute(page: WalletScreen()));
+                  Navigator.of(context).pushReplacement(ScaleRoute(
+                      page: WalletScreen(
+                    comingFrom: "Dashboard",
+                  )));
                   break;
                 case 2:
                   Navigator.of(context)
@@ -389,12 +399,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                               ),
                       ),
                       Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(width: 0.3, color: Colors.grey),
-                          ),
-                          height: 60,
-                          margin: EdgeInsets.fromLTRB(5, 10, 5, 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 0.3, color: Colors.grey),
+                        ),
+                        height: 60,
+                        margin: EdgeInsets.fromLTRB(5, 10, 5, 2),
+                        child: InkWell(
                           child: Material(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -459,7 +470,15 @@ class _DashboardScreenState extends State<DashboardScreen>
                             ),
                             elevation: 5,
                             borderRadius: BorderRadius.circular(10),
-                          )),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(ScaleRoute(
+                                page: WalletScreen(
+                              comingFrom: "Dashboard",
+                            )));
+                          },
+                        ),
+                      ),
                       Container(
                         margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
                         padding: EdgeInsets.all(5),
@@ -626,21 +645,35 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           child: InkWell(
                                             child: Column(
                                               children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.asset(
-                                                    bankingImages[index],
-                                                    height: 50,
-                                                    width: 50,
+                                                Material(
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: Image.asset(
+                                                      bankingImages[index],
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
                                                   ),
+                                                  elevation: 10,
+                                                  shape: CircleBorder(),
                                                 ),
-                                                Text(
-                                                  bankingServiceTitles[index],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Material(
+                                                  child: Text(
+                                                    bankingServiceTitles[index],
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                    ),
                                                   ),
+                                                  elevation: 10,
+                                                  color: Colors.transparent,
+                                                  shadowColor:
+                                                      Colors.transparent,
                                                 ),
                                               ],
                                             ),
@@ -688,7 +721,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Bills and Utilities',
+                                  'Recharges & Bill Payments',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -705,21 +738,36 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           child: InkWell(
                                             child: Column(
                                               children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.asset(
-                                                    billsUtilitiesImages[index],
-                                                    height: 50,
-                                                    width: 50,
+                                                Material(
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: Image.asset(
+                                                      rechargesBillsImages[
+                                                          index],
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
                                                   ),
+                                                  elevation: 10,
+                                                  shape: CircleBorder(),
                                                 ),
-                                                Text(
-                                                  billsUtilitiesTitles[index],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Material(
+                                                  child: Text(
+                                                    rechargesBillsTitles[index],
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                    ),
                                                   ),
+                                                  elevation: 10,
+                                                  color: Colors.transparent,
+                                                  shadowColor:
+                                                      Colors.transparent,
                                                 ),
                                               ],
                                             ),
@@ -738,6 +786,26 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                   rechargeType:
                                                       RechargeTypes.DTH,
                                                 )));
+                                              } else if (index == 2) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSElectricityRechargeScreen()));
+                                              } else if (index == 3) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSBroadbandRechargeScreen()));
+                                              } else if (index == 4) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSPostpaidRechargeScreen()));
+                                              } else if (index == 5) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSFastagRechargeScreen()));
                                               } else {
                                                 showComingSoon("Coming soon!");
                                               }
@@ -745,7 +813,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           ),
                                         );
                                       },
-                                      itemCount: billsUtilitiesTitles.length,
+                                      itemCount: rechargesBillsTitles.length,
                                       shrinkWrap: true,
                                     ),
                                   ),
@@ -756,7 +824,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
                         child: Material(
                           elevation: 10,
                           color: Colors.transparent,
@@ -774,7 +842,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'BBPS Services',
+                                  'BBPS',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -791,30 +859,59 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           child: InkWell(
                                             child: Column(
                                               children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.asset(
-                                                    bbpsServiceImages[index],
-                                                    height: 50,
-                                                    width: 50,
+                                                Material(
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: Image.asset(
+                                                      bbpsServiceImages[index],
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
                                                   ),
+                                                  elevation: 10,
+                                                  shape: CircleBorder(),
                                                 ),
-                                                Text(
-                                                  bbpsServiceTitles[index],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Material(
+                                                  child: Text(
+                                                    bbpsServiceTitles[index],
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                    ),
                                                   ),
+                                                  elevation: 10,
+                                                  color: Colors.transparent,
+                                                  shadowColor:
+                                                      Colors.transparent,
                                                 ),
                                               ],
                                             ),
                                             onTap: () {
-                                              if (index == 2) {
+                                              if (index == 0) {
                                                 Navigator.of(context).push(
                                                     ScaleRoute(
                                                         page:
-                                                            BBPSElectricityRechargeScreen()));
+                                                            BBPSPrepaidRechargeScreen()));
+                                              } else if (index == 1) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSDTHRechargeScreen()));
+                                              } else if (index == 2) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSWaterRechargeScreen()));
+                                              } else if (index == 3) {
+                                                Navigator.of(context).push(
+                                                    ScaleRoute(
+                                                        page:
+                                                            BBPSGasRechargeScreen()));
                                               } else {
                                                 showComingSoon("Coming soon!");
                                               }
@@ -822,7 +919,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           ),
                                         );
                                       },
-                                      itemCount: bbpsServiceTitles.length,
+                                      itemCount: bankingImages.length,
                                       shrinkWrap: true,
                                     ),
                                   ),
@@ -868,9 +965,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                             child: InkWell(
                                               child: Column(
                                                 children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.topCenter,
+                                                  Material(
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -881,10 +976,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                         width: 50,
                                                       ),
                                                     ),
+                                                    elevation: 10,
+                                                    shape: CircleBorder(),
                                                   ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Material(
                                                     child: Text(
                                                       insuranceTitles[index],
                                                       style: TextStyle(
@@ -892,11 +990,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                         fontSize: 14,
                                                       ),
                                                     ),
-                                                  )
+                                                    elevation: 10,
+                                                    color: Colors.transparent,
+                                                    shadowColor:
+                                                        Colors.transparent,
+                                                  ),
                                                 ],
                                               ),
                                               onTap: () {
-                                                showComingSoon("Coming Soon!");
+                                                showComingSoon(
+                                                    "Available only in the desktop version");
                                               },
                                             ));
                                       },
@@ -946,9 +1049,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                             child: InkWell(
                                               child: Column(
                                                 children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.topCenter,
+                                                  Material(
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -959,10 +1060,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                         width: 50,
                                                       ),
                                                     ),
+                                                    elevation: 10,
+                                                    shape: CircleBorder(),
                                                   ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Material(
                                                     child: Text(
                                                       travelTitles[index],
                                                       style: TextStyle(
@@ -970,7 +1074,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                         fontSize: 14,
                                                       ),
                                                     ),
-                                                  )
+                                                    elevation: 10,
+                                                    color: Colors.transparent,
+                                                    shadowColor:
+                                                        Colors.transparent,
+                                                  ),
                                                 ],
                                               ),
                                               onTap: () {
@@ -1024,9 +1132,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                             child: InkWell(
                                               child: Column(
                                                 children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.topCenter,
+                                                  Material(
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -1037,10 +1143,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                         width: 50,
                                                       ),
                                                     ),
+                                                    elevation: 10,
+                                                    shape: CircleBorder(),
                                                   ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Material(
                                                     child: Text(
                                                       taxesTitles[index],
                                                       style: TextStyle(
@@ -1048,7 +1157,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                         fontSize: 14,
                                                       ),
                                                     ),
-                                                  )
+                                                    elevation: 10,
+                                                    color: Colors.transparent,
+                                                    shadowColor:
+                                                        Colors.transparent,
+                                                  ),
                                                 ],
                                               ),
                                               onTap: () {
@@ -1102,9 +1215,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           child: InkWell(
                                             child: Column(
                                               children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.topCenter,
+                                                Material(
                                                   child: ClipRRect(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -1115,10 +1226,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                       width: 50,
                                                     ),
                                                   ),
+                                                  elevation: 10,
+                                                  shape: CircleBorder(),
                                                 ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomCenter,
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Material(
                                                   child: Text(
                                                     otherServicesTitles[index],
                                                     style: TextStyle(
@@ -1126,6 +1240,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                       fontSize: 14,
                                                     ),
                                                   ),
+                                                  elevation: 10,
+                                                  color: Colors.transparent,
+                                                  shadowColor:
+                                                      Colors.transparent,
                                                 ),
                                               ],
                                             ),
@@ -1135,6 +1253,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                     ScaleRoute(
                                                         page:
                                                             CMSServiceScreen()));
+                                              } else if (index == 1) {
+                                                showComingSoon(
+                                                    'Available only in the desktop version!');
                                               } else {
                                                 showComingSoon('Coming Soon!');
                                               }
@@ -1187,10 +1308,13 @@ class _DashboardScreenState extends State<DashboardScreen>
           GetWalletResponseData getWalletResponseData =
               walletsResponseModel.data;
 
-          setState(() {
-            mainWalletBalance = getWalletResponseData.wBalance;
-            atmWalletBalance = getWalletResponseData.aBalance;
-          });
+          if (mounted) {
+            setState(() {
+              mainWalletBalance = getWalletResponseData.wBalance;
+              atmWalletBalance = getWalletResponseData.aBalance;
+            });
+          }
+
           SharedPreferences.getInstance().then((sharedPrefs) {
             sharedPrefs.setString(
                 Constants.SHARED_PREF_MAIN_WALLET_BALANCE, mainWalletBalance);
@@ -1241,10 +1365,12 @@ class _DashboardScreenState extends State<DashboardScreen>
           redirectUrlList.add(bannerResponseModel.data[i].description);
         }
 
-        setState(() {
-          bannerUrl = urlList;
-          redirectUrl = redirectUrlList;
-        });
+        if (mounted) {
+          setState(() {
+            bannerUrl = urlList;
+            redirectUrl = redirectUrlList;
+          });
+        }
       } else {
         print('Could not fetch image');
       }
@@ -1257,10 +1383,12 @@ class _DashboardScreenState extends State<DashboardScreen>
         if (responseModel.status) {
           List<NoticeResponseData> listOfNotices = List();
           listOfNotices = responseModel.data;
-          if (listOfNotices.isNotEmpty) {
-            setState(() {
-              noticeString = listOfNotices[0].description;
-            });
+          if (mounted) {
+            if (listOfNotices.isNotEmpty) {
+              setState(() {
+                noticeString = listOfNotices[0].description;
+              });
+            }
           }
         } else {
           showErrorDialog(responseModel.message);
@@ -1275,11 +1403,13 @@ class _DashboardScreenState extends State<DashboardScreen>
         AllCommissionsResponseModel responseModel =
             AllCommissionsResponseModel.fromJson(json.decode(response.body));
         if (responseModel.status) {
-          setState(() {
-            youEarned = responseModel.data.youearned;
-            transactionCount = responseModel.data.transcationcount;
-            totalTxnAmount = responseModel.data.totaltxn;
-          });
+          if (mounted) {
+            setState(() {
+              youEarned = responseModel.data.youearned;
+              transactionCount = responseModel.data.transcationcount;
+              totalTxnAmount = responseModel.data.totaltxn;
+            });
+          }
         } else {
           showErrorDialog(responseModel.message);
         }
@@ -1314,73 +1444,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                           Icons.error_outline_rounded,
                           size: 40,
                           color: Colors.red,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                        child: Text(
-                          message,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              'OK',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            )),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
-          });
-    }
-  }
-
-  void showComingSoon(String message) {
-    if (mounted) {
-      showDialog(
-          context: context,
-          builder: (buildContext) {
-            return CustomAlertDialog(
-              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              content: Container(
-                width: 80,
-                height: 150,
-                decoration: new BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: const Color(0xFFFFFF),
-                  borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
-                ),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: Icon(
-                          Icons.info_outline_rounded,
-                          size: 40,
-                          color: Colors.blue,
                         ),
                       ),
                     ),
@@ -1490,6 +1553,73 @@ class _DashboardScreenState extends State<DashboardScreen>
     }
   }
 
+  void showComingSoon(String message) {
+    if (mounted) {
+      showDialog(
+          context: context,
+          builder: (buildContext) {
+            return CustomAlertDialog(
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              content: Container(
+                width: 80,
+                height: 180,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: const Color(0xFFFFFF),
+                  borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Icon(
+                          Icons.info_outline_rounded,
+                          size: 40,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Text(
+                          message,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+  }
+
   void saveWalletBalance(GetWalletResponseData getWalletResponseData) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -1509,7 +1639,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       platformChannel.invokeMethod("AEPS").then((result) {
         print(result.toString());
       });
-    } on PlatformException catch (error) {
+    } catch (error) {
       print('AEPS error : $error');
     }
   }

@@ -5,8 +5,12 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
+import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/biller_details_response_model.dart';
+import 'package:vimopay_application/network/models/cms_bill_details_data.dart';
+import 'package:vimopay_application/network/models/cms_bill_details_response_model.dart';
+import 'package:vimopay_application/network/models/cms_bill_paid_response_model.dart';
 import 'package:vimopay_application/network/models/cms_get_billers_response.dart';
 
 class CMSServiceScreen extends StatefulWidget {
@@ -19,7 +23,9 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
   List<String> listOfOperators = List();
   List<Billers> listOfBillers = List();
   List<TextEditingController> listOfControllers = List();
+  List<TextEditingController> billDetailsControllerList = List();
   List<String> listOfPostKeys = List();
+  List<String> billDetailsPostKeys = List();
 
   String selectedBillerUrl = "";
   String selectedBillerName = "";
@@ -28,12 +34,20 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
   bool _showBillerDetails = false;
   bool _showDetailsProgress = false;
   bool _showProgress = false;
+  bool _showPaymentProgress = false;
+  bool _showBillDetails = false;
 
   List<Fields> listOfFields = List();
+  List<BillDetailsField> billDetailsFields = List();
   String mainWalletBalance = "";
   String authToken = "";
   String sessionId = "";
   String billActionType = "";
+
+  String partnerTxnId = "";
+  String hash = "";
+
+  CMSBillDetailsResponseData _billDetailsResponseData;
 
   @override
   void initState() {
@@ -42,6 +56,19 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
     getUserDetails();
 
     fetchBillerList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    listOfControllers.forEach((controller) {
+      controller.dispose();
+    });
+
+    billDetailsControllerList.forEach((controller) {
+      controller.dispose();
+    });
   }
 
   @override
@@ -172,6 +199,40 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                                     ),
                                   )
                             : Container(),
+                        _showBillDetails && _billDetailsResponseData != null
+                            ? Container(
+                                child: buildDetailsLayout(),
+                              )
+                            : Container(),
+                        _showBillDetails
+                            ? !_showPaymentProgress
+                                ? Container(
+                                    margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                                    alignment: Alignment.center,
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        payBill();
+                                      },
+                                      child: Text(
+                                        "Submit",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      minWidth: 150,
+                                      color: Colors.blue[900],
+                                      padding: EdgeInsets.all(8),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ))
+                            : Container(),
                       ],
                     ),
                   ),
@@ -198,6 +259,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
             selectedBiller = listOfBillers[0];
             selectedBillerUrl = listOfBillers[0].fetchUrl;
             selectedBillerName = listOfBillers[0].name;
+
             fetchBillerDetails(selectedBillerUrl);
           });
         } else {}
@@ -276,12 +338,15 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
   void fetchBillerDetails(String billerURL) {
     setState(() {
       _showDetailsProgress = true;
+
       _showBillerDetails = false;
+      _showBillDetails = false;
     });
 
     HTTPService().fetchBillerDetails(partnerId, billerURL).then((response) {
       setState(() {
         _showDetailsProgress = false;
+        _showBillDetails = false;
       });
 
       if (response.statusCode == 200) {
@@ -318,7 +383,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
       _showProgress = true;
     });
 
-    String partnerTxnId = DateTime.now().microsecondsSinceEpoch.toString();
+    // partnerTxnId = DateTime.now().microsecondsSinceEpoch.toString();
 
     HashMap<String, String> bodyMap = HashMap();
 
@@ -335,7 +400,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
       bodyMap.addAll(map);
     }
 
-    String hash = generateHash();
+    hash = generateHash();
 
     Map<String, String> sessionMap = Map();
     sessionMap['feSessionId'] = sessionId;
@@ -347,6 +412,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
 
     Map<String, String> partnerTxnMap = Map();
     partnerTxnMap['partnerTxnId'] = partnerTxnId;
+    // bodyMap.addAll(partnerTxnMap);
     bodyMap.addAll(partnerTxnMap);
 
     Map<String, String> partnerIdMap = Map();
@@ -356,14 +422,52 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
     selectedBillerUrl =
         "/billers${selectedBillerUrl.substring(selectedBillerUrl.lastIndexOf("/"))}";
 
+    List<BillDetailsField> list = List();
+
     HTTPService()
-        .fetchBillDetails(partnerId, selectedBillerUrl, bodyMap.toString())
+        .fetchBillDetails(partnerId, selectedBillerUrl, jsonEncode(bodyMap))
         .then((response) {
-      setState(() {
-        _showProgress = false;
-      });
       if (response.statusCode == 200) {
-      } else {}
+        CMSBillDetailsResponseModel responseModel =
+            CMSBillDetailsResponseModel.fromJson(json.decode(response.body));
+        _billDetailsResponseData = responseModel.data;
+        if (responseModel.meta.status == "0") {
+          responseModel.data.fields.forEach((field) {
+            TextEditingController textEditingController =
+                TextEditingController();
+            if (field.type != "SUBMIT" &&
+                field.type != "FETCH" &&
+                field.isVisible == "true") {
+              list.add(field);
+              textEditingController.text = field.value;
+              billDetailsControllerList.add(textEditingController);
+              billDetailsPostKeys.add(field.postKey);
+            }
+
+            if (field.type == "SUBMIT" || field.type == "FETCH") {
+              billActionType = field.type;
+            }
+
+            setState(() {
+              _showProgress = false;
+              _showBillDetails = true;
+              _showBillerDetails = false;
+
+              billDetailsFields = list;
+            });
+          });
+        } else {
+          showErrorDialog(responseModel.meta.description);
+          print('Error code : ${responseModel.meta.code}');
+        }
+      } else {
+        setState(() {
+          _showProgress = false;
+          _showBillDetails = false;
+
+          billDetailsFields.clear();
+        });
+      }
     });
   }
 
@@ -377,13 +481,290 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
 
   String generateHash() {
     sessionId = DateTime.now().microsecondsSinceEpoch.toString();
-    String partnerTxnID =
-        "Txn_${DateTime.now().millisecondsSinceEpoch.toString()}";
+    // partnerTxnId = "Txn_${DateTime.now().millisecondsSinceEpoch.toString()}";
+    partnerTxnId = sessionId;
     String salt = "7fabdc58";
 
-    var bytes = utf8.encode('$sessionId#$partnerId#$partnerTxnID#$salt');
+    var bytes = utf8.encode('$sessionId#$partnerId#$partnerTxnId#$salt');
     Digest sha512Result = sha512.convert(bytes);
 
     return sha512Result.toString();
+  }
+
+  void showErrorDialog(String message) {
+    if (mounted) {
+      showDialog(
+          context: context,
+          builder: (buildContext) {
+            return CustomAlertDialog(
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              content: Container(
+                width: 80,
+                height: 200,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: const Color(0xFFFFFF),
+                  borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Icon(
+                          Icons.error_outline_rounded,
+                          size: 40,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Text(
+                          message,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+  }
+
+  void showSuccessDialog(BuildContext buildContext, String message) {
+    if (mounted) {
+      showDialog(
+          context: buildContext,
+          builder: (buildContext) {
+            return CustomAlertDialog(
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              content: Container(
+                width: 80,
+                height: 200,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: const Color(0xFFFFFF),
+                  borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Image.asset(
+                          'images/ic_success.png',
+                          height: 40,
+                          width: 40,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Text(
+                          message,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+  }
+
+  Widget buildDetailsLayout() {
+    return ListView.builder(
+        itemCount: billDetailsFields.length,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return billDetailsFields[index].isVisible == "true"
+              ? Container(
+                  margin: EdgeInsets.fromLTRB(0, 10, 10, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      billDetailsFields[index].type != "FETCH" &&
+                              billDetailsFields[index].type != "SUBMIT"
+                          ? Text(
+                              billDetailsFields[index].label,
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 18,
+                              ),
+                            )
+                          : SizedBox(
+                              height: 1,
+                              width: 1,
+                            ),
+                      Container(
+                        height: 50,
+                        margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: billDetailsFields[index].type != "D" &&
+                                billDetailsFields[index].type != "FETCH" &&
+                                billDetailsFields[index].type != "SUBMIT"
+                            ? TextField(
+                                controller: billDetailsControllerList[index],
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: billDetailsFields[index].label,
+                                  hintStyle: TextStyle(
+                                      color: Colors.black54, fontSize: 16),
+                                  enabled:
+                                      billDetailsFields[index].isEditable ==
+                                              "true"
+                                          ? true
+                                          : false,
+                                ),
+                                keyboardType: billDetailsFields[index].type ==
+                                            "N" ||
+                                        billDetailsFields[index].type == "PWDN"
+                                    ? TextInputType.number
+                                    : TextInputType.text,
+                                obscureText: billDetailsFields[index].type ==
+                                            "PWD" ||
+                                        billDetailsFields[index].type == "PWDN"
+                                    ? true
+                                    : false,
+                              )
+                            : SizedBox(
+                                height: 1,
+                                width: 1,
+                              ),
+                      ),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 1,
+                  width: 1,
+                );
+        });
+  }
+
+  void payBill() {
+    setState(() {
+      _showPaymentProgress = true;
+    });
+
+    // partnerTxnId = DateTime.now().microsecondsSinceEpoch.toString();
+
+    HashMap<String, String> bodyMap = HashMap();
+
+    for (int i = 0; i < billDetailsFields.length; i++) {
+      BillDetailsField field = billDetailsFields[i];
+      TextEditingController textEditingController =
+          billDetailsControllerList[i];
+
+      Map<String, String> map = Map();
+      if (textEditingController.text.isEmpty)
+        map[field.postKey] = field.value;
+      else
+        map[field.postKey] = textEditingController.text;
+
+      bodyMap.addAll(map);
+    }
+
+    // String hash = generateHash();
+
+    Map<String, String> sessionMap = Map();
+    sessionMap['feSessionId'] = sessionId;
+    bodyMap.addAll(sessionMap);
+
+    Map<String, String> assistCustMap = Map();
+    assistCustMap['assistCustId'] = "7718313198";
+    bodyMap.addAll(assistCustMap);
+
+    Map<String, String> hashMap = Map();
+    hashMap['hash'] = hash;
+    bodyMap.addAll(hashMap);
+
+    Map<String, String> partnerTxnMap = Map();
+    partnerTxnMap['partnerTxnId'] = partnerTxnId;
+    // bodyMap.addAll(partnerTxnMap);
+    bodyMap.addAll(partnerTxnMap);
+
+    Map<String, String> customerIdMap = Map();
+    customerIdMap['customerId'] = partnerId;
+    bodyMap.addAll(customerIdMap);
+
+    Map<String, String> partnerIdMap = Map();
+    partnerIdMap['partnerId'] = partnerId;
+    bodyMap.addAll(partnerIdMap);
+
+    selectedBillerUrl =
+        "/billers${selectedBillerUrl.substring(selectedBillerUrl.lastIndexOf("/"))}";
+
+    HTTPService()
+        .payBill(partnerId, selectedBillerUrl, jsonEncode(bodyMap))
+        .then((response) {
+      setState(() {
+        _showPaymentProgress = false;
+      });
+
+      if (response.statusCode == 200) {
+        CMSBillPaidResponseModel responseModel =
+            CMSBillPaidResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.meta.status == "0")
+          showSuccessDialog(context, responseModel.meta.description);
+        else
+          showErrorDialog(responseModel.meta.description);
+      } else {
+        showErrorDialog("Payment failed!");
+      }
+    });
   }
 }

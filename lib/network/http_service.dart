@@ -391,7 +391,63 @@ class HTTPService {
     return response;
   }
 
-  Future<http.Response> fetchElectriciyBillers(
+  Future<http.Response> payElectricityBill(
+      String jwt_token,
+      String ref_id,
+      String billNumber,
+      String accountNumber,
+      String mobileNumber,
+      String amount,
+      String billerId,
+      String field,
+      String fieldValue) async {
+    http.Response response = await http.post(
+        Uri.encodeFull(
+            APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/bill/pay'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'jwt_token': jwt_token,
+        },
+        body: jsonEncode({
+          "ref_id": ref_id,
+          "biller_fetch_response": {},
+          "bill_details": {
+            field: fieldValue,
+            "bill_number": billNumber,
+            "account_number": accountNumber,
+            "amount": amount,
+            "sub_district": "",
+            "sub_division": ""
+          },
+          "biller_details": {
+            "biller_id": billerId,
+          },
+          "additional_info": {
+            "bbpsAgentId": "PT01PT63AGTU00000002",
+            "agent_id": "PT63",
+            "initiating_channel": "AGT",
+            "ip": "10.10.10.10",
+            "imei": "183000006490",
+            "os": "Android",
+            "app_version": "2.0",
+            "customer_mobile": mobileNumber,
+            "mobile": "7718313198",
+            "si_txn": "Yes",
+            "postal_code": "700017",
+            "geocode": "21.2819,74.3789",
+            "terminal_id": "7718313198",
+            "payment_mode": "Cash",
+            "payment_bank": "Cash",
+            "cou_cust_conv_fee": "0",
+            "Remarks": "None",
+          }
+        }));
+
+    print('Electricity Bill Recharge : ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> fetchBBPSBillers(
       String authToken, String serviceId) async {
     http.Response response = await http.post(
       Uri.encodeFull(APIConstants.ENDPOINT_SERVICE_LIST),
@@ -404,7 +460,7 @@ class HTTPService {
       body: jsonEncode({"ServiceId": serviceId}),
     );
 
-    print('Change Mobile Number response: ${response.body}');
+    print('Fetch electricity billers response: ${response.body}');
     return response;
   }
 
@@ -549,6 +605,65 @@ class HTTPService {
     );
 
     print('Bank Details response: ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> getChecksum(String authToken, String beneficiaryAccount,
+      String beneficiaryIFSC, String amount) async {
+    http.Response response =
+        await http.post(Uri.encodeFull(APIConstants.ENDPOINT_GET_CHECKSUM),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+              'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+              'A-Token': authToken,
+            },
+            body: jsonEncode({
+              "subwalletGuid":
+                  "4ccfe9f5-bb17-11ghjghkea-b181-fa163e4dhdfh29e83",
+              "beneficiaryAccount": beneficiaryAccount,
+              "beneficiaryIFSC": beneficiaryIFSC,
+              "amount": amount,
+              "purpose": 'OTHERS',
+            }));
+
+    print('Checksum response: ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> initiatePayout(
+      {String mid,
+      String checkSum,
+      String orderId,
+      String amount,
+      String purpose,
+      String date,
+      String transferMode,
+      String beneficiaryAccount,
+      String beneficiaryIFSC,
+      String beneficiaryVPA,
+      String phoneNumber,
+      String beneficiaryContactRefId}) async {
+    http.Response response =
+        await http.post(Uri.encodeFull(APIConstants.ENDPOINT_INITIATE_PAYOUT),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'x-mid': mid,
+              'x-checksum': checkSum,
+            },
+            body: jsonEncode({
+              'orderId': orderId,
+              'subwalletGuid':
+                  '4ccfe9f5-bb17-11ghjghkea-b181-fa163e4dhdfh29e83',
+              'amount': amount,
+              'purpose': 'OTHERS',
+              'transferMode': transferMode,
+              'beneficiaryAccount': beneficiaryAccount,
+              'beneficiaryIFSC': beneficiaryIFSC,
+              'beneficiaryPhoneNo': phoneNumber,
+            }));
+
+    print('Payout response: ${response.body}');
     return response;
   }
 
@@ -714,11 +829,28 @@ class HTTPService {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Basic b2JjbXM6b2JjbXMxMzM3',
         },
-        body: jsonEncode(keyValuePairs));
+        body: keyValuePairs);
 
     print('Url : $url');
     print('Bill details request : $keyValuePairs');
     print('Fetch Bill Details : ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> payBill(
+      String partnerId, String billerURL, String keyValuePairs) async {
+    String url =
+        "https://apbuat.airtelbank.com:5050/v1/openCms/partner/$partnerId$billerURL/submit";
+    http.Response response = await http.post(Uri.encodeFull(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Basic b2JjbXM6b2JjbXMxMzM3',
+        },
+        body: keyValuePairs);
+
+    print('Url : $url');
+    print('Pay bill request : $keyValuePairs');
+    print('Pay Bill Details : ${response.body}');
     return response;
   }
 
@@ -766,6 +898,37 @@ class HTTPService {
     return response;
   }
 
+  Future<http.Response> getCommissionChart(String authToken) async {
+    http.Response response = await http.post(
+      Uri.encodeFull(APIConstants.ENDPOINT_GET_COMMISSION_CHART),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
+        'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+        'A-Token': authToken,
+      },
+    );
+
+    print('Commission chart : ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> transferToWallet(
+      String authToken, String amount) async {
+    http.Response response = await http.post(
+        Uri.encodeFull(APIConstants.ENDPOINT_TRANSFER_TO_WALLET),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+          'A-Token': authToken,
+        },
+        body: jsonEncode({'TransactionAmt': amount}));
+
+    print('Transfer to wallet: ${response.body}');
+    return response;
+  }
+
   Future<http.Response> getAEPSToken() async {
     http.Response response =
         await http.post(Uri.encodeFull(APIConstants.AEPS_TOKEN_FETCH),
@@ -782,6 +945,37 @@ class HTTPService {
             }));
 
     print('AEPS Token : ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> bbpsBillPay(
+      String authToken,
+      String refId,
+      String operator,
+      String amount,
+      String operatorId,
+      String txnId,
+      bool status) async {
+    http.Response response = await http.post(
+      Uri.encodeFull(APIConstants.ENDPOINT_BBPS_BILL_PAY),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+        'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+        'A-Token': authToken,
+      },
+      body: jsonEncode({
+        "Refno": refId,
+        "Operator": operator,
+        "Amount": amount,
+        "Service": "Electricity Bill",
+        "OperatorID": operatorId,
+        "TxnId": txnId,
+        "Status": status.toString()
+      }),
+    );
+
+    print('BBPS bill pay response: ${response.body}');
     return response;
   }
 }

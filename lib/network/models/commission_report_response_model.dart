@@ -1,4 +1,4 @@
-import 'commission_report_response_data.dart';
+import 'package:vimopay_application/network/models/commission_report_response_data.dart';
 
 class CommissionReportResponseModel {
   String _message;
@@ -13,10 +13,15 @@ class CommissionReportResponseModel {
   }
 
   String get message => _message;
+
   set message(String message) => _message = message;
+
   bool get status => _status;
+
   set status(bool status) => _status = status;
+
   List<CommissionReportResponseData> get data => _data;
+
   set data(List<CommissionReportResponseData> data) => _data = data;
 
   CommissionReportResponseModel.fromJson(Map<String, dynamic> json) {

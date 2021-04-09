@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
@@ -10,14 +11,20 @@ import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_data.dart';
 import 'package:vimopay_application/network/models/get_wallet_response_model.dart';
 import 'package:vimopay_application/network/models/main_transaction_response_model.dart';
+import 'package:vimopay_application/network/models/transfer_to_wallet_response_model.dart';
 import 'package:vimopay_application/ui/AddMoneyWalletScreen.dart';
 import 'package:vimopay_application/ui/DashboardScreen.dart';
 import 'package:vimopay_application/ui/ProfileScreenNew.dart';
+import 'package:vimopay_application/ui/TransferToBankScreen.dart';
 
 import 'ReportScreenUI.dart';
 import 'SupportScreen.dart';
 
 class WalletScreen extends StatefulWidget {
+  String comingFrom = "";
+
+  WalletScreen({this.comingFrom});
+
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
@@ -40,12 +47,15 @@ class _WalletScreenState extends State<WalletScreen> {
   ScrollController _scrollController;
 
   int selectedWallet = 0;
+  int currentIndex = 1;
   bool _showProgress = true;
   bool _showTransactionProgress = false;
+  String _comingFrom = "";
 
   @override
   void initState() {
     super.initState();
+    _comingFrom = widget.comingFrom;
     _scrollController = ScrollController();
 
     backgroundImageList.add('images/ic_aeps_bg.png');
@@ -73,12 +83,28 @@ class _WalletScreenState extends State<WalletScreen> {
     getUserDetails();
 
     _scrollController.addListener(() {
-      print('Selected : ${_scrollController.position.pixels}');
+      // print('Selected : ${_scrollController.position.pixels}');
+      // if (_scrollController.position.pixels == 0) {
+      //   fetchATMWalletTransactions();
+      // } else if (_scrollController.position.pixels > 300) {
+      //   fetchMainWalletTransactions();
+      // }
 
-      if (_scrollController.position.pixels == 0) {
-        fetchATMWalletTransactions();
-      } else if (_scrollController.position.pixels > 300) {
-        fetchMainWalletTransactions();
+      // _scrollController.jumpTo(2);
+      int index =
+          (_scrollController.offset / (MediaQuery.of(context).size.width))
+                  .round() +
+              1;
+      print('Index : $index');
+
+      if (index != currentIndex) {
+        currentIndex = index;
+
+        if (index == 1) {
+          fetchATMWalletTransactions();
+        } else {
+          fetchMainWalletTransactions();
+        }
       }
     });
   }
@@ -228,10 +254,10 @@ class _WalletScreenState extends State<WalletScreen> {
                         : ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
+                            itemExtent: MediaQuery.of(context).size.width - 20,
                             controller: _scrollController,
                             itemBuilder: (context, index) {
                               return Container(
-                                width: MediaQuery.of(context).size.width - 50,
                                 margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 padding: EdgeInsets.all(5),
                                 decoration: BoxDecoration(
@@ -288,38 +314,6 @@ class _WalletScreenState extends State<WalletScreen> {
                                                       ),
                                                     ],
                                                   ),
-                                                  selectedWallet == 1
-                                                      ? Align(
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          child: Material(
-                                                            shape:
-                                                                CircleBorder(),
-                                                            child: InkWell(
-                                                              child: Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(5),
-                                                                child:
-                                                                    Image.asset(
-                                                                  'images/ic_add_money.png',
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                ),
-                                                              ),
-                                                              onTap: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .push(ScaleRoute(
-                                                                        page:
-                                                                            AddMoneyWalletScreen()));
-                                                              },
-                                                            ),
-                                                            elevation: 10,
-                                                            color: Colors.white,
-                                                          ),
-                                                        )
-                                                      : Container()
                                                 ],
                                               ),
                                               margin: EdgeInsets.fromLTRB(
@@ -359,7 +353,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                                 (MediaQuery.of(context)
                                                         .size
                                                         .width -
-                                                    50))
+                                                    20))
                                             .toDouble(),
                                         duration: new Duration(seconds: 2),
                                         curve: Curves.ease);
@@ -370,6 +364,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             itemCount: walletNames.length,
                           ),
                   ),
+                  selectedWallet == 1 ? buildMainExtra() : buildATMExtra(),
                   _showTransactionProgress
                       ? Container()
                       : Container(
@@ -399,7 +394,14 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   Future<bool> onBackPressed() async {
-    Navigator.of(context).pop();
+    if (_comingFrom == "Dashboard") {
+      Navigator.of(context)
+          .pushReplacement(ScaleRoute(page: DashboardScreen()));
+    } else if (_comingFrom == "ReportScreen") {
+      Navigator.of(context).pushReplacement(ScaleRoute(page: ReportScreenUI()));
+    } else {
+      Navigator.of(context).pop();
+    }
     return true;
   }
 
@@ -664,8 +666,8 @@ class _WalletScreenState extends State<WalletScreen> {
                               mainTransactionsList[index].isStatus == 1
                                   ? 'Pending'
                                   : mainTransactionsList[index].isStatus == 2
-                                      ? 'Approved'
-                                      : 'Rejected',
+                                      ? 'Success'
+                                      : 'Failed',
                               style: TextStyle(
                                   color: mainTransactionsList[index].isStatus ==
                                           1
@@ -704,6 +706,333 @@ class _WalletScreenState extends State<WalletScreen> {
       }
     } else {
       return Container();
+    }
+  }
+
+  buildMainExtra() {
+    return Container(
+      width: double.infinity,
+      child: Material(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: InkWell(
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            // child: Image.asset(
+            //   'images/ic_add_money.png',
+            //   height: 24,
+            //   width: 24,
+            // ),
+            child: Text(
+              '+ Add Money',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+          onTap: () {
+            Navigator.of(context)
+                .push(ScaleRoute(page: AddMoneyWalletScreen()));
+          },
+        ),
+        elevation: 10,
+        color: Colors.pink[500],
+      ),
+      alignment: Alignment.centerRight,
+    );
+  }
+
+  buildATMExtra() {
+    return Container(
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Material(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            child: InkWell(
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                // child: Image.asset(
+                //   'images/ic_add_money.png',
+                //   height: 24,
+                //   width: 24,
+                // ),
+                child: Text(
+                  'Transfer to Bank',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+              onTap: () {
+                startTransferToBank();
+              },
+            ),
+            elevation: 10,
+            color: Colors.pink[500],
+          ),
+          Material(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            child: InkWell(
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                // child: Image.asset(
+                //   'images/ic_add_money.png',
+                //   height: 24,
+                //   width: 24,
+                // ),
+                child: Text(
+                  'Transfer to Wallet',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+              onTap: () => showTransferToWallet(),
+            ),
+            elevation: 10,
+            color: Colors.pink[500],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void startTransferToBank() {
+    Navigator.of(context).push(ScaleRoute(
+        page: TransferToBankScreen(
+      walletBalance: atmWalletBalance,
+    )));
+  }
+
+  void showTransferToWallet() {
+    TextEditingController amountController = TextEditingController();
+    bool _showTransferProgress = false;
+
+    if (mounted) {
+      showDialog(
+          context: (context),
+          builder: (buildContext) {
+            return CustomAlertDialog(
+              contentPadding: EdgeInsets.all(5),
+              content: StatefulBuilder(
+                builder: (context, StateSetter stateSetter) {
+                  return Container(
+                    height: 230,
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Transfer to wallet',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              'Wallet Balance',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            Text(
+                              atmWalletBalance,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              'Transfer ',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 16),
+                            ),
+                            SizedBox(
+                              width: 100,
+                              height: 40,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal),
+                                keyboardType: TextInputType.number,
+                                controller: amountController,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: _showTransferProgress
+                              ? CircularProgressIndicator()
+                              : MaterialButton(
+                                  onPressed: () {
+                                    stateSetter(() {
+                                      _showTransferProgress = true;
+                                    });
+                                    String amount =
+                                        amountController.text.trim();
+                                    if (double.parse(amount) <=
+                                        double.parse(atmWalletBalance)) {
+                                      HTTPService()
+                                          .transferToWallet(authToken, amount)
+                                          .then((response) {
+                                        stateSetter(() {
+                                          _showTransferProgress = false;
+                                        });
+                                        Navigator.of(context).pop();
+
+                                        if (response.statusCode == 200) {
+                                          TransferToWalletResponseModel
+                                              responseModel =
+                                              TransferToWalletResponseModel
+                                                  .fromJson(json
+                                                      .decode(response.body));
+                                          if (responseModel.status) {
+                                            setState(() {
+                                              atmWalletBalance = (double.parse(
+                                                          atmWalletBalance) -
+                                                      double.parse(amount))
+                                                  .toString();
+                                            });
+
+                                            showSuccessDialog(
+                                                context, responseModel.message);
+                                          } else {
+                                            showErrorDialog(
+                                                responseModel.message);
+                                          }
+                                        } else {
+                                          showErrorDialog(
+                                              'Some error occurred ${response.statusCode}');
+                                        }
+                                      });
+                                    } else {
+                                      Navigator.of(context).pop();
+                                      showErrorDialog('Not enough balance');
+                                    }
+                                  },
+                                  child: Text(
+                                    'Transfer',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                  color: Colors.blue,
+                                  minWidth: 120,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          });
+    }
+  }
+
+  void showSuccessDialog(BuildContext buildContext, String message) {
+    if (mounted) {
+      showDialog(
+          context: buildContext,
+          builder: (buildContext) {
+            return CustomAlertDialog(
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              content: Container(
+                width: 80,
+                height: 200,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: const Color(0xFFFFFF),
+                  borderRadius: new BorderRadius.all(new Radius.circular(32.0)),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Image.asset(
+                          'images/ic_success.png',
+                          height: 40,
+                          width: 40,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Text(
+                          message,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
     }
   }
 }

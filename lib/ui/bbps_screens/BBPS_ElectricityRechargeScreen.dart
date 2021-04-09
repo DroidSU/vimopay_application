@@ -8,8 +8,10 @@ import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/bbps_bill_fetch_failed_model.dart';
 import 'package:vimopay_application/network/models/bbps_bill_fetched_response_model.dart';
+import 'package:vimopay_application/network/models/bbps_bill_pay_response_model.dart';
 import 'package:vimopay_application/network/models/bbps_login_failed_model.dart';
 import 'package:vimopay_application/network/models/bbps_login_response_model.dart';
+import 'package:vimopay_application/network/models/bbps_services_response_model.dart';
 import 'package:vimopay_application/network/models/biller_list_response_model.dart';
 
 class BBPSElectricityRechargeScreen extends StatefulWidget {
@@ -29,12 +31,16 @@ class _BBPSElectricityRechargeScreenState
   String fieldName = "";
   String fieldValue = "";
   String mobileNumber = "";
+  String refId = "";
+  String amount = "";
+  String mainWalletBalance = "";
 
   TextEditingController fieldController;
   TextEditingController mobileNumberController;
 
   bool _isFetchingBill = false;
   bool _isBillFetched = false;
+  bool _billPayInProgress = false;
   BBPSBillFetchResponseModel billModel;
 
   @override
@@ -46,7 +52,10 @@ class _BBPSElectricityRechargeScreenState
     mobileNumberController = TextEditingController();
     SharedPreferences.getInstance().then((sharedPrefs) {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
+      mainWalletBalance =
+          sharedPrefs.getString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE);
     });
+
     generateAgentToken();
   }
 
@@ -88,17 +97,18 @@ class _BBPSElectricityRechargeScreenState
                       ],
                     ),
                     Container(
-                        padding: EdgeInsets.all(15),
-                        child: InkWell(
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                          onTap: () {
-                            onBackPressed();
-                          },
-                        )),
+                      padding: EdgeInsets.all(15),
+                      child: InkWell(
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 26,
+                        ),
+                        onTap: () {
+                          onBackPressed();
+                        },
+                      ),
+                    ),
                   ],
                 )),
           ),
@@ -140,6 +150,9 @@ class _BBPSElectricityRechargeScreenState
                               onChanged: (value) {
                                 setState(() {
                                   selectedBillerName = value;
+                                  fieldController.clear();
+                                  _isBillFetched = false;
+
                                   listOfBillers.forEach((biller) {
                                     if (biller.cateName == value) {
                                       setState(() {
@@ -404,8 +417,7 @@ class _BBPSElectricityRechargeScreenState
                                         width: 20,
                                       ),
                                       Text(
-                                        billModel.data.billDetails.amount
-                                            .toString(),
+                                        'Rs.${billModel.data.billDetails.amount.toString()}',
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                       )
@@ -414,20 +426,32 @@ class _BBPSElectricityRechargeScreenState
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  MaterialButton(
-                                    onPressed: () {},
-                                    color: Colors.green,
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    child: Text(
-                                      'Pay now',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                                  _billPayInProgress
+                                      ? CircularProgressIndicator()
+                                      : MaterialButton(
+                                          onPressed: () {
+                                            double balance =
+                                                double.parse(mainWalletBalance);
+                                            double amt = double.parse(amount);
+                                            if (balance > amt) {
+                                              payBill();
+                                            } else {
+                                              showErrorDialog(
+                                                  'Insufficient wallet balance');
+                                            }
+                                          },
+                                          color: Colors.green,
+                                          elevation: 5,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          child: Text(
+                                            'Pay now',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                 ],
                               ),
                             ),
@@ -576,17 +600,20 @@ class _BBPSElectricityRechargeScreenState
   }
 
   void fetchElectricityBillers() {
-    HTTPService().fetchElectriciyBillers(authToken, '4').then((response) {
+    HTTPService().fetchBBPSBillers(authToken, '4').then((response) {
       if (response.statusCode == 200) {
         BillerListResponseModel responseModel =
             BillerListResponseModel.fromJson(json.decode(response.body));
         if (responseModel.status) {
-          setState(() {
-            listOfBillers = responseModel.data;
+          if (mounted) {
+            setState(() {
+              listOfBillers = responseModel.data;
 
-            selectedBillerName = listOfBillers[0].cateName;
-            fieldName = listOfBillers[0].field;
-          });
+              selectedBillerName = listOfBillers[0].cateName;
+              fieldName = listOfBillers[0].field;
+              selectedBillerId = listOfBillers[0].value;
+            });
+          }
         } else {}
       } else {
         showErrorDialog('Server error occurred ${response.statusCode}');
@@ -595,7 +622,7 @@ class _BBPSElectricityRechargeScreenState
   }
 
   void fetchBill() {
-    String refId = (DateTime.now().millisecondsSinceEpoch).toString();
+    refId = (DateTime.now().millisecondsSinceEpoch).toString();
 
     HTTPService()
         .bbpsBillFetch(refId, fieldValue, selectedBillerId, agentToken,
@@ -611,13 +638,80 @@ class _BBPSElectricityRechargeScreenState
           setState(() {
             _isBillFetched = true;
             billModel = responseModel;
+            amount = billModel.data.billDetails.amount.toString();
           });
+        } else {
+          BBPSBillFetchFailed responseModel =
+              BBPSBillFetchFailed.fromJson(json.decode(response.body));
+          showErrorDialog(responseModel.message);
+          print('Bill Fetch failed ${response.statusCode}');
         }
       } else {
         BBPSBillFetchFailed responseModel =
             BBPSBillFetchFailed.fromJson(json.decode(response.body));
         showErrorDialog(responseModel.message);
         print('Bill Fetch failed ${response.statusCode}');
+      }
+    });
+  }
+
+  void payBill() {
+    setState(() {
+      _billPayInProgress = true;
+    });
+
+    HTTPService()
+        .payElectricityBill(
+            agentToken,
+            billModel.refId,
+            "",
+            "",
+            mobileNumber,
+            amount,
+            billModel.data.billerDetails.billerId,
+            fieldName,
+            fieldValue)
+        .then((response) {
+      setState(() {
+        _billPayInProgress = false;
+      });
+
+      if (response.statusCode == 200) {
+        BBPSBillPayResponseModel responseModel =
+            BBPSBillPayResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.status == "SUCCESS") {
+          showSuccess(responseModel.message);
+
+          updateTransactionToServer(true);
+        } else {
+          showErrorDialog(responseModel.message);
+
+          updateTransactionToServer(false);
+        }
+      } else {
+        showErrorDialog("Bill payment failed");
+      }
+    });
+  }
+
+  void updateTransactionToServer(bool status) {
+    String txnId = (DateTime.now().millisecondsSinceEpoch).toString();
+
+    HTTPService()
+        .bbpsBillPay(authToken, refId, selectedBillerName, amount,
+            selectedBillerId, txnId, status)
+        .then((response) {
+      if (response.statusCode == 200) {
+        BBPSServicesResponseModel responseModel =
+            BBPSServicesResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.status) {
+          // do nothing
+          print('Transaction updated in the server');
+        } else {
+          print('Transaction could not be updated in server..');
+        }
+      } else {
+        print('Transaction could not be updated in server..');
       }
     });
   }

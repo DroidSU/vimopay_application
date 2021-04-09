@@ -37,7 +37,10 @@ class _ReportScreenUIState extends State<ReportScreenUI> {
                       ScaleRoute(page: DashboardScreen()), (route) => false);
                   break;
                 case 1:
-                  Navigator.of(context).push(ScaleRoute(page: WalletScreen()));
+                  Navigator.of(context).pushReplacement(ScaleRoute(
+                      page: WalletScreen(
+                    comingFrom: "ReportScreen",
+                  )));
                   break;
                 case 2:
                   break;

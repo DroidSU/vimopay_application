@@ -9,6 +9,7 @@ import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/basic_response_model.dart';
+import 'package:vimopay_application/ui/CommissionChartScreen.dart';
 import 'package:vimopay_application/ui/DashboardScreen.dart';
 import 'package:vimopay_application/ui/EditBankDetailsScreen.dart';
 import 'package:vimopay_application/ui/EditProfileScreen.dart';
@@ -802,88 +803,93 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                           elevation: 10,
                           borderRadius: BorderRadius.circular(15),
                           child: Container(
-                            margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                            padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Image.asset(
-                                  'images/ic_discount.png',
-                                  height: 30,
-                                  width: 30,
-                                  color: Colors.black,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Commission Chart',
-                                    style: TextStyle(
+                              margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                              padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: InkWell(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      'images/ic_discount.png',
+                                      height: 30,
+                                      width: 30,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        'Commission Chart',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 50,
+                                      child: Icon(
+                                        Icons.navigate_next_sharp,
                                         color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal),
-                                  ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Container(
-                                  width: 50,
-                                  child: Icon(
-                                    Icons.navigate_next_sharp,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                onTap: () {
+                                  Navigator.of(context).push(ScaleRoute(
+                                      page: CommissionChartScreen()));
+                                },
+                              )),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10, 10, 20, 0),
-                        padding: EdgeInsets.all(5),
-                        child: Material(
-                          child: Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Image.asset(
-                                  'images/ic_certificate.png',
-                                  height: 30,
-                                  width: 30,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Certificate',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ),
-                                Container(
-                                  width: 50,
-                                  child: Icon(
-                                    Icons.navigate_next_sharp,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                            padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                          elevation: 10,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
+                      // Container(
+                      //   margin: EdgeInsets.fromLTRB(10, 10, 20, 0),
+                      //   padding: EdgeInsets.all(5),
+                      //   child: Material(
+                      //     child: Container(
+                      //       child: Row(
+                      //         crossAxisAlignment: CrossAxisAlignment.center,
+                      //         mainAxisAlignment: MainAxisAlignment.start,
+                      //         children: [
+                      //           Image.asset(
+                      //             'images/ic_certificate.png',
+                      //             height: 30,
+                      //             width: 30,
+                      //           ),
+                      //           SizedBox(
+                      //             width: 15,
+                      //           ),
+                      //           Expanded(
+                      //             child: Text(
+                      //               'Certificate',
+                      //               style: TextStyle(
+                      //                   color: Colors.black,
+                      //                   fontSize: 20,
+                      //                   fontWeight: FontWeight.normal),
+                      //             ),
+                      //           ),
+                      //           Container(
+                      //             width: 50,
+                      //             child: Icon(
+                      //               Icons.navigate_next_sharp,
+                      //               color: Colors.black,
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                      //       padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
+                      //       decoration: BoxDecoration(
+                      //           borderRadius: BorderRadius.circular(15)),
+                      //     ),
+                      //     elevation: 10,
+                      //     borderRadius: BorderRadius.circular(15),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

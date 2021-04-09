@@ -9,6 +9,7 @@ class APIConstants {
       BASE_URL + "Credentials/Mobilechange";
   static const ENDPOINT_CHANGE_EMAIL_ADDRESS =
       BASE_URL + "Credentials/Emailchange";
+  static const ENDPOINT_BBPS_BILL_PAY = BASE_URL + "Services/BBPS_Services";
   static const ENDPOINT_UPDATE_PROFILE_DETAILS =
       BASE_URL + "Credentials/Profileupdate";
   static const ENDPOINT_UPDATE_BANK_DETAILS =
@@ -46,10 +47,19 @@ class APIConstants {
       BASE_URL + "Balance/DMTAll_VerifyAccDetails";
   static const ENDPOINT_DMT_REPORTS =
       BASE_URL + "Balance/DMTAll_TransactionDetails";
+  static const ENDPOINT_GET_COMMISSION_CHART =
+      BASE_URL + "Balance/Commissionchart";
+  static const ENDPOINT_TRANSFER_TO_WALLET =
+      BASE_URL + "Balance/RetailerMoneyTransToMainWallet";
   static const AEPS_TOKEN_FETCH = "http://uat.dhansewa.com/AEPS/BCInitiate";
 
   // BBPS APIS
   // static const BBPS_BASE_URL = "https://digitalproxy-staging.paytm.com/billpay/";
   static const BBPS_BASE_URL = "https://billpayment.paytm.com/billpay/";
   static const ENDPOINT_SERVICE_LIST = BASE_URL + "Services/ServiceList";
+
+  static const ENDPOINT_GET_CHECKSUM = BASE_URL + "Riskcovry/GenerateChecksum";
+
+  static const ENDPOINT_INITIATE_PAYOUT =
+      "https://staging-dashboard.paytm.com/bpay/api/v1/disburse/order/bank";
 }

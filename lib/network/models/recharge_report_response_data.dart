@@ -6,6 +6,7 @@ class RechargeReportResponseData {
   String status;
   String type;
   String pK_Id;
+  String operatorName;
 
   RechargeReportResponseData(
       {this.createDate,
@@ -14,7 +15,8 @@ class RechargeReportResponseData {
       this.trxnId,
       this.status,
       this.type,
-      this.pK_Id});
+      this.pK_Id,
+      this.operatorName});
 
   RechargeReportResponseData.fromJson(Map<String, dynamic> json) {
     createDate = json['createDate'];
@@ -24,6 +26,7 @@ class RechargeReportResponseData {
     status = json['status'];
     type = json['type'];
     pK_Id = json['pK_Id'];
+    operatorName = json['operatorName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class RechargeReportResponseData {
     data['status'] = this.status;
     data['type'] = this.type;
     data['pK_Id'] = this.pK_Id;
+    data['operatorName'] = this.operatorName;
     return data;
   }
 }

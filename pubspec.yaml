@@ -43,6 +43,7 @@ dependencies:
   url_launcher: ^5.7.10
   flutter_email_sender: ^4.0.0
   printing: ^4.1.0
+  flutter_svg: ^0.19.1
 
 dev_dependencies:
   flutter_test:

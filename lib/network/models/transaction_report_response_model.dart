@@ -34,6 +34,7 @@ class TransactionReportResponseData {
   String refno;
   String status;
   String amount;
+  String operatorName;
 
   TransactionReportResponseData(
       {this.createDate,
@@ -41,7 +42,8 @@ class TransactionReportResponseData {
       this.transactionId,
       this.refno,
       this.status,
-      this.amount});
+      this.amount,
+      this.operatorName});
 
   TransactionReportResponseData.fromJson(Map<String, dynamic> json) {
     createDate = json['createDate'];
@@ -50,6 +52,7 @@ class TransactionReportResponseData {
     refno = json['refno'];
     status = json['status'];
     amount = json['amount'];
+    operatorName = json['operatorName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +63,7 @@ class TransactionReportResponseData {
     data['refno'] = this.refno;
     data['status'] = this.status;
     data['amount'] = this.amount;
+    data['operatorName'] = this.operatorName;
     return data;
   }
 }

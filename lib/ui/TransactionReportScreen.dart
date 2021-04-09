@@ -19,6 +19,7 @@ class TransactionReportScreen extends StatefulWidget {
 
 class _TransactionReportScreenState extends State<TransactionReportScreen> {
   String authToken = "";
+  String bcID = "";
 
   List<TransactionReportResponseData> transactionList;
   bool _showProgress = true;
@@ -83,6 +84,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
 
     SharedPreferences.getInstance().then((sharedPrefs) {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
+      bcID = sharedPrefs.getString(Constants.SHARED_PREF_USER_ID);
 
       transactionList.clear();
       getTransactionDetails();
@@ -535,81 +537,175 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
 
   void printReceipt(TransactionReportResponseData transactionList) async {
     final doc = pw.Document();
-    // ImageProvider image = Image.asset('images/').image;
-    ImageProvider image = AssetImage('images/ic_logo.png');
 
-    doc.addPage(pw.Page(build: (pw.Context context) {
-      return pw.Center(
-        child: pw.SizedBox(
-          height: 400,
-          width: 500,
-          child: pw.Container(
-            width: 500,
-            alignment: pw.Alignment.center,
-            child: pw.Column(
-              mainAxisAlignment: pw.MainAxisAlignment.center,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text('Transaction Receipt',
-                    style: pw.TextStyle(
-                      fontSize: 20,
-                    )),
-                pw.SizedBox(height: 10),
-                pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+    ImageProvider imageProvider = AssetImage('images/ic_logo.png');
+
+    flutterImageProvider(imageProvider).then((image) {
+      doc.addPage(pw.Page(build: (pw.Context context) {
+        return pw.Container(
+          width: double.infinity,
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Container(
+                  width: double.infinity,
+                  child: pw.Image(image),
+                  alignment: pw.Alignment.center),
+              pw.SizedBox(height: 20),
+              transactionList.status != null
+                  ? pw.Container(
+                      width: double.infinity,
+                      alignment: pw.Alignment.center,
+                      child: pw.Text(
+                          transactionList.status != null
+                              ? transactionList.status
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 30,
+                            fontWeight: pw.FontWeight.bold,
+                          )),
+                    )
+                  : pw.Container(),
+              pw.SizedBox(height: 30),
+              pw.Container(
+                width: double.infinity,
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text('Transaction Id'),
+                      pw.Container(
+                          child: pw.Text('User BC ID',
+                              style: pw.TextStyle(fontSize: 22)),
+                          alignment: pw.Alignment.centerLeft),
+                      pw.Text(bcID,
+                          style: pw.TextStyle(
+                            fontSize: 30,
+                          )),
+                    ]),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                width: double.infinity,
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Container(
+                          child: pw.Text('Transaction Id',
+                              style: pw.TextStyle(fontSize: 24)),
+                          alignment: pw.Alignment.centerLeft),
                       pw.Text(
                           transactionList.transactionId != null
                               ? transactionList.transactionId
                               : '',
                           style: pw.TextStyle(
-                            fontSize: 18,
+                            fontSize: 30,
                           )),
                     ]),
-                pw.SizedBox(height: 10),
-                pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+              ),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                width: double.infinity,
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text('Transaction Amount'),
-                      pw.Text(
-                          transactionList.amount != null
-                              ? transactionList.amount
-                              : '',
-                          style: pw.TextStyle(
-                            fontSize: 18,
-                          )),
-                    ]),
-                pw.SizedBox(height: 10),
-                pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: pw.CrossAxisAlignment.center,
-                    children: [
-                      pw.Text('Transaction Date'),
+                      pw.Container(
+                          child: pw.Text('Transaction Date',
+                              style: pw.TextStyle(fontSize: 24)),
+                          alignment: pw.Alignment.centerLeft),
                       pw.Text(
                           transactionList.createDate != null
                               ? UtilityMethods()
                                   .beautifyDateTime(transactionList.createDate)
                               : '',
                           style: pw.TextStyle(
-                            fontSize: 18,
+                            fontSize: 28,
                           )),
                     ]),
-                pw.SizedBox(height: 10),
-                pw.Container(
-                  child: pw.Text('Thank You',
-                      style: pw.TextStyle(
-                        fontSize: 30,
-                      )),
-                ),
-              ],
-            ),
+              ),
+              // pw.SizedBox(height: 20),
+              // pw.Container(
+              //   width: double.infinity,
+              //   child: pw.Row(
+              //       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+              //       children: [
+              //         pw.Container(
+              //             child: pw.Text('Recharge number',
+              //                 style: pw.TextStyle(fontSize: 24)),
+              //             alignment: pw.Alignment.centerLeft),
+              //         pw.Text(
+              //             transactionList. != null
+              //                 ? transactionList.mobileNo
+              //                 : '',
+              //             style: pw.TextStyle(
+              //               fontSize: 28,
+              //             )),
+              //       ]),
+              // ),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                width: double.infinity,
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Container(
+                          child: pw.Text(
+                              transactionList.operatorName != null
+                                  ? 'Operator Name'
+                                  : '',
+                              style: pw.TextStyle(fontSize: 24)),
+                          alignment: pw.Alignment.centerLeft),
+                      pw.Text(
+                          transactionList.operatorName != null
+                              ? transactionList.operatorName
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 30,
+                          )),
+                    ]),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                width: double.infinity,
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Container(
+                          child: pw.Text('Transaction Amount',
+                              style: pw.TextStyle(fontSize: 24)),
+                          alignment: pw.Alignment.centerLeft),
+                      pw.Text(
+                          transactionList.amount != null
+                              ? 'Rs. ${transactionList.amount}'
+                              : '',
+                          style: pw.TextStyle(
+                              fontSize: 30, fontWeight: pw.FontWeight.bold)),
+                    ]),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                child: pw.Text('Thank You',
+                    style: pw.TextStyle(
+                      fontSize: 40,
+                    )),
+                alignment: pw.Alignment.center,
+              ),
+              pw.SizedBox(height: 60),
+              pw.Container(
+                child: pw.Text('Contact: support@VimoPay.in',
+                    style: pw.TextStyle(fontSize: 18)),
+                alignment: pw.Alignment.center,
+                width: double.infinity,
+              ),
+            ],
           ),
-        ),
-      );
-    })); // Page
+        );
+      })); // Page
+    });
 
     await Printing.layoutPdf(onLayout: (pdfPageFormat) {
       return doc.save();

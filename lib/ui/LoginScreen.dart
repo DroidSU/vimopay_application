@@ -89,13 +89,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         prefixIcon: Icon(Icons.phone_android_rounded),
                         filled: true,
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(
+                            color: Colors.grey, fontWeight: FontWeight.normal),
                         hintText: "Mobile Number",
                         fillColor: Color(0xfff2f2f2)),
                     keyboardType: TextInputType.number,
                     maxLines: 1,
                     inputFormatters: [LengthLimitingTextInputFormatter(10)],
                     controller: mobileNumberController,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Roboto'),
                   ),
                 ),
                 SizedBox(
@@ -136,13 +141,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         filled: true,
-                        hintStyle: new TextStyle(color: Colors.grey),
+                        hintStyle: new TextStyle(
+                            color: Colors.grey, fontWeight: FontWeight.normal),
                         hintText: "Password",
                         fillColor: Colors.grey[200]),
                     keyboardType: TextInputType.visiblePassword,
                     maxLines: 1,
                     obscureText: _obscurePassword,
                     controller: passwordController,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Roboto'),
                   ),
                 ),
                 Container(
