@@ -702,6 +702,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                             onTap: () {
                                               if (index == 0) {
                                                 startAEPSTransaction();
+                                              } else if (index == 1) {
                                               } else if (index == 2) {
                                                 Navigator.of(context).push(
                                                     ScaleRoute(
@@ -1663,6 +1664,17 @@ class _DashboardScreenState extends State<DashboardScreen>
       });
     } catch (error) {
       print('AEPS error : $error');
+    }
+  }
+
+  void startMiniATM() {
+    const platformChannel = const MethodChannel("com.brixham.vimopay");
+    try {
+      platformChannel.invokeMethod("Mini ATM").then((result) {
+        print(result.toString());
+      });
+    } catch (error) {
+      print('Mini ATM error : $error');
     }
   }
 }
