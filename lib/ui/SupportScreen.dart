@@ -146,7 +146,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                     width: 10,
                                   ),
                                   Text(
-                                    'info@vimopay.in',
+                                    'support@vimopay.in',
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.normal),

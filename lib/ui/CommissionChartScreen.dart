@@ -35,7 +35,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
     return SafeArea(
         child: WillPopScope(
             child: Scaffold(
-              backgroundColor: Colors.white70,
+              backgroundColor: Colors.white,
               appBar: PreferredSize(
                 preferredSize: Size(double.infinity, 100),
                 child: Container(
@@ -94,6 +94,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                       shape: BoxShape.rectangle,
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(12),
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              'images/bg_commission.png'),
+                                          fit: BoxFit.cover),
                                     ),
                                     child: Column(
                                       children: [
@@ -104,14 +108,14 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Scheme Name',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
                                             Text(
                                               'Scheme Name',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -119,6 +123,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                         ),
                                         SizedBox(
                                           height: 10,
+                                          child: Divider(
+                                            color: Colors.white,
+                                            thickness: 1,
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -127,7 +135,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Service Name',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -135,7 +143,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               listOfCommissions[index]
                                                   .serviceType,
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -143,6 +151,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                         ),
                                         SizedBox(
                                           height: 10,
+                                          child: Divider(
+                                            color: Colors.white,
+                                            thickness: 1,
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -151,7 +163,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Provicer Name',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -159,7 +171,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               listOfCommissions[index]
                                                   .providerName,
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -167,6 +179,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                         ),
                                         SizedBox(
                                           height: 10,
+                                          child: Divider(
+                                            color: Colors.white,
+                                            thickness: 1,
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -175,7 +191,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Commission Type',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -183,7 +199,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               listOfCommissions[index]
                                                   .commisisontype,
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -191,6 +207,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                         ),
                                         SizedBox(
                                           height: 10,
+                                          child: Divider(
+                                            color: Colors.white,
+                                            thickness: 1,
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -199,7 +219,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Percentage',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -207,7 +227,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               listOfCommissions[index]
                                                   .percentage,
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -215,6 +235,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                         ),
                                         SizedBox(
                                           height: 10,
+                                          child: Divider(
+                                            color: Colors.white,
+                                            thickness: 1,
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -223,14 +247,14 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Flat Form',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
                                             Text(
                                               listOfCommissions[index].flatform,
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -238,6 +262,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                         ),
                                         SizedBox(
                                           height: 10,
+                                          child: Divider(
+                                            color: Colors.white,
+                                            thickness: 1,
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -246,14 +274,14 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Flat To',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
                                             Text(
                                               listOfCommissions[index].flatto,
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -261,6 +289,10 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                         ),
                                         SizedBox(
                                           height: 10,
+                                          child: Divider(
+                                            color: Colors.white,
+                                            thickness: 1,
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -269,14 +301,14 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                             Text(
                                               'Flat Amount',
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),
                                             Text(
                                               listOfCommissions[index].flatamnt,
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 fontSize: 16,
                                               ),
                                             ),

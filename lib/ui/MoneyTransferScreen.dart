@@ -111,470 +111,475 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                 )),
           ),
           body: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    child: Text(
-                      'Account Number:',
+            child: SizedBox.expand(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      child: Text(
+                        'Account Number:',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.start,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 0.5)),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 0.5)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 0.5)),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 0.5)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 0.5)),
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 0.5)),
+                        hintText: 'Account Number',
+                        hintStyle: TextStyle(
+                            color: Colors.grey.withOpacity(0.3),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                        filled: false,
+                      ),
+                      controller: accountNumberController,
+                      keyboardType: TextInputType.number,
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.start,
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal),
                     ),
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 0.5)),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 0.5)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 0.5)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 0.5)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 0.5)),
-                      disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 0.5)),
-                      hintText: 'Account Number',
-                      hintStyle: TextStyle(
-                          color: Colors.grey.withOpacity(0.3),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                      filled: false,
+                    SizedBox(
+                      height: 20,
                     ),
-                    controller: accountNumberController,
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: Text(
-                      'IFSC Code:',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.start,
+                    Container(
+                      child: Text(
+                        'IFSC Code:',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.start,
+                      ),
+                      width: MediaQuery.of(context).size.width,
                     ),
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    child: Stack(
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Colors.black, width: 0.5)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Colors.black, width: 0.5)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Colors.black, width: 0.5)),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Colors.black, width: 0.5)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Colors.black, width: 0.5)),
-                            disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Colors.black, width: 0.5)),
-                            hintText: 'IFSC Code',
-                            hintStyle: TextStyle(
-                                color: Colors.grey.withOpacity(0.3),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                            filled: false,
-                            suffixIcon: _isVerifiedIFSC
-                                ? Icon(
-                                    Icons.verified_rounded,
-                                    color: Colors.green,
-                                  )
-                                : null,
-                          ),
-                          controller: ifscController,
-                          textCapitalization: TextCapitalization.characters,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.normal),
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(11)
-                          ],
-                          // onChanged: (value) {
-                          //   if (value.length == 11) {
-                          //     ifscCode = ifscController.text.trim();
-                          //     accountNumber = accountNumberController.text.trim();
-                          //     verifyIFSC();
-                          //   }
-                          // },
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: MaterialButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (buildContext) {
-                                    return CustomAlertDialog(
-                                      content: Container(
-                                        height: 160,
-                                        child: Column(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                'You need to pay verification charge of Rs 4.00, Are you sure you want to continue with verification?',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                MaterialButton(
-                                                  child: Text(
-                                                    'Yes',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                    verifyIFSC();
-                                                  },
-                                                  color: Colors.green,
-                                                ),
-                                                MaterialButton(
-                                                  child: Text(
-                                                    'No',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  color: Colors.red,
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  });
-                            },
-                            child: Text(
-                              'Verify',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      child: Stack(
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 0.5)),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 0.5)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 0.5)),
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 0.5)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 0.5)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 0.5)),
+                              hintText: 'IFSC Code',
+                              hintStyle: TextStyle(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                              filled: false,
+                              suffixIcon: _isVerifiedIFSC
+                                  ? Icon(
+                                      Icons.verified_rounded,
+                                      color: Colors.green,
+                                    )
+                                  : null,
                             ),
-                            color: Color(0xff133374),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _isVerifiedIFSC
-                      ? Container(
-                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          child: Column(
-                            children: [
-                              Container(
-                                child: Text(
-                                  'Beneficiary Name',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.start,
-                                ),
-                                width: MediaQuery.of(context).size.width,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  hintText: 'Beneficiary Name',
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  filled: false,
-                                ),
-                                controller: beneficiaryController,
-                                keyboardType: TextInputType.name,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                child: Text(
-                                  'Amount',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.start,
-                                ),
-                                width: MediaQuery.of(context).size.width,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  hintText: 'Amount',
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  filled: false,
-                                ),
-                                controller: amountController,
-                                keyboardType: TextInputType.number,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                child: Text(
-                                  'Mobile Number',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.start,
-                                ),
-                                width: MediaQuery.of(context).size.width,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  disabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5)),
-                                  hintText: 'Mobile Number',
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  filled: false,
-                                ),
-                                controller: mobileController,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(10),
-                                ],
-                                keyboardType: TextInputType.phone,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                child: Text(
-                                  'Mode',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.start,
-                                ),
-                                width: MediaQuery.of(context).size.width,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              DropdownButton(
-                                isExpanded: true,
-                                items: listOfModes.map((e) {
-                                  return DropdownMenuItem(
-                                    child: Text(
-                                      e,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                          fontFamily: ''),
-                                    ),
-                                    value: e,
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    mode = value;
-                                  });
-                                },
-                                value: mode,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                child: _showProgress
-                                    ? CircularProgressIndicator()
-                                    : MaterialButton(
-                                        onPressed: () {
-                                          startMoneyTransfer();
-                                        },
-                                        color: Color(0xff133374),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          'Submit',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ),
-                              )
+                            controller: ifscController,
+                            textCapitalization: TextCapitalization.characters,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(11)
                             ],
+                            // onChanged: (value) {
+                            //   if (value.length == 11) {
+                            //     ifscCode = ifscController.text.trim();
+                            //     accountNumber = accountNumberController.text.trim();
+                            //     verifyIFSC();
+                            //   }
+                            // },
                           ),
-                        )
-                      : _showProgress1
-                          ? Container(
-                              child: Center(
-                                child: CircularProgressIndicator(),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: MaterialButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (buildContext) {
+                                      return CustomAlertDialog(
+                                        content: Container(
+                                          height: 160,
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'You need to pay verification charge of Rs 4.00, Are you sure you want to continue with verification?',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  MaterialButton(
+                                                    child: Text(
+                                                      'Yes',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      verifyIFSC();
+                                                    },
+                                                    color: Colors.green,
+                                                  ),
+                                                  MaterialButton(
+                                                    child: Text(
+                                                      'No',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    color: Colors.red,
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                              child: Text(
+                                'Verify',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
                               ),
-                            )
-                          : Container(),
-                ],
+                              color: Color(0xff133374),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _isVerifiedIFSC
+                        ? Container(
+                            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: Text(
+                                    'Beneficiary Name',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    hintText: 'Beneficiary Name',
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    filled: false,
+                                  ),
+                                  controller: beneficiaryController,
+                                  keyboardType: TextInputType.name,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: Text(
+                                    'Amount',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    hintText: 'Amount',
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    filled: false,
+                                  ),
+                                  controller: amountController,
+                                  keyboardType: TextInputType.number,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: Text(
+                                    'Mobile Number',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 0.5)),
+                                    hintText: 'Mobile Number',
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    filled: false,
+                                  ),
+                                  controller: mobileController,
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
+                                  keyboardType: TextInputType.phone,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: Text(
+                                    'Mode',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                DropdownButton(
+                                  isExpanded: true,
+                                  items: listOfModes.map((e) {
+                                    return DropdownMenuItem(
+                                      child: Text(
+                                        e,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                            fontFamily: ''),
+                                      ),
+                                      value: e,
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      mode = value;
+                                    });
+                                  },
+                                  value: mode,
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                                  child: _showProgress
+                                      ? CircularProgressIndicator()
+                                      : MaterialButton(
+                                          onPressed: () {
+                                            startMoneyTransfer();
+                                          },
+                                          color: Color(0xff133374),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            'Submit',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                )
+                              ],
+                            ),
+                          )
+                        : _showProgress1
+                            ? Container(
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : Container(),
+                  ],
+                ),
               ),
             ),
           ),

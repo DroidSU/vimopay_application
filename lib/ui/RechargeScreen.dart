@@ -86,14 +86,14 @@ class _RechargeScreenState extends State<RechargeScreen> {
           sharedPrefs.getString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE);
       atmWalletBalance =
           sharedPrefs.getString(Constants.SHARED_PREF_ATM_BALANCE);
-    });
 
-    if (rechargeType == RechargeTypes.PREPAID) {
-      fetchRechargeReports();
-      getPrepaidList();
-    } else if (rechargeType == RechargeTypes.DTH) {
-      getDTHOperators();
-    }
+      if (rechargeType == RechargeTypes.PREPAID) {
+        fetchRechargeReports();
+        getPrepaidList();
+      } else if (rechargeType == RechargeTypes.DTH) {
+        getDTHOperators();
+      }
+    });
 
     mobileNumberController = TextEditingController();
     amountController = TextEditingController();
@@ -179,9 +179,8 @@ class _RechargeScreenState extends State<RechargeScreen> {
               body: SingleChildScrollView(
                 child: Container(
                   height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
+                  margin: EdgeInsets.all(5),
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white,
@@ -216,7 +215,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                             );
                           }).toList()),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       rechargeType == RechargeTypes.DTH
                           ? Text(
@@ -240,7 +239,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                           : Container(),
                       rechargeType == RechargeTypes.DTH
                           ? SizedBox(
-                              height: 20,
+                              height: 10,
                             )
                           : Container(),
                       Text(
@@ -261,7 +260,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                 TextStyle(color: Colors.black54, fontSize: 16)),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Text(
                         'Amount',
@@ -281,7 +280,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                             )),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 20,
                       ),
                       Container(
                         alignment: Alignment.center,
@@ -336,7 +335,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                           itemBuilder: (context, index) {
                             return Container(
                               width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
+                              margin: EdgeInsets.all(5),
                               child: Material(
                                 elevation: 8,
                                 borderRadius: BorderRadius.circular(12),
@@ -439,7 +438,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                       Row(
                                         children: [
@@ -484,64 +483,65 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                               fontSize: 18),
                                         ),
                                       ),
-                                      Container(
-                                          width: double.infinity,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              MaterialButton(
-                                                onPressed: () {
-                                                  printReceipt(
-                                                      rechargeReportList[
-                                                          index]);
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Image.asset(
-                                                      'images/ic_printer.png',
-                                                      height: 20,
-                                                      width: 20,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                      'Print',
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                color: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              MaterialButton(
-                                                onPressed: () {
-                                                  showComplainDialog(index);
-                                                },
-                                                child: Text(
-                                                  'Complain',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                color: Colors.redAccent,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                            ],
-                                          )),
+                                      // Container(
+                                      //     width: double.infinity,
+                                      //     child: Row(
+                                      //       mainAxisAlignment:
+                                      //           MainAxisAlignment.center,
+                                      //       children: [
+                                      //         MaterialButton(
+                                      //           onPressed: () {
+                                      //             printReceipt(
+                                      //                 rechargeReportList[
+                                      //                     index]);
+                                      //           },
+                                      //           child: Row(
+                                      //             children: [
+                                      //               Image.asset(
+                                      //                 'images/ic_printer.png',
+                                      //                 height: 20,
+                                      //                 width: 20,
+                                      //               ),
+                                      //               SizedBox(
+                                      //                 width: 10,
+                                      //               ),
+                                      //               Text(
+                                      //                 'Print',
+                                      //                 style: TextStyle(
+                                      //                   color: Colors.black,
+                                      //                   fontSize: 16,
+                                      //                 ),
+                                      //               ),
+                                      //             ],
+                                      //           ),
+                                      //           color: Colors.white,
+                                      //           shape: RoundedRectangleBorder(
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(12),
+                                      //           ),
+                                      //         ),
+                                      //         SizedBox(
+                                      //           width: 10,
+                                      //         ),
+                                      //         MaterialButton(
+                                      //           onPressed: () {
+                                      //             showComplainDialog(index);
+                                      //           },
+                                      //           child: Text(
+                                      //             'Complain',
+                                      //             style: TextStyle(
+                                      //               color: Colors.white,
+                                      //             ),
+                                      //           ),
+                                      //           color: Colors.redAccent,
+                                      //           shape: RoundedRectangleBorder(
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(12),
+                                      //           ),
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      // ),
                                     ],
                                   ),
                                 ),

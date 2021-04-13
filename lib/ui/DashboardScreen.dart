@@ -225,6 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Navigator.of(context).pushReplacement(ScaleRoute(
                       page: WalletScreen(
                     comingFrom: "Dashboard",
+                    selectedWallet: 0,
                   )));
                   break;
                 case 2:
@@ -295,14 +296,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     alignment: Alignment.center,
                   ),
-                  Container(
-                    width: 60,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.notifications_active_rounded,
-                      color: Color(0xff133374),
-                    ),
-                  ),
+                  // Container(
+                  //   width: 60,
+                  //   alignment: Alignment.center,
+                  //   child: Icon(
+                  //     Icons.notifications_active_rounded,
+                  //     color: Color(0xff133374),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -399,84 +400,105 @@ class _DashboardScreenState extends State<DashboardScreen>
                               ),
                       ),
                       Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 0.3, color: Colors.grey),
-                        ),
-                        height: 60,
+                        color: Colors.transparent,
+                        height: 65,
                         margin: EdgeInsets.fromLTRB(5, 10, 5, 2),
-                        child: InkWell(
-                          child: Material(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Container(
-                                  height: 70,
-                                  alignment: Alignment.bottomCenter,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Atm Wallet',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              child: Material(
+                                child: SizedBox(
+                                  width: 120,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Atm Wallet',
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        '\u20B9$atmWalletBalance',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          '\u20B9$atmWalletBalance',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                VerticalDivider(
-                                  color: Colors.grey,
-                                  thickness: 0.3,
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                Container(
-                                  height: 70,
-                                  alignment: Alignment.bottomCenter,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Main Wallet',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        '\u20B9$mainWalletBalance',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                              ),
+                              onTap: () {
+                                Navigator.of(context).push(ScaleRoute(
+                                    page: WalletScreen(
+                                  comingFrom: 'Dashboard',
+                                  selectedWallet: 0,
+                                )));
+                              },
                             ),
-                            elevation: 5,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(ScaleRoute(
-                                page: WalletScreen(
-                              comingFrom: "Dashboard",
-                            )));
-                          },
+                            VerticalDivider(
+                              color: Colors.black,
+                              thickness: 0.3,
+                            ),
+                            InkWell(
+                              child: Material(
+                                child: SizedBox(
+                                  width: 120,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Main Wallet',
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          '\u20B9$mainWalletBalance',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.of(context).push(ScaleRoute(
+                                    page: WalletScreen(
+                                  comingFrom: 'Dashboard',
+                                  selectedWallet: 1,
+                                )));
+                              },
+                            )
+                          ],
                         ),
                       ),
                       Container(

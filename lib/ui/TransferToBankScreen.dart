@@ -660,7 +660,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
           //   });
           //   showErrorDialog(responseModel.message);
           // }
-          showSuccessDialog(context, "Request Accepted!");
+          showSuccessDialog(context, "Request Submitted!");
         } else {
           setState(() {
             _transferProgress = false;

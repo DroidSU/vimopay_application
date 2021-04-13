@@ -823,7 +823,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                     ),
                                     Expanded(
                                       child: Text(
-                                        'Commission Chart',
+                                        'My Commissions',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 18,

@@ -40,6 +40,7 @@ class _ReportScreenUIState extends State<ReportScreenUI> {
                   Navigator.of(context).pushReplacement(ScaleRoute(
                       page: WalletScreen(
                     comingFrom: "ReportScreen",
+                    selectedWallet: 0,
                   )));
                   break;
                 case 2:

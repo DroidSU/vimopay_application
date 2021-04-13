@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -21,9 +22,10 @@ import 'ReportScreenUI.dart';
 import 'SupportScreen.dart';
 
 class WalletScreen extends StatefulWidget {
-  String comingFrom = "";
+  final String comingFrom;
+  final int selectedWallet;
 
-  WalletScreen({this.comingFrom});
+  WalletScreen({this.comingFrom, @required this.selectedWallet});
 
   @override
   _WalletScreenState createState() => _WalletScreenState();
@@ -56,6 +58,13 @@ class _WalletScreenState extends State<WalletScreen> {
   void initState() {
     super.initState();
     _comingFrom = widget.comingFrom;
+    selectedWallet = widget.selectedWallet;
+
+    if (selectedWallet == 0)
+      currentIndex = 1;
+    else
+      currentIndex = 2;
+
     _scrollController = ScrollController();
 
     backgroundImageList.add('images/ic_aeps_bg.png');
@@ -83,18 +92,11 @@ class _WalletScreenState extends State<WalletScreen> {
     getUserDetails();
 
     _scrollController.addListener(() {
-      // print('Selected : ${_scrollController.position.pixels}');
-      // if (_scrollController.position.pixels == 0) {
-      //   fetchATMWalletTransactions();
-      // } else if (_scrollController.position.pixels > 300) {
-      //   fetchMainWalletTransactions();
-      // }
-
-      // _scrollController.jumpTo(2);
       int index =
           (_scrollController.offset / (MediaQuery.of(context).size.width))
                   .round() +
               1;
+
       print('Index : $index');
 
       if (index != currentIndex) {
@@ -103,10 +105,13 @@ class _WalletScreenState extends State<WalletScreen> {
         if (index == 1) {
           fetchATMWalletTransactions();
         } else {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
           fetchMainWalletTransactions();
         }
       }
     });
+
+    // _scrollController.jumpTo(currentIndex.toDouble());
   }
 
   @override
@@ -117,6 +122,13 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // After 1 second, it takes you to the end of the ListView
+    if (currentIndex == 2) {
+      Timer(Duration(seconds: 1), () {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    }
+
     return WillPopScope(
         child: SafeArea(
           child: Scaffold(
@@ -226,20 +238,6 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
               ),
             ),
-            // floatingActionButton: selectedWallet == 1
-            //     ? FloatingActionButton(
-            //         child: Icon(
-            //           Icons.add,
-            //           size: 32,
-            //           color: Colors.white,
-            //         ),
-            //         backgroundColor: Color(0xff133374),
-            //         onPressed: () {
-            //           Navigator.of(context)
-            //               .push(ScaleRoute(page: AddMoneyWalletScreen()));
-            //         },
-            //       )
-            //     : null,
             body: Container(
               height: MediaQuery.of(context).size.height,
               child: Column(
@@ -266,99 +264,97 @@ class _WalletScreenState extends State<WalletScreen> {
                                       ? mainWalletGradient
                                       : atmWalletGradient,
                                 ),
-                                child: InkWell(
-                                  child: Material(
-                                      elevation: 5,
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          gradient: index == 0
-                                              ? mainWalletGradient
-                                              : atmWalletGradient,
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              child: Stack(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Material(
-                                                        shape: CircleBorder(),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          child: Image.asset(
-                                                            walletIconList[
-                                                                index],
-                                                            height: 24,
-                                                            width: 24,
-                                                          ),
+                                // child: InkWell(
+                                //   child:
+                                //   onTap: () {
+                                //     _scrollController.animateTo(
+                                //         (index *
+                                //                 (MediaQuery.of(context)
+                                //                         .size
+                                //                         .width -
+                                //                     20))
+                                //             .toDouble(),
+                                //         duration: new Duration(seconds: 2),
+                                //         curve: Curves.ease);
+                                //   },
+                                // ),
+                                child: Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        gradient: index == 0
+                                            ? mainWalletGradient
+                                            : atmWalletGradient,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Stack(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Material(
+                                                      shape: CircleBorder(),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        child: Image.asset(
+                                                          walletIconList[index],
+                                                          height: 24,
+                                                          width: 24,
                                                         ),
-                                                        color: Colors.white,
                                                       ),
-                                                      SizedBox(
-                                                        width: 12,
-                                                      ),
-                                                      Text(
-                                                        walletNames[index],
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 18),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
+                                                      color: Colors.white,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 12,
+                                                    ),
+                                                    Text(
+                                                      walletNames[index],
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 18),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Text(
-                                                    'Balance',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Text(
-                                                    balances[index],
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20),
-                                                  )
-                                                ],
-                                              ),
+                                            margin: EdgeInsets.fromLTRB(
+                                                0, 10, 0, 0),
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  'Balance',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16),
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  balances[index],
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20),
+                                                )
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      )),
-                                  onTap: () {
-                                    _scrollController.animateTo(
-                                        (index *
-                                                (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    20))
-                                            .toDouble(),
-                                        duration: new Duration(seconds: 2),
-                                        curve: Curves.ease);
-                                  },
-                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
                               );
                             },
                             itemCount: walletNames.length,
@@ -606,7 +602,7 @@ class _WalletScreenState extends State<WalletScreen> {
         return ListView.builder(
           itemBuilder: (context, index) {
             return Container(
-              height: 100,
+              height: 150,
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Material(
@@ -684,6 +680,15 @@ class _WalletScreenState extends State<WalletScreen> {
                             width: 20,
                           ),
                         ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        child: Text(
+                          'Comment : ${mainTransactionsList[index].comment}',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ],
                   ),
