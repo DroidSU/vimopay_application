@@ -261,11 +261,9 @@ class CustomAlertDialog extends StatelessWidget {
     }
 
     if (actions != null) {
-      children.add(new ButtonTheme.bar(
-        child: new ButtonBar(
-          children: actions,
-        ),
-      ));
+      children.add(ButtonBar(
+        children: actions,
+      ),);
     }
 
     Widget dialogChild = new IntrinsicWidth(
@@ -627,7 +625,8 @@ Future<T> customShowDialog<T>({
   assert(child == null || builder == null);
   return Navigator.of(context, rootNavigator: true).push(new _DialogRoute<T>(
     child: child ?? new Builder(builder: builder),
-    theme: Theme.of(context, shadowThemeOnly: true),
+    // theme: Theme.of(context, shadowThemeOnly: true),
+    theme: Theme.of(context),
     barrierDismissible: barrierDismissible,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
   ));
