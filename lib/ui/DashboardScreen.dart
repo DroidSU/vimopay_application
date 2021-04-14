@@ -703,6 +703,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                               if (index == 0) {
                                                 startAEPSTransaction();
                                               } else if (index == 1) {
+                                                startMiniATM();
                                               } else if (index == 2) {
                                                 Navigator.of(context).push(
                                                     ScaleRoute(
