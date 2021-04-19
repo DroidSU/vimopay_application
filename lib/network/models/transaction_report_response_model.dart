@@ -1,15 +1,15 @@
 class TransactionReportResponseModel {
-  List<TransactionReportResponseData> data;
-  String message;
-  bool status;
+  List<TransactionReportResponseData>? data;
+  String? message;
+  bool? status;
 
   TransactionReportResponseModel({this.data, this.message, this.status});
 
   TransactionReportResponseModel.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = new List<TransactionReportResponseData>();
+      data = <TransactionReportResponseData>[];
       json['data'].forEach((v) {
-        data.add(new TransactionReportResponseData.fromJson(v));
+        data!.add(new TransactionReportResponseData.fromJson(v));
       });
     }
     message = json['message'];
@@ -19,7 +19,7 @@ class TransactionReportResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     data['message'] = this.message;
     data['status'] = this.status;
@@ -28,13 +28,13 @@ class TransactionReportResponseModel {
 }
 
 class TransactionReportResponseData {
-  String createDate;
-  String transactionType;
-  String transactionId;
-  String refno;
-  String status;
-  String amount;
-  String operatorName;
+  String? createDate;
+  String? transactionType;
+  String? transactionId;
+  String? refno;
+  String? status;
+  String? amount;
+  String? operatorName;
 
   TransactionReportResponseData(
       {this.createDate,

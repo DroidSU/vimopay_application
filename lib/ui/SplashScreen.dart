@@ -15,10 +15,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _animation;
+  late AnimationController _controller;
+  Animation<double>? _animation;
 
-  String authToken = "";
+  String? authToken = "";
 
   @override
   void initState() {
@@ -110,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  void startTimer(String authToken) {
+  void startTimer(String? authToken) {
     Timer(Duration(milliseconds: 3000), () {
       if (authToken != null && authToken.isNotEmpty) {
         Navigator.of(context)

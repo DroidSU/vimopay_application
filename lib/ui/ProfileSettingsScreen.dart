@@ -15,30 +15,30 @@ class ProfileSettingsScreen extends StatefulWidget {
 }
 
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
-  String authToken = "";
+  String? authToken = "";
 
-  String mobileNumber = "";
+  String? mobileNumber = "";
   bool _isValidMobile = true;
-  TextEditingController mobileController;
+  TextEditingController? mobileController;
   String changeMobileOTP = "";
 
-  String emailAddress = "";
+  String? emailAddress = "";
   bool _isValidEmail = true;
-  TextEditingController emailController;
+  TextEditingController? emailController;
   String changeEmailOTP = "";
 
-  String bankHolderName = "";
-  TextEditingController holderNameController;
-  String accountNumber = "";
-  TextEditingController accountNumberController;
-  String ifscCode = "";
-  TextEditingController ifscController;
-  String bankName = "";
-  TextEditingController bankNameController;
+  String? bankHolderName = "";
+  TextEditingController? holderNameController;
+  String? accountNumber = "";
+  TextEditingController? accountNumberController;
+  String? ifscCode = "";
+  TextEditingController? ifscController;
+  String? bankName = "";
+  TextEditingController? bankNameController;
 
-  TextEditingController oldPasswordController;
-  TextEditingController newPasswordController;
-  TextEditingController confirmPasswordController;
+  TextEditingController? oldPasswordController;
+  TextEditingController? newPasswordController;
+  TextEditingController? confirmPasswordController;
 
   bool _showBankUpdateProgress = false;
   bool _showMobileUpdateProgress = false;
@@ -64,15 +64,15 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   @override
   void dispose() {
     super.dispose();
-    mobileController.dispose();
-    emailController.dispose();
-    holderNameController.dispose();
-    accountNumberController.dispose();
-    ifscController.dispose();
-    bankNameController.dispose();
-    oldPasswordController.dispose();
-    newPasswordController.dispose();
-    confirmPasswordController.dispose();
+    mobileController!.dispose();
+    emailController!.dispose();
+    holderNameController!.dispose();
+    accountNumberController!.dispose();
+    ifscController!.dispose();
+    bankNameController!.dispose();
+    oldPasswordController!.dispose();
+    newPasswordController!.dispose();
+    confirmPasswordController!.dispose();
   }
 
   @override
@@ -494,12 +494,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           : sharedPrefs.getString(Constants.SHARED_PREF_IFSC_CODE);
 
       setState(() {
-        mobileController.text = mobileNumber;
-        emailController.text = emailAddress;
-        holderNameController.text = bankHolderName;
-        accountNumberController.text = accountNumber;
-        bankNameController.text = bankName;
-        ifscController.text = ifscCode;
+        mobileController!.text = mobileNumber!;
+        emailController!.text = emailAddress!;
+        holderNameController!.text = bankHolderName!;
+        accountNumberController!.text = accountNumber!;
+        bankNameController!.text = bankName!;
+        ifscController!.text = ifscCode!;
       });
     });
   }
@@ -669,14 +669,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   }
 
   updateMobile() {
-    String mobileNumber = mobileController.text.trim();
+    String mobileNumber = mobileController!.text.trim();
     if (mobileNumber != null && mobileNumber.length == 10) {
       setState(() {
         _showMobileUpdateProgress = true;
       });
 
       HTTPService()
-          .changeMobileNumber(authToken, mobileNumber, '')
+          .changeMobileNumber(authToken!, mobileNumber, '')
           .then((response) {
         setState(() {
           _showMobileUpdateProgress = false;
@@ -700,7 +700,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     }
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -733,7 +733,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -835,12 +835,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   }
 
   updateEmail() {
-    String emailId = emailController.text.trim();
+    String emailId = emailController!.text.trim();
     if (emailId != null && EmailValidator.validate(emailId)) {
       setState(() {
         _showEmailUpdateProgress = true;
       });
-      HTTPService().changeEmailAddress(authToken, emailId, '').then((response) {
+      HTTPService()
+          .changeEmailAddress(authToken!, emailId, '')
+          .then((response) {
         setState(() {
           _showEmailUpdateProgress = false;
         });
@@ -868,14 +870,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       _showBankUpdateProgress = true;
     });
 
-    bankName = bankNameController.text.trim();
-    accountNumber = accountNumberController.text.trim();
-    ifscCode = ifscController.text.trim();
-    bankHolderName = holderNameController.text.trim();
+    bankName = bankNameController!.text.trim();
+    accountNumber = accountNumberController!.text.trim();
+    ifscCode = ifscController!.text.trim();
+    bankHolderName = holderNameController!.text.trim();
 
     HTTPService()
         .updateBankDetails(
-            authToken, bankName, accountNumber, ifscCode, bankHolderName)
+            authToken!, bankName, accountNumber, ifscCode, bankHolderName)
         .then((response) {
       setState(() {
         _showBankUpdateProgress = false;
@@ -884,15 +886,15 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         BasicResponseModel basicResponseModel =
             BasicResponseModel.fromJson(json.decode(response.body));
 
-        if (basicResponseModel.status) {
+        if (basicResponseModel.status!) {
           showSuccessDialog(context, 'Bank details updated successfully');
           SharedPreferences.getInstance().then((sharedPrefs) {
             sharedPrefs.setString(
-                Constants.SHARED_PREF_HOLDER_NAME, bankHolderName);
+                Constants.SHARED_PREF_HOLDER_NAME, bankHolderName!);
             sharedPrefs.setString(
-                Constants.SHARED_PREF_ACCOUNT_NUMBER, accountNumber);
-            sharedPrefs.setString(Constants.SHARED_PREF_IFSC_CODE, ifscCode);
-            sharedPrefs.setString(Constants.SHARED_PREF_BANK_NAME, bankName);
+                Constants.SHARED_PREF_ACCOUNT_NUMBER, accountNumber!);
+            sharedPrefs.setString(Constants.SHARED_PREF_IFSC_CODE, ifscCode!);
+            sharedPrefs.setString(Constants.SHARED_PREF_BANK_NAME, bankName!);
           });
         } else {
           showErrorDialog(basicResponseModel.message);

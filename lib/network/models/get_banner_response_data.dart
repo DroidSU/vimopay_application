@@ -1,7 +1,7 @@
 class BannerResponseData {
-  String photo;
-  String heading;
-  String description;
+  String? photo;
+  String? heading;
+  String? description;
 
   BannerResponseData({this.photo, this.heading, this.description});
 

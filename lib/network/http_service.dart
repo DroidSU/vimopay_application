@@ -5,9 +5,9 @@ import 'package:vimopay_application/customs/api_constants.dart';
 
 class HTTPService {
   Future<http.Response> loginUser(
-      String mobile, String password, String deviceId) async {
+      String mobile, String password, String? deviceId) async {
     http.Response response =
-        await http.post(Uri.encodeFull(APIConstants.ENDPOINT_LOGIN),
+        await http.post(Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_LOGIN)),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
               'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -24,17 +24,17 @@ class HTTPService {
   }
 
   Future<http.Response> forgotPassword(String mobile, String otp) async {
-    http.Response response =
-        await http.post(Uri.encodeFull(APIConstants.ENDPOINT_FORGOT_PASSWORD),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-              'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
-              'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
-            },
-            body: jsonEncode({
-              "Mobile": mobile,
-              "OTP": otp,
-            }));
+    http.Response response = await http.post(
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_FORGOT_PASSWORD)),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+        },
+        body: jsonEncode({
+          "Mobile": mobile,
+          "OTP": otp,
+        }));
 
     print('Forgot Password response: ${response.body}');
     return response;
@@ -42,17 +42,17 @@ class HTTPService {
 
   Future<http.Response> changePassword(
       String authToken, String password) async {
-    http.Response response =
-        await http.post(Uri.encodeFull(APIConstants.ENDPOINT_CHANGE_PASSWORD),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-              'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
-              'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
-              'A-Token': authToken,
-            },
-            body: jsonEncode({
-              "password": password,
-            }));
+    http.Response response = await http.post(
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_CHANGE_PASSWORD)),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+          'A-Token': authToken,
+        },
+        body: jsonEncode({
+          "password": password,
+        }));
 
     print('Change Password response: ${response.body}');
     return response;
@@ -60,7 +60,7 @@ class HTTPService {
 
   Future<http.Response> getWallets(String authToken) async {
     http.Response response = await http.get(
-      Uri.encodeFull(APIConstants.ENDPOINT_GET_WALLETS),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_WALLETS)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -76,7 +76,7 @@ class HTTPService {
   Future<http.Response> getBanner(String authToken) async {
     http.Response response = await http
         .get(
-          Uri.encodeFull(APIConstants.ENDPOINT_GET_BANNER),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_BANNER)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -85,6 +85,7 @@ class HTTPService {
           },
         )
         .timeout(Duration(minutes: 1))
+        // ignore: return_of_invalid_type_from_catch_error
         .catchError((error) => {print('Exception: ${error.toString()}')});
 
     print('Get Banner: ${response.body}');
@@ -94,7 +95,7 @@ class HTTPService {
   Future<http.Response> getNotice(String authToken) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_GET_NOTICE),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_NOTICE)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -112,7 +113,7 @@ class HTTPService {
   Future<http.Response> getAllCommissions(String authToken) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_GET_COMMISSIONS),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_COMMISSIONS)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -131,7 +132,7 @@ class HTTPService {
       String complainDescription) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_COMPLAIN),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_COMPLAIN)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -150,12 +151,12 @@ class HTTPService {
 
   Future<http.Response> sendReportComplain(
       String authToken,
-      String complainStatus,
+      String? complainStatus,
       String complainDescription,
       String rechargeRefId) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_REPORT_COMPLAIN),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_REPORT_COMPLAIN)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -179,7 +180,7 @@ class HTTPService {
   Future<http.Response> getMainWalletTransactions(String authToken) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_FETCH_MAIN_TXNS),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_FETCH_MAIN_TXNS)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -197,7 +198,7 @@ class HTTPService {
   Future<http.Response> getWalletTransactions(String authToken) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_FETCH_WALLET_TXNS),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_FETCH_WALLET_TXNS)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -215,7 +216,7 @@ class HTTPService {
   Future<http.Response> getAdminList(String authToken) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_GET_ADMIN_LIST),
+          Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_ADMIN_LIST)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -231,14 +232,14 @@ class HTTPService {
   }
 
   Future<http.Response> addMoneyRetailer(
-      {String authToken,
-      String adminId,
-      String amount,
-      String mode,
-      String referenceNumber,
-      String note}) async {
+      {String authToken = "",
+      String? adminId,
+      String? amount,
+      String? mode,
+      String? referenceNumber,
+      String? note}) async {
     http.Response response = await http
-        .post(Uri.encodeFull(APIConstants.ENDPOINT_ADD_MONEY),
+        .post(Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_ADD_MONEY)),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
               'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -260,15 +261,15 @@ class HTTPService {
   }
 
   Future<http.Response> moneyTransfer(
-      {String authToken,
-      String accountNumber,
-      String ifscCode,
-      String beneficiaryName,
-      String amount,
-      String mode,
-      String narration}) async {
+      {String authToken = "",
+      String? accountNumber,
+      String? ifscCode,
+      String? beneficiaryName,
+      String? amount,
+      String? mode,
+      String? narration}) async {
     http.Response response = await http
-        .post(Uri.encodeFull(APIConstants.ENDPOINT_MONEY_TRANSFER),
+        .post(Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_MONEY_TRANSFER)),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
               'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -291,10 +292,11 @@ class HTTPService {
   }
 
   Future<http.Response> fetchTransactionDetails(String authToken,
-      String fromDate, String toDate, String status, String product) async {
+      String fromDate, String toDate, String? status, String? product) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(APIConstants.ENDPOINT_FETCH_TRANSACTION_REPORT),
+          Uri.parse(
+              Uri.encodeFull(APIConstants.ENDPOINT_FETCH_TRANSACTION_REPORT)),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -324,9 +326,8 @@ class HTTPService {
   Future<http.Response> bbpsAgentLogin() async {
     http.Response response = await http
         .post(
-          // Uri.encodeFull(APIConstants.BBPS_BASE_URL + 'v2/agents/11065108/login'),
-          Uri.encodeFull(
-              APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/login'),
+          Uri.parse(Uri.encodeFull(
+              APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/login')),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -345,14 +346,14 @@ class HTTPService {
   Future<http.Response> bbpsBillFetch(
       String refID,
       String fieldValue,
-      String billerId,
+      String? billerId,
       String jwt_token,
       String mobileNumber,
-      String field) async {
+      String? field) async {
     http.Response response = await http
         .post(
-          Uri.encodeFull(
-              APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/bill/fetch'),
+          Uri.parse(Uri.encodeFull(
+              APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/bill/fetch')),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'jwt_token': jwt_token,
@@ -393,17 +394,17 @@ class HTTPService {
 
   Future<http.Response> payElectricityBill(
       String jwt_token,
-      String ref_id,
+      String? ref_id,
       String billNumber,
       String accountNumber,
       String mobileNumber,
       String amount,
-      String billerId,
-      String field,
+      String? billerId,
+      String? field,
       String fieldValue) async {
     http.Response response = await http.post(
-        Uri.encodeFull(
-            APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/bill/pay'),
+        Uri.parse(Uri.encodeFull(
+            APIConstants.BBPS_BASE_URL + 'v2/agents/1269501754/bill/pay')),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'jwt_token': jwt_token,
@@ -450,7 +451,7 @@ class HTTPService {
   Future<http.Response> fetchBBPSBillers(
       String authToken, String serviceId) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_SERVICE_LIST),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_SERVICE_LIST)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -465,13 +466,15 @@ class HTTPService {
   }
 
   Future<http.Response> retailerSMSEnquire(
-      {String authToken,
-      String retailerID,
-      String mobileNumber,
-      String name,
-      String message}) async {
+      {String authToken = "",
+      String? retailerID,
+      String? mobileNumber,
+      String? name,
+      String? message}) async {
     http.Response response = await http
-        .post(Uri.encodeFull(APIConstants.ENDPOINT_RETAILER_SMS_ENQUIRE),
+        .post(
+            Uri.parse(
+                Uri.encodeFull(APIConstants.ENDPOINT_RETAILER_SMS_ENQUIRE)),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
               'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -492,9 +495,9 @@ class HTTPService {
   }
 
   Future<http.Response> changeMobileNumber(
-      String authToken, String mobileNumber, String otp) async {
+      String authToken, String? mobileNumber, String? otp) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_CHANGE_MOBILE_NUMBER),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_CHANGE_MOBILE_NUMBER)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -512,9 +515,9 @@ class HTTPService {
   }
 
   Future<http.Response> changeEmailAddress(
-      String authToken, String emailAddress, String otp) async {
+      String authToken, String? emailAddress, String otp) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_CHANGE_EMAIL_ADDRESS),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_CHANGE_EMAIL_ADDRESS)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -533,16 +536,16 @@ class HTTPService {
 
   Future<http.Response> updateProfileDetails(
       String authToken,
-      String name,
-      String address,
-      String city,
-      String state,
-      String pincode,
-      String aadharNumber,
-      String panNumber,
-      String gstNumber) async {
+      String? name,
+      String? address,
+      String? city,
+      String? state,
+      String? pincode,
+      String? aadharNumber,
+      String? panNumber,
+      String? gstNumber) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_UPDATE_PROFILE_DETAILS),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_UPDATE_PROFILE_DETAILS)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -564,10 +567,10 @@ class HTTPService {
     return response;
   }
 
-  Future<http.Response> updateBankDetails(String authToken, String bankName,
-      String accountNumber, String ifsc, String holderName) async {
+  Future<http.Response> updateBankDetails(String authToken, String? bankName,
+      String? accountNumber, String? ifsc, String? holderName) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_UPDATE_BANK_DETAILS),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_UPDATE_BANK_DETAILS)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -595,73 +598,84 @@ class HTTPService {
 
   Future<http.Response> getBankDetails(String authToken) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_GET_BANK_DETAILS),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
-        'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
-        'A-Token': authToken,
-      },
-    );
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_BANK_DETAILS)),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+          'A-Token': authToken,
+        });
 
     print('Bank Details response: ${response.body}');
     return response;
   }
 
+  Future<http.Response> getCommissionPlanPDF(String authToken) async {
+    http.Response response = await http.post(
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_COMMISSION_PLAN)),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+          'A-Token': authToken,
+        });
+
+    print('Commission Plan response: ${response.body}');
+    return response;
+  }
+
   Future<http.Response> getChecksum(String authToken, String beneficiaryAccount,
       String beneficiaryIFSC, String amount) async {
-    http.Response response =
-        await http.post(Uri.encodeFull(APIConstants.ENDPOINT_GET_CHECKSUM),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-              'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
-              'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
-              'A-Token': authToken,
-            },
-            body: jsonEncode({
-              "subwalletGuid":
-                  "4ccfe9f5-bb17-11ghjghkea-b181-fa163e4dhdfh29e83",
-              "beneficiaryAccount": beneficiaryAccount,
-              "beneficiaryIFSC": beneficiaryIFSC,
-              "amount": amount,
-              "purpose": 'OTHERS',
-            }));
+    http.Response response = await http.post(
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_CHECKSUM)),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
+          'Authorization': 'Basic Vmltb3BheTpWaW1vcGF5QDIwMjA=',
+          'A-Token': authToken,
+        },
+        body: jsonEncode({
+          "subwalletGuid": "4ccfe9f5-bb17-11ghjghkea-b181-fa163e4dhdfh29e83",
+          "beneficiaryAccount": beneficiaryAccount,
+          "beneficiaryIFSC": beneficiaryIFSC,
+          "amount": amount,
+          "purpose": 'OTHERS',
+        }));
 
     print('Checksum response: ${response.body}');
     return response;
   }
 
   Future<http.Response> initiatePayout(
-      {String mid,
-      String checkSum,
-      String orderId,
-      String amount,
-      String purpose,
-      String date,
-      String transferMode,
-      String beneficiaryAccount,
-      String beneficiaryIFSC,
-      String beneficiaryVPA,
-      String phoneNumber,
-      String beneficiaryContactRefId}) async {
-    http.Response response =
-        await http.post(Uri.encodeFull(APIConstants.ENDPOINT_INITIATE_PAYOUT),
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-              'x-mid': mid,
-              'x-checksum': checkSum,
-            },
-            body: jsonEncode({
-              'orderId': orderId,
-              'subwalletGuid':
-                  '4ccfe9f5-bb17-11ghjghkea-b181-fa163e4dhdfh29e83',
-              'amount': amount,
-              'purpose': 'OTHERS',
-              'transferMode': transferMode,
-              'beneficiaryAccount': beneficiaryAccount,
-              'beneficiaryIFSC': beneficiaryIFSC,
-              'beneficiaryPhoneNo': phoneNumber,
-            }));
+      {String mid = "",
+      String checkSum = "",
+      String? orderId,
+      String? amount,
+      String? purpose,
+      String? date,
+      String? transferMode,
+      String? beneficiaryAccount,
+      String? beneficiaryIFSC,
+      String? beneficiaryVPA,
+      String? phoneNumber,
+      String? beneficiaryContactRefId}) async {
+    http.Response response = await http.post(
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_INITIATE_PAYOUT)),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'x-mid': mid,
+          'x-checksum': checkSum,
+        },
+        body: jsonEncode({
+          'orderId': orderId,
+          'subwalletGuid': '4ccfe9f5-bb17-11ghjghkea-b181-fa163e4dhdfh29e83',
+          'amount': amount,
+          'purpose': 'OTHERS',
+          'transferMode': transferMode,
+          'beneficiaryAccount': beneficiaryAccount,
+          'beneficiaryIFSC': beneficiaryIFSC,
+          'beneficiaryPhoneNo': phoneNumber,
+        }));
 
     print('Payout response: ${response.body}');
     return response;
@@ -670,11 +684,11 @@ class HTTPService {
   Future<http.Response> prepaidRecharge(
     String authToken,
     String mobileNumber,
-    String operatorCode,
+    String? operatorCode,
     String amount,
   ) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_PREPAID_RECHARGE),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_PREPAID_RECHARGE)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -692,11 +706,13 @@ class HTTPService {
   Future<http.Response> dthRecharge(
     String authToken,
     String subscriberId,
-    String operatorCode,
+    String? operatorCode,
     String amount,
   ) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_DTH_RECHARGE),
+      Uri.parse(
+        Uri.encodeFull(APIConstants.ENDPOINT_DTH_RECHARGE),
+      ),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -720,7 +736,7 @@ class HTTPService {
     String accountNumber,
   ) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_VERIFY_IFSC),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_VERIFY_IFSC)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -735,9 +751,9 @@ class HTTPService {
   }
 
   Future<http.Response> getCommissionReport(
-      String authToken, String fromDate, String toDate, String product) async {
+      String authToken, String fromDate, String toDate, String? product) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_COMMISSION_REPORT),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_COMMISSION_REPORT)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -758,9 +774,9 @@ class HTTPService {
   }
 
   Future<http.Response> getRechargeReport(
-      String authToken, String fromDate, String toDate, String status) async {
+      String authToken, String fromDate, String toDate, String? status) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_RECHARGE_REPORT),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_RECHARGE_REPORT)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -778,7 +794,7 @@ class HTTPService {
   Future<http.Response> getATMReportsScreen(
       String authToken, String fromDate, String toDate, String status) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_ATM_REPORT),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_ATM_REPORT)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -796,8 +812,8 @@ class HTTPService {
   Future<http.Response> fetchCMSBillers(String partnerId) async {
     String url =
         "https://apbuat.airtelbank.com:5050/v1/openCms/partner/$partnerId/billers/";
-    http.Response response =
-        await http.get(Uri.encodeFull(url), headers: <String, String>{
+    http.Response response = await http
+        .get(Uri.parse(Uri.encodeFull(url)), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Basic b2JjbXM6b2JjbXMxMzM3',
     });
@@ -807,11 +823,11 @@ class HTTPService {
   }
 
   Future<http.Response> fetchBillerDetails(
-      String partnerId, String billerURL) async {
+      String partnerId, String? billerURL) async {
     String url =
         "https://apbuat.airtelbank.com:5050/v1/openCms/partner/$partnerId$billerURL";
-    http.Response response =
-        await http.get(Uri.encodeFull(url), headers: <String, String>{
+    http.Response response = await http
+        .get(Uri.parse(Uri.encodeFull(url)), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Basic b2JjbXM6b2JjbXMxMzM3',
     });
@@ -821,10 +837,10 @@ class HTTPService {
   }
 
   Future<http.Response> fetchBillDetails(
-      String partnerId, String billerURL, String keyValuePairs) async {
+      String partnerId, String? billerURL, String keyValuePairs) async {
     String url =
         "https://apbuat.airtelbank.com:5050/v1/openCms/partner/$partnerId$billerURL/fetch";
-    http.Response response = await http.post(Uri.encodeFull(url),
+    http.Response response = await http.post(Uri.parse(Uri.encodeFull(url)),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Basic b2JjbXM6b2JjbXMxMzM3',
@@ -838,10 +854,10 @@ class HTTPService {
   }
 
   Future<http.Response> payBill(
-      String partnerId, String billerURL, String keyValuePairs) async {
+      String partnerId, String? billerURL, String keyValuePairs) async {
     String url =
         "https://apbuat.airtelbank.com:5050/v1/openCms/partner/$partnerId$billerURL/submit";
-    http.Response response = await http.post(Uri.encodeFull(url),
+    http.Response response = await http.post(Uri.parse(Uri.encodeFull(url)),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Basic b2JjbXM6b2JjbXMxMzM3',
@@ -855,9 +871,9 @@ class HTTPService {
   }
 
   Future<http.Response> getVerifiedAccounts(
-      String authToken, String fromDate, String toDate, String status) async {
+      String authToken, String fromDate, String toDate, String? status) async {
     http.Response response = await http.post(
-        Uri.encodeFull(APIConstants.ENDPOINT_DMT_VERIFIED_ACCOUTNS),
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_DMT_VERIFIED_ACCOUTNS)),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -877,9 +893,9 @@ class HTTPService {
   }
 
   Future<http.Response> getDMTReports(
-      String authToken, String fromDate, String toDate, String status) async {
+      String authToken, String fromDate, String toDate, String? status) async {
     http.Response response = await http.post(
-        Uri.encodeFull(APIConstants.ENDPOINT_DMT_REPORTS),
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_DMT_REPORTS)),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',
@@ -900,7 +916,7 @@ class HTTPService {
 
   Future<http.Response> getCommissionChart(String authToken) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_GET_COMMISSION_CHART),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_GET_COMMISSION_CHART)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -916,7 +932,7 @@ class HTTPService {
   Future<http.Response> transferToWallet(
       String authToken, String amount) async {
     http.Response response = await http.post(
-        Uri.encodeFull(APIConstants.ENDPOINT_TRANSFER_TO_WALLET),
+        Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_TRANSFER_TO_WALLET)),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00',
@@ -930,19 +946,19 @@ class HTTPService {
   }
 
   Future<http.Response> getAEPSToken() async {
-    http.Response response =
-        await http.post(Uri.encodeFull(APIConstants.AEPS_TOKEN_FETCH),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode({
-              'bc_id': 'BC319061250',
-              'phone1': '8145661425',
-              'ip': '104.98.216.00',
-              'userid': '814566',
-              'saltkey': '8C3327E8D9D5CE419247DC3826806427',
-              'secretkey': 'MH2503191003444694137MK'
-            }));
+    http.Response response = await http.post(
+        Uri.parse(Uri.encodeFull(APIConstants.AEPS_TOKEN_FETCH)),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'bc_id': 'BC319061250',
+          'phone1': '8145661425',
+          'ip': '104.98.216.00',
+          'userid': '814566',
+          'saltkey': '8C3327E8D9D5CE419247DC3826806427',
+          'secretkey': 'MH2503191003444694137MK'
+        }));
 
     print('AEPS Token : ${response.body}');
     return response;
@@ -951,13 +967,13 @@ class HTTPService {
   Future<http.Response> bbpsBillPay(
       String authToken,
       String refId,
-      String operator,
+      String? operator,
       String amount,
-      String operatorId,
+      String? operatorId,
       String txnId,
       bool status) async {
     http.Response response = await http.post(
-      Uri.encodeFull(APIConstants.ENDPOINT_BBPS_BILL_PAY),
+      Uri.parse(Uri.encodeFull(APIConstants.ENDPOINT_BBPS_BILL_PAY)),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'X-ApiKey': '8f92cb92-c007-448b-b488-1650492dfd00 ',

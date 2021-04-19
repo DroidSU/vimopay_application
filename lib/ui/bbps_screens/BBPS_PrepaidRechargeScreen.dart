@@ -21,24 +21,24 @@ class BBPSPrepaidRechargeScreen extends StatefulWidget {
 }
 
 class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
-  String jwt_token = "";
-  String authToken = "";
-  List<BillerListResponseData> listOfBillers;
-  String mainWalletBalance = "";
-  String selectedBillerName = "";
-  String selectedBillerId = "";
-  String fieldName = "";
+  String? jwt_token = "";
+  String? authToken = "";
+  List<BillerListResponseData>? listOfBillers;
+  String? mainWalletBalance = "";
+  String? selectedBillerName = "";
+  String? selectedBillerId = "";
+  String? fieldName = "";
   String fieldValue = "";
   String amount = "";
   String mobileNumber = "";
   String refId = "";
-  TextEditingController fieldController;
-  TextEditingController mobileNumberController;
+  TextEditingController? fieldController;
+  TextEditingController? mobileNumberController;
 
   bool _isFetchingBill = false;
   bool _isBillFetched = false;
   bool _billPayInProgress = false;
-  BBPSBillFetchResponseModel billModel;
+  late BBPSBillFetchResponseModel billModel;
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
 
     fieldController = TextEditingController();
     mobileNumberController = TextEditingController();
-    listOfBillers = List();
+    listOfBillers = [];
 
     generateAgentToken();
   }
@@ -59,8 +59,8 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
   @override
   void dispose() {
     super.dispose();
-    fieldController.dispose();
-    mobileNumberController.dispose();
+    fieldController!.dispose();
+    mobileNumberController!.dispose();
   }
 
   @override
@@ -129,13 +129,13 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                     ),
                   ),
                   Container(
-                    child: listOfBillers.isNotEmpty
+                    child: listOfBillers!.isNotEmpty
                         ? DropdownButtonHideUnderline(
                             child: DropdownButton(
-                              items: listOfBillers.map((biller) {
+                              items: listOfBillers!.map((biller) {
                                 return DropdownMenuItem(
                                   child: Text(
-                                    biller.cateName,
+                                    biller.cateName!,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal),
@@ -143,13 +143,13 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                                   value: biller.cateName,
                                 );
                               }).toList(),
-                              onChanged: (value) {
+                              onChanged: (dynamic value) {
                                 setState(() {
                                   selectedBillerName = value;
-                                  fieldController.clear();
+                                  fieldController!.clear();
                                   _isBillFetched = false;
 
-                                  listOfBillers.forEach((biller) {
+                                  listOfBillers!.forEach((biller) {
                                     if (biller.cateName == value) {
                                       setState(() {
                                         fieldName = biller.field;
@@ -170,9 +170,9 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? Text(
-                          fieldName,
+                          fieldName!,
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 18,
@@ -182,7 +182,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                   SizedBox(
                     height: 8,
                   ),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? TextField(
                           style: TextStyle(
                             color: Colors.black,
@@ -219,7 +219,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? Text(
                           "Customer Mobile Number",
                           style: TextStyle(
@@ -228,12 +228,12 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                           ),
                         )
                       : Container(),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? SizedBox(
                           height: 8,
                         )
                       : Container(),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? TextField(
                           keyboardType: TextInputType.number,
                           style: TextStyle(
@@ -280,11 +280,11 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                           child: !_isFetchingBill
                               ? MaterialButton(
                                   onPressed: () {
-                                    fieldValue = fieldController.text.trim();
+                                    fieldValue = fieldController!.text.trim();
                                     mobileNumber =
-                                        mobileNumberController.text.trim();
+                                        mobileNumberController!.text.trim();
 
-                                    if (selectedBillerName.isNotEmpty &&
+                                    if (selectedBillerName!.isNotEmpty &&
                                         fieldValue.isNotEmpty &&
                                         mobileNumber.length == 10) {
                                       setState(() {
@@ -292,7 +292,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                                       });
                                       fetchBill();
                                     } else {
-                                      if (selectedBillerName.isEmpty)
+                                      if (selectedBillerName!.isEmpty)
                                         showErrorDialog(
                                             'Please select a biller');
                                       else if (fieldValue.isNotEmpty)
@@ -342,7 +342,8 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                                         width: 20,
                                       ),
                                       Text(
-                                        billModel.data.billerDetails.billerId,
+                                        billModel
+                                            .data!.billerDetails!.billerId!,
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                       )
@@ -367,7 +368,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                                         width: 150,
                                         child: Text(
                                           billModel
-                                              .data.billDetails.customerName,
+                                              .data!.billDetails!.customerName!,
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 14),
@@ -393,7 +394,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                                         width: 20,
                                       ),
                                       Text(
-                                        billModel.data.billDetails.dueDate,
+                                        billModel.data!.billDetails!.dueDate!,
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                       )
@@ -415,7 +416,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                                         width: 20,
                                       ),
                                       Text(
-                                        'Rs.${billModel.data.billDetails.amount.toString()}',
+                                        'Rs.${billModel.data!.billDetails!.amount.toString()}',
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                       )
@@ -428,8 +429,8 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                                       ? CircularProgressIndicator()
                                       : MaterialButton(
                                           onPressed: () {
-                                            double balance =
-                                                double.parse(mainWalletBalance);
+                                            double balance = double.parse(
+                                                mainWalletBalance!);
                                             double amt = double.parse(amount);
                                             if (balance > amt) {
                                               payBill();
@@ -485,7 +486,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -512,7 +513,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -542,7 +543,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
     }
   }
 
-  void showSuccess(String message) {
+  void showSuccess(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -570,7 +571,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(fontSize: 18, fontFamily: ''),
                         textAlign: TextAlign.center,
                       ),
@@ -598,18 +599,18 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
   }
 
   void fetchPostpaidBillers() {
-    HTTPService().fetchBBPSBillers(authToken, '5').then((response) {
+    HTTPService().fetchBBPSBillers(authToken!, '5').then((response) {
       if (response.statusCode == 200) {
         BillerListResponseModel responseModel =
             BillerListResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           if (mounted) {
             setState(() {
               listOfBillers = responseModel.data;
 
-              selectedBillerName = listOfBillers[0].cateName;
-              fieldName = listOfBillers[0].field;
-              selectedBillerId = listOfBillers[0].value;
+              selectedBillerName = listOfBillers![0].cateName;
+              fieldName = listOfBillers![0].field;
+              selectedBillerId = listOfBillers![0].value;
             });
           }
         } else {}
@@ -623,7 +624,7 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
     refId = (DateTime.now().millisecondsSinceEpoch).toString();
 
     HTTPService()
-        .bbpsBillFetch(refId, fieldValue, selectedBillerId, jwt_token,
+        .bbpsBillFetch(refId, fieldValue, selectedBillerId, jwt_token!,
             mobileNumber, fieldName)
         .then((response) {
       setState(() {
@@ -632,11 +633,11 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
       if (response.statusCode == 200) {
         BBPSBillFetchResponseModel responseModel =
             BBPSBillFetchResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status.toLowerCase() == "success") {
+        if (responseModel.status!.toLowerCase() == "success") {
           setState(() {
             _isBillFetched = true;
             billModel = responseModel;
-            amount = billModel.data.billDetails.amount.toString();
+            amount = billModel.data!.billDetails!.amount.toString();
           });
         } else {
           BBPSBillFetchFailed responseModel =
@@ -660,13 +661,13 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
 
     HTTPService()
         .payElectricityBill(
-            jwt_token,
+            jwt_token!,
             billModel.refId,
             "",
             "",
             mobileNumber,
             amount,
-            billModel.data.billerDetails.billerId,
+            billModel.data!.billerDetails!.billerId,
             fieldName,
             fieldValue)
         .then((response) {
@@ -696,13 +697,13 @@ class _BBPSPrepaidRechargeScreenState extends State<BBPSPrepaidRechargeScreen> {
     String txnId = (DateTime.now().millisecondsSinceEpoch).toString();
 
     HTTPService()
-        .bbpsBillPay(authToken, refId, selectedBillerName, amount,
+        .bbpsBillPay(authToken!, refId, selectedBillerName, amount,
             selectedBillerId, txnId, status)
         .then((response) {
       if (response.statusCode == 200) {
         BBPSServicesResponseModel responseModel =
             BBPSServicesResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           // do nothing
           print('Transaction updated in the server');
         } else {

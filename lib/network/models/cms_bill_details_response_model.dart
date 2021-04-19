@@ -2,8 +2,8 @@ import 'package:vimopay_application/network/models/cms_bill_details_data.dart';
 import 'package:vimopay_application/network/models/cms_bill_details_meta.dart';
 
 class CMSBillDetailsResponseModel {
-  CMSBillDetailsResponseMeta meta;
-  CMSBillDetailsResponseData data;
+  CMSBillDetailsResponseMeta? meta;
+  CMSBillDetailsResponseData? data;
 
   CMSBillDetailsResponseModel({this.meta, this.data});
 
@@ -19,10 +19,10 @@ class CMSBillDetailsResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.meta != null) {
-      data['meta'] = this.meta.toJson();
+      data['meta'] = this.meta!.toJson();
     }
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }

@@ -1,6 +1,6 @@
 class BBPSBillPayResponseModel {
-  String status;
-  String message;
+  String? status;
+  String? message;
 
   BBPSBillPayResponseModel({this.status, this.message});
 

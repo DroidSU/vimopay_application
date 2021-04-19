@@ -10,7 +10,7 @@ class BBPSRechargeScreen extends StatefulWidget {
 }
 
 class _BBPSRechargeScreenState extends State<BBPSRechargeScreen> {
-  String authToken = "";
+  String? authToken = "";
 
   @override
   void initState() {

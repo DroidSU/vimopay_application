@@ -1,5 +1,5 @@
 class BBPSLoginFailedModel {
-  String message;
+  String? message;
 
   BBPSLoginFailedModel({this.message});
 

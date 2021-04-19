@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/apptheme.dart';
@@ -12,6 +13,7 @@ import 'customs/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(debug: true);
   await Firebase.initializeApp();
   handleNotifs();
   runApp(
@@ -23,34 +25,12 @@ void main() async {
 }
 
 Future<void> handleNotifs() async {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  // if (Platform.isIOS) {
-  //   iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
-  //     // save the token  OR subscribe to a topic here
-  //   });
-  //
-  //   _fcm.requestNotificationPermissions(IosNotificationSettings());
-  // }
-
-  String fcmToken = await _firebaseMessaging.getToken();
+  String? fcmToken = await FirebaseMessaging.instance.getToken();
   print('FCM Token: $fcmToken');
 
   SharedPreferences.getInstance().then((sharedPrefs) {
-    sharedPrefs.setString(Constants.SHARED_PREF_FCM_TOKEN, fcmToken);
+    sharedPrefs.setString(Constants.SHARED_PREF_FCM_TOKEN, fcmToken!);
   });
-
-  _firebaseMessaging.configure(
-    onMessage: (Map<String, dynamic> message) async {
-      print("onMessage: $message");
-    },
-    onLaunch: (Map<String, dynamic> message) async {
-      print("onLaunch: $message");
-    },
-    onResume: (Map<String, dynamic> message) async {
-      print("onResume: $message");
-    },
-  );
 }
 
 class MyApp extends StatelessWidget {

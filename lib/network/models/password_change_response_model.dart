@@ -1,9 +1,9 @@
 import 'password_change_response_data.dart';
 
 class PasswordChangeResponseModel {
-  String message;
-  bool status;
-  PasswordChangeResponseData data;
+  String? message;
+  bool? status;
+  PasswordChangeResponseData? data;
 
   PasswordChangeResponseModel({this.message, this.status, this.data});
 
@@ -20,7 +20,7 @@ class PasswordChangeResponseModel {
     data['message'] = this.message;
     data['status'] = this.status;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }

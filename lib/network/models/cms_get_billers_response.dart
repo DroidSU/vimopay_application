@@ -1,6 +1,6 @@
 class CMSBillersResponseModel {
-  CMSBillersResponseData data;
-  Meta meta;
+  CMSBillersResponseData? data;
+  Meta? meta;
 
   CMSBillersResponseModel({this.data, this.meta});
 
@@ -14,25 +14,25 @@ class CMSBillersResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     if (this.meta != null) {
-      data['meta'] = this.meta.toJson();
+      data['meta'] = this.meta!.toJson();
     }
     return data;
   }
 }
 
 class CMSBillersResponseData {
-  List<Billers> billers;
+  List<Billers>? billers;
 
   CMSBillersResponseData({this.billers});
 
   CMSBillersResponseData.fromJson(Map<String, dynamic> json) {
     if (json['billers'] != null) {
-      billers = new List<Billers>();
+      billers = <Billers>[];
       json['billers'].forEach((v) {
-        billers.add(new Billers.fromJson(v));
+        billers!.add(new Billers.fromJson(v));
       });
     }
   }
@@ -40,16 +40,16 @@ class CMSBillersResponseData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.billers != null) {
-      data['billers'] = this.billers.map((v) => v.toJson()).toList();
+      data['billers'] = this.billers!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Billers {
-  String name;
-  String fetchUrl;
-  String type;
+  String? name;
+  String? fetchUrl;
+  String? type;
 
   Billers({this.name, this.fetchUrl, this.type});
 
@@ -69,9 +69,9 @@ class Billers {
 }
 
 class Meta {
-  String description;
-  String status;
-  String code;
+  String? description;
+  String? status;
+  String? code;
 
   Meta({this.description, this.status, this.code});
 

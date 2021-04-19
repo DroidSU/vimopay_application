@@ -6,9 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vimopay_application/customs/constants.dart';
 import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/network/http_service.dart';
-import 'package:vimopay_application/network/models/basic_response_model.dart';
 import 'package:vimopay_application/network/models/money_transfer_request_data.dart';
 import 'package:vimopay_application/network/models/money_transfer_response_model.dart';
+import 'package:vimopay_application/network/models/verify_ifsc_response_model.dart';
+
+import '../network/models/dmt_transaction_report_response_model.dart';
 
 class MoneyTransferScreen extends StatefulWidget {
   @override
@@ -18,24 +20,24 @@ class MoneyTransferScreen extends StatefulWidget {
 class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   String accountNumber = "";
   String ifscCode = "";
-  String authToken = "";
+  String? authToken = "";
   String beneficiaryName = "";
   String amount = "";
   String mobileNumber = "";
 
   List<String> listOfModes = ['IMPS', 'NEFT', 'RTGS'];
-  String mode = '';
+  String? mode = '';
 
-  TextEditingController accountNumberController;
-  TextEditingController ifscController;
-  TextEditingController beneficiaryController;
-  TextEditingController amountController;
-  TextEditingController mobileController;
+  TextEditingController? accountNumberController;
+  TextEditingController? ifscController;
+  TextEditingController? beneficiaryController;
+  TextEditingController? amountController;
+  TextEditingController? mobileController;
 
-  bool _isVerifiedIFSC = false;
+  bool _isVerifiedIFSC = true;
   bool _showProgress = false;
   bool _showProgress1 = false;
-  String mainWalletBalance = "";
+  String? mainWalletBalance = "";
 
   @override
   void initState() {
@@ -56,11 +58,11 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
 
   @override
   void dispose() {
-    accountNumberController.dispose();
-    ifscController.dispose();
-    beneficiaryController.dispose();
-    amountController.dispose();
-    mobileController.dispose();
+    accountNumberController!.dispose();
+    ifscController!.dispose();
+    beneficiaryController!.dispose();
+    amountController!.dispose();
+    mobileController!.dispose();
 
     super.dispose();
   }
@@ -111,149 +113,151 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                 )),
           ),
           body: SingleChildScrollView(
-            child: SizedBox.expand(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      child: Text(
-                        'Account Number:',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.start,
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 0.5)),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 0.5)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 0.5)),
-                        errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 0.5)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 0.5)),
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 0.5)),
-                        hintText: 'Account Number',
-                        hintStyle: TextStyle(
-                            color: Colors.grey.withOpacity(0.3),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                        filled: false,
-                      ),
-                      controller: accountNumberController,
-                      keyboardType: TextInputType.number,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    child: Text(
+                      'Account Number:',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.start,
                     ),
-                    SizedBox(
-                      height: 20,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 0.5)),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 0.5)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 0.5)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 0.5)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 0.5)),
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 0.5)),
+                      hintText: 'Account Number',
+                      hintStyle: TextStyle(
+                          color: Colors.grey.withOpacity(0.3),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                      filled: false,
                     ),
-                    Container(
-                      child: Text(
-                        'IFSC Code:',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.start,
-                      ),
-                      width: MediaQuery.of(context).size.width,
+                    controller: accountNumberController,
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: Text(
+                      'IFSC Code:',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.start,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      child: Stack(
-                        children: [
-                          TextField(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 0.5)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 0.5)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 0.5)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 0.5)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 0.5)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 0.5)),
-                              hintText: 'IFSC Code',
-                              hintStyle: TextStyle(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                              filled: false,
-                              suffixIcon: _isVerifiedIFSC
-                                  ? Icon(
-                                      Icons.verified_rounded,
-                                      color: Colors.green,
-                                    )
-                                  : null,
-                            ),
-                            controller: ifscController,
-                            textCapitalization: TextCapitalization.characters,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal),
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(11)
-                            ],
-                            // onChanged: (value) {
-                            //   if (value.length == 11) {
-                            //     ifscCode = ifscController.text.trim();
-                            //     accountNumber = accountNumberController.text.trim();
-                            //     verifyIFSC();
-                            //   }
-                            // },
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 60,
+                    child: Stack(
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Colors.black, width: 0.5)),
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Colors.black, width: 0.5)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Colors.black, width: 0.5)),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Colors.black, width: 0.5)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Colors.black, width: 0.5)),
+                            disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Colors.black, width: 0.5)),
+                            hintText: 'IFSC Code',
+                            hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.3),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            filled: false,
+                            // suffixIcon: _isVerifiedIFSC
+                            //     ? Icon(
+                            //         Icons.verified_rounded,
+                            //         color: Colors.green,
+                            //       )
+                            //     : null,
                           ),
-                          Align(
-                            alignment: Alignment.centerRight,
+                          controller: ifscController,
+                          textCapitalization: TextCapitalization.characters,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal),
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(11)
+                          ],
+                          // onChanged: (value) {
+                          //   if (value.length == 11) {
+                          //     ifscCode = ifscController.text.trim();
+                          //     accountNumber = accountNumberController.text.trim();
+                          //     verifyIFSC();
+                          //   }
+                          // },
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                             child: MaterialButton(
                               onPressed: () {
                                 showDialog(
@@ -322,264 +326,485 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                                 ),
                               ),
                               color: Color(0xff133374),
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    _isVerifiedIFSC
-                        ? Container(
-                            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Text(
-                                    'Beneficiary Name',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  width: MediaQuery.of(context).size.width,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    hintText: 'Beneficiary Name',
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                    filled: false,
-                                  ),
-                                  controller: beneficiaryController,
-                                  keyboardType: TextInputType.name,
+                  ),
+                  _isVerifiedIFSC
+                      ? Container(
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          child: Column(
+                            children: [
+                              Container(
+                                child: Text(
+                                  'Beneficiary Name',
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
                                 ),
-                                SizedBox(
-                                  height: 20,
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  hintText: 'Beneficiary Name',
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  filled: false,
                                 ),
-                                Container(
-                                  child: Text(
-                                    'Amount',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  width: MediaQuery.of(context).size.width,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    hintText: 'Amount',
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                    filled: false,
-                                  ),
-                                  controller: amountController,
-                                  keyboardType: TextInputType.number,
+                                controller: beneficiaryController,
+                                keyboardType: TextInputType.name,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                child: Text(
+                                  'Amount',
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
                                 ),
-                                SizedBox(
-                                  height: 20,
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  hintText: 'Amount',
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  filled: false,
                                 ),
-                                Container(
-                                  child: Text(
-                                    'Mobile Number',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  width: MediaQuery.of(context).size.width,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 0.5)),
-                                    hintText: 'Mobile Number',
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                    filled: false,
-                                  ),
-                                  controller: mobileController,
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(10),
-                                  ],
-                                  keyboardType: TextInputType.phone,
+                                controller: amountController,
+                                keyboardType: TextInputType.number,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                child: Text(
+                                  'Mobile Number',
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
                                 ),
-                                SizedBox(
-                                  height: 20,
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5)),
+                                  hintText: 'Mobile Number',
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  filled: false,
                                 ),
-                                Container(
-                                  child: Text(
-                                    'Mode',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  width: MediaQuery.of(context).size.width,
+                                controller: mobileController,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(10),
+                                ],
+                                keyboardType: TextInputType.phone,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                child: Text(
+                                  'Mode',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                DropdownButton(
-                                  isExpanded: true,
-                                  items: listOfModes.map((e) {
-                                    return DropdownMenuItem(
-                                      child: Text(
-                                        e,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.normal,
-                                            fontFamily: ''),
-                                      ),
-                                      value: e,
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      mode = value;
-                                    });
-                                  },
-                                  value: mode,
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                  child: _showProgress
-                                      ? CircularProgressIndicator()
-                                      : MaterialButton(
-                                          onPressed: () {
-                                            startMoneyTransfer();
-                                          },
-                                          color: Color(0xff133374),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Text(
-                                            'Submit',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.normal),
-                                          ),
+                                width: MediaQuery.of(context).size.width,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DropdownButton(
+                                isExpanded: true,
+                                items: listOfModes.map((e) {
+                                  return DropdownMenuItem(
+                                    child: Text(
+                                      e,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                          fontFamily: ''),
+                                    ),
+                                    value: e,
+                                  );
+                                }).toList(),
+                                onChanged: (dynamic value) {
+                                  setState(() {
+                                    mode = value;
+                                  });
+                                },
+                                value: mode,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                                child: _showProgress
+                                    ? CircularProgressIndicator()
+                                    : MaterialButton(
+                                        onPressed: () {
+                                          startMoneyTransfer();
+                                        },
+                                        color: Color(0xff133374),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                )
-                              ],
-                            ),
-                          )
-                        : _showProgress1
-                            ? Container(
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                                        child: Text(
+                                          'Submit',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ),
                               )
-                            : Container(),
-                  ],
-                ),
+                            ],
+                          ),
+                        )
+                      : _showProgress1
+                          ? Container(
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : Container(),
+                  // Expanded(
+                  //   child: ListView.builder(
+                  //     itemBuilder: (context, index) {
+                  //       return Container(
+                  //         width: MediaQuery.of(context).size.width,
+                  //         margin: EdgeInsets.all(5),
+                  //         child: Material(
+                  //           elevation: 8,
+                  //           borderRadius: BorderRadius.circular(12),
+                  //           child: Container(
+                  //             decoration: BoxDecoration(
+                  //               borderRadius: BorderRadius.circular(12),
+                  //             ),
+                  //             padding: EdgeInsets.fromLTRB(12, 12, 12, 5),
+                  //             child: Column(
+                  //               children: [
+                  //                 Row(
+                  //                   mainAxisAlignment:
+                  //                       MainAxisAlignment.spaceBetween,
+                  //                   children: [
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         'Txn Id: ',
+                  //                         style: TextStyle(
+                  //                           color: Colors.black,
+                  //                           fontSize: 14,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         rechargeReportList[index].trxnId ==
+                  //                                 null
+                  //                             ? ''
+                  //                             : rechargeReportList[index]
+                  //                                 .trxnId,
+                  //                         style: TextStyle(
+                  //                             color: Colors.black,
+                  //                             fontWeight: FontWeight.bold,
+                  //                             fontSize: 16),
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //                 SizedBox(
+                  //                   height: 5,
+                  //                 ),
+                  //                 Row(
+                  //                   mainAxisAlignment:
+                  //                       MainAxisAlignment.spaceBetween,
+                  //                   children: [
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         'Mob Number: ',
+                  //                         style: TextStyle(
+                  //                             color: Colors.black,
+                  //                             fontSize: 14,
+                  //                             fontWeight: FontWeight.normal),
+                  //                       ),
+                  //                     ),
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         rechargeReportList[index].mobileNo ==
+                  //                                 null
+                  //                             ? ''
+                  //                             : rechargeReportList[index]
+                  //                                 .mobileNo,
+                  //                         style: TextStyle(
+                  //                             color: Colors.black,
+                  //                             fontWeight: FontWeight.normal,
+                  //                             fontSize: 16),
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //                 SizedBox(
+                  //                   height: 5,
+                  //                 ),
+                  //                 Row(
+                  //                   children: [
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         'Amount: ',
+                  //                         style: TextStyle(
+                  //                           color: Colors.black,
+                  //                           fontSize: 14,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         rechargeReportList[index].amount ==
+                  //                                 null
+                  //                             ? ''
+                  //                             : '\u20B9${rechargeReportList[index].amount}',
+                  //                         style: TextStyle(
+                  //                             color: Colors.black,
+                  //                             fontWeight: FontWeight.bold,
+                  //                             fontSize: 16),
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //                 SizedBox(
+                  //                   height: 5,
+                  //                 ),
+                  //                 Row(
+                  //                   children: [
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         'Date: ',
+                  //                         style: TextStyle(
+                  //                           color: Colors.black,
+                  //                           fontSize: 14,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Expanded(
+                  //                       child: Text(
+                  //                         rechargeReportList[index]
+                  //                                     .createDate ==
+                  //                                 null
+                  //                             ? ''
+                  //                             : '${rechargeReportList[index].createDate.substring(0, 10)} ${UtilityMethods().beautifyTime(rechargeReportList[index].createDate.substring(12))}',
+                  //                         style: TextStyle(
+                  //                             color: Colors.black,
+                  //                             fontWeight: FontWeight.normal,
+                  //                             fontSize: 14),
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //                 Container(
+                  //                   alignment: Alignment.centerLeft,
+                  //                   padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                  //                   child: Text(
+                  //                     rechargeReportList[index].status,
+                  //                     style: TextStyle(
+                  //                         color: rechargeReportList[index]
+                  //                                     .status
+                  //                                     .toLowerCase() ==
+                  //                                 'fail'
+                  //                             ? Colors.red
+                  //                             : Colors.green,
+                  //                         fontWeight: FontWeight.bold,
+                  //                         fontSize: 18),
+                  //                   ),
+                  //                 ),
+                  //                 // Container(
+                  //                 //     width: double.infinity,
+                  //                 //     child: Row(
+                  //                 //       mainAxisAlignment:
+                  //                 //           MainAxisAlignment.center,
+                  //                 //       children: [
+                  //                 //         MaterialButton(
+                  //                 //           onPressed: () {
+                  //                 //             printReceipt(
+                  //                 //                 rechargeReportList[
+                  //                 //                     index]);
+                  //                 //           },
+                  //                 //           child: Row(
+                  //                 //             children: [
+                  //                 //               Image.asset(
+                  //                 //                 'images/ic_printer.png',
+                  //                 //                 height: 20,
+                  //                 //                 width: 20,
+                  //                 //               ),
+                  //                 //               SizedBox(
+                  //                 //                 width: 10,
+                  //                 //               ),
+                  //                 //               Text(
+                  //                 //                 'Print',
+                  //                 //                 style: TextStyle(
+                  //                 //                   color: Colors.black,
+                  //                 //                   fontSize: 16,
+                  //                 //                 ),
+                  //                 //               ),
+                  //                 //             ],
+                  //                 //           ),
+                  //                 //           color: Colors.white,
+                  //                 //           shape: RoundedRectangleBorder(
+                  //                 //             borderRadius:
+                  //                 //                 BorderRadius.circular(12),
+                  //                 //           ),
+                  //                 //         ),
+                  //                 //         SizedBox(
+                  //                 //           width: 10,
+                  //                 //         ),
+                  //                 //         MaterialButton(
+                  //                 //           onPressed: () {
+                  //                 //             showComplainDialog(index);
+                  //                 //           },
+                  //                 //           child: Text(
+                  //                 //             'Complain',
+                  //                 //             style: TextStyle(
+                  //                 //               color: Colors.white,
+                  //                 //             ),
+                  //                 //           ),
+                  //                 //           color: Colors.redAccent,
+                  //                 //           shape: RoundedRectangleBorder(
+                  //                 //             borderRadius:
+                  //                 //                 BorderRadius.circular(12),
+                  //                 //           ),
+                  //                 //         ),
+                  //                 //       ],
+                  //                 //     ),
+                  //                 // ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //     itemCount: rechargeReportList.length,
+                  //     shrinkWrap: true,
+                  //   ),
+                  // ),
+                ],
               ),
             ),
           ),
@@ -592,42 +817,74 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     return true;
   }
 
-  void verifyIFSC() {
-    accountNumber = accountNumberController.text.trim();
-    ifscCode = ifscController.text.trim();
-    if (accountNumber.isNotEmpty &&
-        ifscCode.isNotEmpty &&
-        ifscCode.length == 11) {
+  void fetchDMTReports() {
+    HTTPService().getDMTReports(authToken!, '', '', '').then((response) {
       setState(() {
-        _showProgress1 = true;
+        _showProgress = false;
       });
 
-      HTTPService()
-          .verifyIFSC(authToken, ifscCode, accountNumber)
-          .then((response) {
+      if (response.statusCode == 200) {
+        DMTTransactionsResponseModel responseModel =
+            DMTTransactionsResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.status!) {
+          setState(() {
+            // rechargeReportList = responseModel.data;
+          });
+        } else {
+          // showErrorDialog('Error occurred ${response.statusCode}');
+        }
+      } else {
+        // showErrorDialog('Error occurred ${response.statusCode}');
+      }
+    });
+  }
+
+  void verifyIFSC() {
+    accountNumber = accountNumberController!.text.trim();
+    ifscCode = ifscController!.text.trim();
+    if (double.parse(mainWalletBalance!) >= 4) {
+      if (accountNumber.isNotEmpty &&
+          ifscCode.isNotEmpty &&
+          ifscCode.length == 11) {
         setState(() {
-          _showProgress1 = false;
+          _showProgress1 = true;
         });
 
-        if (response.statusCode == 200) {
-          BasicResponseModel responseModel =
-              BasicResponseModel.fromJson(json.decode(response.body));
-          if (responseModel.status) {
-            setState(() {
-              _isVerifiedIFSC = true;
-            });
+        HTTPService()
+            .verifyIFSC(authToken!, ifscCode, accountNumber)
+            .then((response) {
+          setState(() {
+            _showProgress1 = false;
+          });
+
+          if (response.statusCode == 200) {
+            // BasicResponseModel responseModel =
+            //     BasicResponseModel.fromJson(json.decode(response.body));
+            VerifyIFSCResponseModel responseModel =
+                VerifyIFSCResponseModel.fromJson(json.decode(response.body));
+            String status = jsonEncode(responseModel.message);
+            print(status);
+
+            if (responseModel.status!) {
+              setState(() {
+                _isVerifiedIFSC = true;
+                showSuccess("Account is verified!");
+              });
+            } else {
+              showErrorDialog(responseModel.message);
+            }
           } else {
-            showErrorDialog(responseModel.message);
+            showErrorDialog('Server error occurred');
           }
-        } else {
-          showErrorDialog('Server error occurred');
-        }
-      });
+        });
+      } else {
+        if (ifscCode.length != 11)
+          showErrorDialog('Invalid IFSC');
+        else
+          showErrorDialog('Account number is empty');
+      }
     } else {
-      if (ifscCode.length != 11)
-        showErrorDialog('Invalid IFSC');
-      else
-        showErrorDialog('Account number is empty');
+      showErrorDialog("Not enough balance");
     }
   }
 
@@ -639,7 +896,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -666,7 +923,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -752,13 +1009,13 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   }
 
   void startMoneyTransfer() {
-    accountNumber = accountNumberController.text.trim();
-    ifscCode = ifscController.text.trim();
-    beneficiaryName = beneficiaryController.text.trim();
-    amount = amountController.text.trim();
-    mobileNumber = mobileController.text.trim();
+    accountNumber = accountNumberController!.text.trim();
+    ifscCode = ifscController!.text.trim();
+    beneficiaryName = beneficiaryController!.text.trim();
+    amount = amountController!.text.trim();
+    mobileNumber = mobileController!.text.trim();
 
-    int balance = double.parse(mainWalletBalance).toInt();
+    int balance = double.parse(mainWalletBalance!).toInt();
 
     if (accountNumber.isNotEmpty &&
         ifscCode.isNotEmpty &&
@@ -775,7 +1032,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
 
       HTTPService()
           .moneyTransfer(
-              authToken: authToken,
+              authToken: authToken!,
               accountNumber: accountNumber,
               ifscCode: ifscCode,
               beneficiaryName: beneficiaryName,
@@ -791,10 +1048,10 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
               MoneyTransferResponseModel.fromJson(json.decode(response.body));
           MoneyTransferRequestData requestData =
               MoneyTransferRequestData.fromJson(
-                  json.decode(responseModel.message));
-          if (responseModel.status) {
+                  json.decode(responseModel.message!));
+          if (responseModel.status!) {
             String message =
-                "Rs.${requestData.data.transferRequest.amount} transferred to ${requestData.data.transferRequest.beneficiaryAccountNumber}";
+                "Rs.${requestData.data!.transferRequest!.amount} transferred to ${requestData.data!.transferRequest!.beneficiaryAccountNumber}";
             showSuccess(message);
           } else {
             showErrorDialog(responseModel.message);

@@ -1,12 +1,12 @@
 class CommissionChartResponseData {
-  String parentMenuName;
-  String serviceType;
-  String providerName;
-  String commisisontype;
-  String percentage;
-  String flatform;
-  String flatto;
-  String flatamnt;
+  String? parentMenuName;
+  String? serviceType;
+  String? providerName;
+  String? commisisontype;
+  String? percentage;
+  String? flatform;
+  String? flatto;
+  String? flatamnt;
 
   CommissionChartResponseData(
       {this.parentMenuName,

@@ -1,7 +1,7 @@
 class GetWalletResponseData {
-  String wBalance;
-  String mBalance;
-  String aBalance;
+  String? wBalance;
+  String? mBalance;
+  String? aBalance;
 
   GetWalletResponseData({this.wBalance, this.mBalance, this.aBalance});
 

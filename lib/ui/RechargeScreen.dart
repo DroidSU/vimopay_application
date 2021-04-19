@@ -21,7 +21,7 @@ import 'package:vimopay_application/ui/DashboardScreen.dart';
 class RechargeScreen extends StatefulWidget {
   final String rechargeType;
 
-  RechargeScreen({@required this.rechargeType});
+  RechargeScreen({required this.rechargeType});
 
   @override
   _RechargeScreenState createState() => _RechargeScreenState();
@@ -29,12 +29,12 @@ class RechargeScreen extends StatefulWidget {
 
 class _RechargeScreenState extends State<RechargeScreen> {
   String rechargeType = "";
-  String authToken = "";
-  List<RechargeReportResponseData> rechargeReportList = List();
+  String? authToken = "";
+  List<RechargeReportResponseData>? rechargeReportList = [];
 
-  String complainStatus = "";
+  String? complainStatus = "";
   String complainDescription = "";
-  TextEditingController descController;
+  TextEditingController? descController;
   bool _showComplaintProgress = false;
 
   List<String> listOfStatus = [
@@ -46,26 +46,26 @@ class _RechargeScreenState extends State<RechargeScreen> {
   ];
 
   String currentDateAsString = "";
-  DateTime currentDate;
+  DateTime? currentDate;
   String fromDateAsString = "";
   String toDateAsString = "";
-  DateTime fromDate;
-  DateTime toDate;
+  DateTime? fromDate;
+  DateTime? toDate;
 
   String mobileNumber = "";
   String subscriberId = "";
   int amount = 0;
-  TextEditingController mobileNumberController;
-  TextEditingController amountController;
-  TextEditingController subscriberIdController;
+  TextEditingController? mobileNumberController;
+  TextEditingController? amountController;
+  late TextEditingController subscriberIdController;
 
   Map<String, String> operatorsMap = Map();
-  List<String> operatorList = List();
-  String selectedOperator = "";
+  List<String> operatorList = [];
+  String? selectedOperator = "";
 
   bool _showProgress = false;
-  String mainWalletBalance = "";
-  String atmWalletBalance = "";
+  String? mainWalletBalance = "";
+  String? atmWalletBalance = "";
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
 
     currentDate = DateTime.now();
     currentDateAsString =
-        '${currentDate.day}/${currentDate.month}/${currentDate.year}';
+        '${currentDate!.day}/${currentDate!.month}/${currentDate!.year}';
     fromDateAsString = currentDateAsString;
     toDateAsString = currentDateAsString;
     fromDate = currentDate;
@@ -101,7 +101,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
   }
 
   void fetchRechargeReports() {
-    HTTPService().getRechargeReport(authToken, '', '', '').then((response) {
+    HTTPService().getRechargeReport(authToken!, '', '', '').then((response) {
       setState(() {
         _showProgress = false;
       });
@@ -109,7 +109,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
       if (response.statusCode == 200) {
         RechargeReportResponseModel responseModel =
             RechargeReportResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             rechargeReportList = responseModel.data;
           });
@@ -125,8 +125,8 @@ class _RechargeScreenState extends State<RechargeScreen> {
   @override
   void dispose() {
     super.dispose();
-    mobileNumberController.dispose();
-    amountController.dispose();
+    mobileNumberController!.dispose();
+    amountController!.dispose();
     subscriberIdController.dispose();
   }
 
@@ -198,7 +198,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                       DropdownButton(
                           isExpanded: true,
                           value: selectedOperator,
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setState(() {
                               selectedOperator = value;
                             });
@@ -289,11 +289,11 @@ class _RechargeScreenState extends State<RechargeScreen> {
                             : MaterialButton(
                                 onPressed: () {
                                   mobileNumber =
-                                      mobileNumberController.text.trim();
+                                      mobileNumberController!.text.trim();
                                   subscriberId =
                                       subscriberIdController.text.trim();
                                   String amountString =
-                                      amountController.text.trim();
+                                      amountController!.text.trim();
                                   if (amountString != null &&
                                       amountString.isNotEmpty)
                                     amount = int.parse(amountString);
@@ -361,12 +361,12 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              rechargeReportList[index]
+                                              rechargeReportList![index]
                                                           .trxnId ==
                                                       null
                                                   ? ''
-                                                  : rechargeReportList[index]
-                                                      .trxnId,
+                                                  : rechargeReportList![index]
+                                                      .trxnId!,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -394,12 +394,12 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              rechargeReportList[index]
+                                              rechargeReportList![index]
                                                           .mobileNo ==
                                                       null
                                                   ? ''
-                                                  : rechargeReportList[index]
-                                                      .mobileNo,
+                                                  : rechargeReportList![index]
+                                                      .mobileNo!,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.normal,
@@ -424,11 +424,11 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              rechargeReportList[index]
+                                              rechargeReportList![index]
                                                           .amount ==
                                                       null
                                                   ? ''
-                                                  : '\u20B9${rechargeReportList[index].amount}',
+                                                  : '\u20B9${rechargeReportList![index].amount}',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -453,11 +453,11 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              rechargeReportList[index]
+                                              rechargeReportList![index]
                                                           .createDate ==
                                                       null
                                                   ? ''
-                                                  : '${rechargeReportList[index].createDate.substring(0, 10)} ${UtilityMethods().beautifyTime(rechargeReportList[index].createDate.substring(12))}',
+                                                  : '${rechargeReportList![index].createDate!.substring(0, 10)} ${UtilityMethods().beautifyTime(rechargeReportList![index].createDate!.substring(12))}',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.normal,
@@ -471,10 +471,10 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                         padding:
                                             EdgeInsets.fromLTRB(5, 10, 5, 0),
                                         child: Text(
-                                          rechargeReportList[index].status,
+                                          rechargeReportList![index].status!,
                                           style: TextStyle(
-                                              color: rechargeReportList[index]
-                                                          .status
+                                              color: rechargeReportList![index]
+                                                          .status!
                                                           .toLowerCase() ==
                                                       'fail'
                                                   ? Colors.red
@@ -548,7 +548,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                               ),
                             );
                           },
-                          itemCount: rechargeReportList.length,
+                          itemCount: rechargeReportList!.length,
                           shrinkWrap: true,
                         ),
                       ),
@@ -620,7 +620,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
     }
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -647,7 +647,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -734,15 +734,15 @@ class _RechargeScreenState extends State<RechargeScreen> {
 
   void startPrepaidRecharge() {
     if (mounted) {
-      int balance = double.parse(mainWalletBalance).toInt();
+      int balance = double.parse(mainWalletBalance!).toInt();
       if (amount <= balance) {
         setState(() {
           _showProgress = true;
         });
 
         HTTPService()
-            .prepaidRecharge(authToken, mobileNumber,
-                operatorsMap[selectedOperator], amount.toString())
+            .prepaidRecharge(authToken!, mobileNumber,
+                operatorsMap[selectedOperator!], amount.toString())
             .then((response) {
           setState(() {
             _showProgress = false;
@@ -755,11 +755,11 @@ class _RechargeScreenState extends State<RechargeScreen> {
             try {
               PrepaidRechargeResponseModel model =
                   PrepaidRechargeResponseModel.fromJson(
-                      json.decode(responseModel.message));
+                      json.decode(responseModel.message!));
 
-              PrepaidRechargeResponseData responseData = model.data;
+              PrepaidRechargeResponseData responseData = model.data!;
 
-              if (responseData.status.toLowerCase() != "failure") {
+              if (responseData.status!.toLowerCase() != "failure") {
                 showSuccess('Your recharge of Rs.$amount is successful');
               } else {
                 showErrorDialog('Recharge request failed');
@@ -821,8 +821,8 @@ class _RechargeScreenState extends State<RechargeScreen> {
       });
 
       HTTPService()
-          .dthRecharge(authToken, subscriberId, operatorsMap[selectedOperator],
-              amount.toString())
+          .dthRecharge(authToken!, subscriberId,
+              operatorsMap[selectedOperator!], amount.toString())
           .then((response) {
         setState(() {
           _showProgress = false;
@@ -835,14 +835,14 @@ class _RechargeScreenState extends State<RechargeScreen> {
           try {
             PrepaidRechargeResponseModel model =
                 PrepaidRechargeResponseModel.fromJson(
-                    json.decode(responseModel.message));
+                    json.decode(responseModel.message!));
 
-            PrepaidRechargeResponseData responseData = model.data;
+            PrepaidRechargeResponseData responseData = model.data!;
 
             // PrepaidRechargeResponseData.fromJson(
             //     json.decode((model.data).toString()));
 
-            if (responseData.status.toLowerCase() != "failure") {
+            if (responseData.status!.toLowerCase() != "failure") {
               showSuccess('Your recharge of Rs.$amount is successful');
             } else {
               showErrorDialog('Recharge request failed');
@@ -881,7 +881,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                         Container(
                           child: DropdownButton(
                             isExpanded: true,
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 complainStatus = value;
                               });
@@ -948,7 +948,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                 child: MaterialButton(
                                   onPressed: () {
                                     complainDescription =
-                                        descController.text.trim();
+                                        descController!.text.trim();
                                     if (listOfStatus.contains(complainStatus) &&
                                         complainDescription.isNotEmpty) {
                                       setState(() {
@@ -957,7 +957,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
 
                                       HTTPService()
                                           .sendReportComplain(
-                                              authToken,
+                                              authToken!,
                                               complainStatus,
                                               complainDescription,
                                               index.toString())
@@ -972,9 +972,9 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                           BasicResponseModel responseModel =
                                               BasicResponseModel.fromJson(
                                                   json.decode(response.body));
-                                          if (responseModel.status) {
+                                          if (responseModel.status!) {
                                             setState(() {
-                                              descController.text = "";
+                                              descController!.text = "";
                                             });
                                             showSuccessDialog(
                                                 context, responseModel.message);
@@ -1010,7 +1010,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
         });
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -1043,7 +1043,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -1106,7 +1106,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                       pw.Text('Transaction Id'),
                       pw.Text(
                           rechargeReportList.trxnId != null
-                              ? rechargeReportList.trxnId
+                              ? rechargeReportList.trxnId!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,
@@ -1120,7 +1120,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                       pw.Text('Transaction Amount'),
                       pw.Text(
                           rechargeReportList.amount != null
-                              ? rechargeReportList.amount
+                              ? rechargeReportList.amount!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,
@@ -1135,7 +1135,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                       pw.Text(
                           rechargeReportList.createDate != null
                               ? UtilityMethods().beautifyDateTime(
-                                  rechargeReportList.createDate)
+                                  rechargeReportList.createDate!)
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,

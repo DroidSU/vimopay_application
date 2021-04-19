@@ -30,6 +30,7 @@ import 'package:vimopay_application/ui/bbps_screens/BBPS_FastagRechargeScreen.da
 import 'package:vimopay_application/ui/bbps_screens/BBPS_PostpaidRechargeScreen.dart';
 import 'package:vimopay_application/ui/bbps_screens/BBPS_PrepaidRechargeScreen.dart';
 
+import 'LoginScreen.dart';
 import 'RechargeScreen.dart';
 import 'bbps_screens/BBPS_WaterRechargeScreen.dart';
 
@@ -40,23 +41,23 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin {
-  AnimationController _headerController;
+  late AnimationController _headerController;
 
-  String authToken;
-  String username = '';
-  String userId = "";
-  String noticeString = "";
-  String youEarned = "";
-  String transactionCount = "";
-  String totalTxnAmount = "";
-  File imageFile;
+  String? authToken;
+  String? username = '';
+  String? userId = "";
+  String? noticeString = "";
+  String? youEarned = "";
+  String? transactionCount = "";
+  String? totalTxnAmount = "";
+  File? imageFile;
 
   bool _showWallet = false;
-  String mainWalletBalance = "";
-  String atmWalletBalance = "";
+  String? mainWalletBalance = "";
+  String? atmWalletBalance = "";
 
-  List<String> bannerUrl = List();
-  List<String> redirectUrl = List();
+  List<String?> bannerUrl = [];
+  List<String?> redirectUrl = [];
   bool _showCommissions = false;
 
   List<String> bankingImages = [
@@ -74,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     'Money Transfer',
     'Aadhar Pay',
     'New Account',
-    'UPI Money Transfer'
+    'BHIM UPI'
   ];
 
   List<String> bbpsServiceTitles = [
@@ -296,14 +297,85 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     alignment: Alignment.center,
                   ),
-                  // Container(
-                  //   width: 60,
-                  //   alignment: Alignment.center,
-                  //   child: Icon(
-                  //     Icons.notifications_active_rounded,
-                  //     color: Color(0xff133374),
-                  //   ),
-                  // ),
+                  Container(
+                      width: 60,
+                      alignment: Alignment.center,
+                      child: InkWell(
+                        child: Icon(
+                          Icons.logout,
+                          // color: Color(0xff133374),
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (buildContext) {
+                                return CustomAlertDialog(
+                                  content: Container(
+                                    height: 100,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Sure you want to logout?',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          children: [
+                                            MaterialButton(
+                                              onPressed: () {
+                                                logoutUser();
+                                              },
+                                              color: Colors.green,
+                                              child: Text(
+                                                'Yes',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                              elevation: 10,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            MaterialButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              color: Colors.red,
+                                              child: Text(
+                                                'No',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                              elevation: 10,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                      )),
                 ],
               ),
             ),
@@ -339,7 +411,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                               padding: EdgeInsets.all(5),
                               child: Center(
                                 child: Marquee(
-                                  text: noticeString,
+                                  text: noticeString!,
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                   scrollAxis: Axis.horizontal,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,7 +455,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                         .map((url) => InkWell(
                                               child: ClipRRect(
                                                 child: Image.network(
-                                                  url,
+                                                  url!,
                                                   fit: BoxFit.fill,
                                                 ),
                                                 borderRadius: BorderRadius.all(
@@ -568,7 +640,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                 height: 2,
                                               ),
                                               Text(
-                                                youEarned,
+                                                youEarned!,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 18,
@@ -590,7 +662,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                 height: 2,
                                               ),
                                               Text(
-                                                transactionCount,
+                                                transactionCount!,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 18,
@@ -612,7 +684,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                 height: 2,
                                               ),
                                               Text(
-                                                totalTxnAmount,
+                                                totalTxnAmount!,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 18,
@@ -1315,7 +1387,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       username = sharedPreferences.getString(Constants.SHARED_PREF_NAME);
     });
 
-    String imagePath =
+    String? imagePath =
         sharedPreferences.getString(Constants.SHARED_PREF_USER_DP_PATH);
     if (imagePath != null) {
       setState(() {
@@ -1323,27 +1395,27 @@ class _DashboardScreenState extends State<DashboardScreen>
       });
     }
 
-    HTTPService().getWallets(authToken).then((response) {
+    HTTPService().getWallets(authToken!).then((response) {
       if (response.statusCode == 200) {
         GetWalletsResponseModel walletsResponseModel =
             GetWalletsResponseModel.fromJson(json.decode(response.body));
 
-        if (walletsResponseModel.status) {
-          GetWalletResponseData getWalletResponseData =
+        if (walletsResponseModel.status!) {
+          GetWalletResponseData? getWalletResponseData =
               walletsResponseModel.data;
 
           if (mounted) {
             setState(() {
-              mainWalletBalance = getWalletResponseData.wBalance;
+              mainWalletBalance = getWalletResponseData!.wBalance;
               atmWalletBalance = getWalletResponseData.aBalance;
             });
           }
 
           SharedPreferences.getInstance().then((sharedPrefs) {
             sharedPrefs.setString(
-                Constants.SHARED_PREF_MAIN_WALLET_BALANCE, mainWalletBalance);
+                Constants.SHARED_PREF_MAIN_WALLET_BALANCE, mainWalletBalance!);
             sharedPrefs.setString(
-                Constants.SHARED_PREF_ATM_BALANCE, atmWalletBalance);
+                Constants.SHARED_PREF_ATM_BALANCE, atmWalletBalance!);
           });
 
           setState(() {
@@ -1376,17 +1448,17 @@ class _DashboardScreenState extends State<DashboardScreen>
       }
     });
 
-    HTTPService().getBanner(authToken).then((response) {
+    HTTPService().getBanner(authToken!).then((response) {
       if (response.statusCode == 200) {
         BannerResponseModel bannerResponseModel =
             BannerResponseModel.fromJson(json.decode(response.body));
 
-        List<String> urlList = List();
-        List<String> redirectUrlList = List();
+        List<String?> urlList = [];
+        List<String?> redirectUrlList = [];
 
-        for (int i = 0; i < bannerResponseModel.data.length; i++) {
-          urlList.add(bannerResponseModel.data[i].photo);
-          redirectUrlList.add(bannerResponseModel.data[i].description);
+        for (int i = 0; i < bannerResponseModel.data!.length; i++) {
+          urlList.add(bannerResponseModel.data![i].photo);
+          redirectUrlList.add(bannerResponseModel.data![i].description);
         }
 
         if (mounted) {
@@ -1400,17 +1472,17 @@ class _DashboardScreenState extends State<DashboardScreen>
       }
     });
 
-    HTTPService().getNotice(authToken).then((response) {
+    HTTPService().getNotice(authToken!).then((response) {
       if (response.statusCode == 200) {
         NoticeResponseModel responseModel =
             NoticeResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
-          List<NoticeResponseData> listOfNotices = List();
+        if (responseModel.status!) {
+          List<NoticeResponseData>? listOfNotices = [];
           listOfNotices = responseModel.data;
           if (mounted) {
-            if (listOfNotices.isNotEmpty) {
+            if (listOfNotices!.isNotEmpty) {
               setState(() {
-                noticeString = listOfNotices[0].description;
+                noticeString = listOfNotices![0].description;
               });
             }
           }
@@ -1422,16 +1494,16 @@ class _DashboardScreenState extends State<DashboardScreen>
       }
     });
 
-    HTTPService().getAllCommissions(authToken).then((response) {
+    HTTPService().getAllCommissions(authToken!).then((response) {
       if (response.statusCode == 200) {
         AllCommissionsResponseModel responseModel =
             AllCommissionsResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           if (mounted) {
             setState(() {
-              youEarned = responseModel.data.youearned;
-              transactionCount = responseModel.data.transcationcount;
-              totalTxnAmount = responseModel.data.totaltxn;
+              youEarned = responseModel.data!.youearned;
+              transactionCount = responseModel.data!.transcationcount;
+              totalTxnAmount = responseModel.data!.totaltxn;
             });
           }
         } else {
@@ -1443,7 +1515,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -1476,7 +1548,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -1648,13 +1720,13 @@ class _DashboardScreenState extends State<DashboardScreen>
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     sharedPreferences.setString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE,
-        getWalletResponseData.wBalance);
+        getWalletResponseData.wBalance!);
 
     sharedPreferences.setString(
-        Constants.SHARED_PREF_MATM_BALANCE, getWalletResponseData.mBalance);
+        Constants.SHARED_PREF_MATM_BALANCE, getWalletResponseData.mBalance!);
 
     sharedPreferences.setString(
-        Constants.SHARED_PREF_ATM_BALANCE, getWalletResponseData.aBalance);
+        Constants.SHARED_PREF_ATM_BALANCE, getWalletResponseData.aBalance!);
   }
 
   void startAEPSTransaction() {
@@ -1677,5 +1749,13 @@ class _DashboardScreenState extends State<DashboardScreen>
     } catch (error) {
       print('Mini ATM error : $error');
     }
+  }
+
+  void logoutUser() async {
+    SharedPreferences.getInstance().then((sharedPrefs) {
+      sharedPrefs.clear();
+    });
+    Navigator.of(context)
+        .pushAndRemoveUntil(ScaleRoute(page: LoginScreen()), (route) => false);
   }
 }

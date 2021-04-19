@@ -1,15 +1,15 @@
 class NoticeResponseModel {
-  List<NoticeResponseData> data;
-  String message;
-  bool status;
+  List<NoticeResponseData>? data;
+  String? message;
+  bool? status;
 
   NoticeResponseModel({this.data, this.message, this.status});
 
   NoticeResponseModel.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = new List<NoticeResponseData>();
+      data = <NoticeResponseData>[];
       json['data'].forEach((v) {
-        data.add(new NoticeResponseData.fromJson(v));
+        data!.add(new NoticeResponseData.fromJson(v));
       });
     }
     message = json['message'];
@@ -19,7 +19,7 @@ class NoticeResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     data['message'] = this.message;
     data['status'] = this.status;
@@ -28,8 +28,8 @@ class NoticeResponseModel {
 }
 
 class NoticeResponseData {
-  String heading;
-  String description;
+  String? heading;
+  String? description;
 
   NoticeResponseData({this.heading, this.description});
 

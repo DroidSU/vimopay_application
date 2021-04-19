@@ -16,8 +16,8 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
-  String authToken = "";
-  String userId = "";
+  String? authToken = "";
+  String? userId = "";
 
   TextEditingController mobileNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -39,7 +39,7 @@ class _SupportScreenState extends State<SupportScreen> {
   bool _showComplainUI = false;
   String complainStatus = "";
   String complainDescription = "";
-  TextEditingController descController;
+  late TextEditingController descController;
   bool _showComplaintProgress = false;
 
   @override
@@ -584,7 +584,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                                                   HTTPService()
                                                                       .retailerSMSEnquire(
                                                                           authToken:
-                                                                              authToken,
+                                                                              authToken!,
                                                                           retailerID:
                                                                               userId,
                                                                           mobileNumber:
@@ -608,7 +608,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                                                           BasicResponseModel.fromJson(
                                                                               json.decode(response.body));
                                                                       if (responseModel
-                                                                          .status) {
+                                                                          .status!) {
                                                                         Navigator.of(context)
                                                                             .pop();
                                                                         setState(
@@ -875,7 +875,7 @@ class _SupportScreenState extends State<SupportScreen> {
     return true;
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -908,7 +908,7 @@ class _SupportScreenState extends State<SupportScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

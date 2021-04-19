@@ -1,7 +1,7 @@
 class CMSBillDetailsResponseMeta {
-  String description;
-  String status;
-  String code;
+  String? description;
+  String? status;
+  String? code;
 
   CMSBillDetailsResponseMeta({this.description, this.status, this.code});
 

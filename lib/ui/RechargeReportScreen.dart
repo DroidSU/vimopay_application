@@ -19,13 +19,13 @@ class RechargeReportScreen extends StatefulWidget {
 
 class _RechargeReportScreenState extends State<RechargeReportScreen> {
   bool _showProgress = false;
-  String authToken = "";
-  String bcId = "";
-  List<RechargeReportResponseData> rechargeReportList = List();
+  String? authToken = "";
+  String? bcId = "";
+  List<RechargeReportResponseData>? rechargeReportList = [];
 
-  String complainStatus = "";
+  String? complainStatus = "";
   String complainDescription = "";
-  TextEditingController descController;
+  TextEditingController? descController;
   bool _showComplaintProgress = false;
 
   List<String> listOfStatus = [
@@ -37,14 +37,14 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
   ];
 
   List<String> listOfTxnStatus = ['Success', 'Fail', 'Pending'];
-  String txnStatus = "Success";
+  String? txnStatus = "Success";
 
   String currentDateAsString = "";
-  DateTime currentDate;
+  DateTime? currentDate;
   String fromDateAsString = "";
   String toDateAsString = "";
-  DateTime fromDate;
-  DateTime toDate;
+  DateTime? fromDate;
+  DateTime? toDate;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
 
     currentDate = DateTime.now();
     currentDateAsString =
-        '${currentDate.day}/${currentDate.month}/${currentDate.year}';
+        '${currentDate!.day}/${currentDate!.month}/${currentDate!.year}';
     fromDateAsString = currentDateAsString;
     toDateAsString = currentDateAsString;
     fromDate = currentDate;
@@ -66,7 +66,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
       bcId = sharedPrefs.getString(Constants.SHARED_PREF_USER_ID);
 
-      rechargeReportList.clear();
+      rechargeReportList!.clear();
       fetchRechargeReports();
     });
   }
@@ -165,10 +165,10 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                     onTap: () {
                                       showDatePicker(
                                               context: context,
-                                              initialDate: fromDate,
-                                              firstDate: fromDate.subtract(
+                                              initialDate: fromDate!,
+                                              firstDate: fromDate!.subtract(
                                                   Duration(days: 365)),
-                                              lastDate: currentDate)
+                                              lastDate: currentDate!)
                                           .then((selectedDate) {
                                         if (selectedDate != null) {
                                           setState(() {
@@ -176,7 +176,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                             fromDateAsString =
                                                 '${selectedDate.day}-${selectedDate.month}-${selectedDate.year}';
 
-                                            rechargeReportList.clear();
+                                            rechargeReportList!.clear();
                                           });
                                           fetchRechargeReports();
                                         }
@@ -225,10 +225,10 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                     onTap: () {
                                       showDatePicker(
                                               context: context,
-                                              initialDate: toDate,
-                                              firstDate: toDate.subtract(
+                                              initialDate: toDate!,
+                                              firstDate: toDate!.subtract(
                                                   Duration(days: 365)),
-                                              lastDate: toDate)
+                                              lastDate: toDate!)
                                           .then((selectedDate) {
                                         if (selectedDate != null) {
                                           setState(() {
@@ -236,7 +236,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                             toDateAsString =
                                                 '${selectedDate.day}-${selectedDate.month}-${selectedDate.year}';
 
-                                            rechargeReportList.clear();
+                                            rechargeReportList!.clear();
                                           });
 
                                           fetchRechargeReports();
@@ -278,11 +278,11 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                               value: status,
                             );
                           }).toList(),
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setState(() {
                               txnStatus = value;
 
-                              rechargeReportList.clear();
+                              rechargeReportList!.clear();
                             });
                             fetchRechargeReports();
                           },
@@ -296,7 +296,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : rechargeReportList.isEmpty
+                  : rechargeReportList!.isEmpty
                       ? Expanded(
                           child: Container(
                             child: Center(
@@ -338,12 +338,12 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                rechargeReportList[index]
+                                                rechargeReportList![index]
                                                             .trxnId ==
                                                         null
                                                     ? ''
-                                                    : rechargeReportList[index]
-                                                        .trxnId,
+                                                    : rechargeReportList![index]
+                                                        .trxnId!,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,
@@ -371,12 +371,12 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                rechargeReportList[index]
+                                                rechargeReportList![index]
                                                             .mobileNo ==
                                                         null
                                                     ? ''
-                                                    : rechargeReportList[index]
-                                                        .mobileNo,
+                                                    : rechargeReportList![index]
+                                                        .mobileNo!,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight:
@@ -402,11 +402,11 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                rechargeReportList[index]
+                                                rechargeReportList![index]
                                                             .amount ==
                                                         null
                                                     ? ''
-                                                    : '\u20B9${rechargeReportList[index].amount}',
+                                                    : '\u20B9${rechargeReportList![index].amount}',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,
@@ -431,11 +431,11 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                rechargeReportList[index]
+                                                rechargeReportList![index]
                                                             .createDate ==
                                                         null
                                                     ? ''
-                                                    : '${rechargeReportList[index].createDate.substring(0, 10)} ${UtilityMethods().beautifyTime(rechargeReportList[index].createDate.substring(12))}',
+                                                    : '${rechargeReportList![index].createDate!.substring(0, 10)} ${UtilityMethods().beautifyTime(rechargeReportList![index].createDate!.substring(12))}',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight:
@@ -450,10 +450,11 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                           padding:
                                               EdgeInsets.fromLTRB(5, 10, 5, 0),
                                           child: Text(
-                                            rechargeReportList[index].status,
+                                            rechargeReportList![index].status!,
                                             style: TextStyle(
-                                                color: rechargeReportList[index]
-                                                            .status
+                                                color: rechargeReportList![
+                                                                index]
+                                                            .status!
                                                             .toLowerCase() ==
                                                         'fail'
                                                     ? Colors.red
@@ -471,7 +472,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                                 MaterialButton(
                                                   onPressed: () {
                                                     printReceipt(
-                                                        rechargeReportList[
+                                                        rechargeReportList![
                                                             index]);
                                                   },
                                                   child: Row(
@@ -528,7 +529,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                 ),
                               );
                             },
-                            itemCount: rechargeReportList.length,
+                            itemCount: rechargeReportList!.length,
                             shrinkWrap: true,
                           ),
                         ),
@@ -549,7 +550,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
     });
     HTTPService()
         .getRechargeReport(
-            authToken, fromDateAsString, toDateAsString, txnStatus)
+            authToken!, fromDateAsString, toDateAsString, txnStatus)
         .then((response) {
       setState(() {
         _showProgress = false;
@@ -558,7 +559,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
       if (response.statusCode == 200) {
         RechargeReportResponseModel responseModel =
             RechargeReportResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             rechargeReportList = responseModel.data;
           });
@@ -571,7 +572,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -604,7 +605,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -660,7 +661,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                         Container(
                           child: DropdownButton(
                             isExpanded: true,
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 complainStatus = value;
                               });
@@ -727,7 +728,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                 child: MaterialButton(
                                   onPressed: () {
                                     complainDescription =
-                                        descController.text.trim();
+                                        descController!.text.trim();
                                     if (listOfStatus.contains(complainStatus) &&
                                         complainDescription.isNotEmpty) {
                                       setState(() {
@@ -736,7 +737,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
 
                                       HTTPService()
                                           .sendReportComplain(
-                                              authToken,
+                                              authToken!,
                                               complainStatus,
                                               complainDescription,
                                               index.toString())
@@ -751,9 +752,9 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                                           BasicResponseModel responseModel =
                                               BasicResponseModel.fromJson(
                                                   json.decode(response.body));
-                                          if (responseModel.status) {
+                                          if (responseModel.status!) {
                                             setState(() {
-                                              descController.text = "";
+                                              descController!.text = "";
                                             });
                                             showSuccessDialog(
                                                 context, responseModel.message);
@@ -789,7 +790,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
         });
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -822,7 +823,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -879,7 +880,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                       alignment: pw.Alignment.center,
                       child: pw.Text(
                           rechargeReportList.status != null
-                              ? rechargeReportList.status
+                              ? rechargeReportList.status!
                               : '',
                           style: pw.TextStyle(
                               fontSize: 30, fontWeight: pw.FontWeight.bold)),
@@ -896,7 +897,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                           child: pw.Text('User BC ID',
                               style: pw.TextStyle(fontSize: 24)),
                           alignment: pw.Alignment.centerLeft),
-                      pw.Text(bcId,
+                      pw.Text(bcId!,
                           style: pw.TextStyle(
                             fontSize: 30,
                           )),
@@ -915,7 +916,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                           alignment: pw.Alignment.centerLeft),
                       pw.Text(
                           rechargeReportList.trxnId != null
-                              ? rechargeReportList.trxnId
+                              ? rechargeReportList.trxnId!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 30,
@@ -936,7 +937,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                       pw.Text(
                           rechargeReportList.createDate != null
                               ? UtilityMethods().beautifyDateTime(
-                                  rechargeReportList.createDate)
+                                  rechargeReportList.createDate!)
                               : '',
                           style: pw.TextStyle(
                             fontSize: 28,
@@ -956,7 +957,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                           alignment: pw.Alignment.centerLeft),
                       pw.Text(
                           rechargeReportList.mobileNo != null
-                              ? rechargeReportList.mobileNo
+                              ? rechargeReportList.mobileNo!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 28,
@@ -974,7 +975,7 @@ class _RechargeReportScreenState extends State<RechargeReportScreen> {
                           child: pw.Text('Operator Name',
                               style: pw.TextStyle(fontSize: 24)),
                           alignment: pw.Alignment.centerLeft),
-                      pw.Text(rechargeReportList.operatorName,
+                      pw.Text(rechargeReportList.operatorName!,
                           style: pw.TextStyle(
                             fontSize: 30,
                           )),

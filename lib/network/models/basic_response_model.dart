@@ -1,6 +1,6 @@
 class BasicResponseModel {
-  String message;
-  bool status;
+  String? message;
+  bool? status;
 
   BasicResponseModel({this.message, this.status});
 

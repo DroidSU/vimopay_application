@@ -17,15 +17,15 @@ class ChangeCredentialsScreen extends StatefulWidget {
 }
 
 class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
-  TextEditingController mobileController;
-  TextEditingController emailAddressController;
+  TextEditingController? mobileController;
+  TextEditingController? emailAddressController;
 
   bool _showMobileUpdateProgress = false;
   bool _showEmailUpdateProgress = false;
 
-  String authToken = "";
-  String mobileNumber = "";
-  String email = "";
+  String? authToken = "";
+  String? mobileNumber = "";
+  String? email = "";
   String mobileOTP = "";
   String emailOTP = "";
 
@@ -40,8 +40,8 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
 
   @override
   void dispose() {
-    mobileController.dispose();
-    emailAddressController.dispose();
+    mobileController!.dispose();
+    emailAddressController!.dispose();
 
     super.dispose();
   }
@@ -173,7 +173,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
                                           ),
                                           onTap: () {
                                             String newNumber =
-                                                mobileController.text.trim();
+                                                mobileController!.text.trim();
                                             if (newNumber != mobileNumber) {
                                               setState(() {
                                                 mobileNumber = newNumber;
@@ -319,7 +319,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
                                               ),
                                               onTap: () {
                                                 String newEmail =
-                                                    emailAddressController.text
+                                                    emailAddressController!.text
                                                         .trim();
                                                 if (newEmail != email) {
                                                   setState(() {
@@ -407,26 +407,26 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
     return true;
   }
 
-  updateMobile({String otp}) {
-    if (mobileNumber.isEmpty) mobileNumber = mobileController.text.trim();
+  updateMobile({String? otp}) {
+    if (mobileNumber!.isEmpty) mobileNumber = mobileController!.text.trim();
 
-    if (mobileNumber != null && mobileNumber.length == 10) {
+    if (mobileNumber != null && mobileNumber!.length == 10) {
       HTTPService()
-          .changeMobileNumber(authToken, mobileNumber, otp)
+          .changeMobileNumber(authToken!, mobileNumber, otp)
           .then((response) {
         if (response.statusCode == 200) {
           BasicResponseModel basicResponseBody =
               BasicResponseModel.fromJson(json.decode(response.body));
 
-          if (otp.isEmpty && basicResponseBody.status) {
+          if (otp!.isEmpty && basicResponseBody.status!) {
             setState(() {
               _showMobileUpdateProgress = true;
             });
           } else {
-            if (otp.isNotEmpty && basicResponseBody.status) {
+            if (otp.isNotEmpty && basicResponseBody.status!) {
               SharedPreferences.getInstance().then((preference) {
                 preference.setString(
-                    Constants.SHARED_PREF_MOBILE, mobileNumber);
+                    Constants.SHARED_PREF_MOBILE, mobileNumber!);
               });
               setState(() {
                 _showMobileUpdateProgress = false;
@@ -454,8 +454,8 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
     }
   }
 
-  updateEmail({String otp}) {
-    if (email.isEmpty) email = emailAddressController.text.trim();
+  updateEmail({String? otp}) {
+    if (email!.isEmpty) email = emailAddressController!.text.trim();
 
     if (email != null) {
       setState(() {
@@ -463,7 +463,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
       });
 
       HTTPService()
-          .changeEmailAddress(authToken, email, emailOTP)
+          .changeEmailAddress(authToken!, email, emailOTP)
           .then((response) {
         if (response.statusCode == 200) {
           BasicResponseModel basicResponseBody =
@@ -471,7 +471,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
 
           if (emailOTP.isNotEmpty) {
             SharedPreferences.getInstance().then((preference) {
-              preference.setString(Constants.SHARED_PREF_EMAIL, email);
+              preference.setString(Constants.SHARED_PREF_EMAIL, email!);
             });
 
             setState(() {
@@ -492,7 +492,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
     }
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -525,7 +525,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -559,7 +559,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
     }
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -592,7 +592,7 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -633,8 +633,8 @@ class _ChangeCredentialsScreenState extends State<ChangeCredentialsScreen> {
       email = sharedPrefs.getString(Constants.SHARED_PREF_EMAIL);
 
       setState(() {
-        mobileController.text = mobileNumber;
-        emailAddressController.text = email;
+        mobileController!.text = mobileNumber!;
+        emailAddressController!.text = email!;
       });
     });
   }

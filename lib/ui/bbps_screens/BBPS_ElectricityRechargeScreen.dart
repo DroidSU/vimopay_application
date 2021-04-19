@@ -22,32 +22,33 @@ class BBPSElectricityRechargeScreen extends StatefulWidget {
 
 class _BBPSElectricityRechargeScreenState
     extends State<BBPSElectricityRechargeScreen> {
-  String authToken = "";
-  String agentToken = "";
+  String? authToken = "";
+  String? agentToken = "";
 
-  List<BillerListResponseData> listOfBillers;
-  String selectedBillerName = "";
-  String selectedBillerId = "";
-  String fieldName = "";
+  List<BillerListResponseData>? listOfBillers;
+  String? selectedBillerName = "";
+  String? selectedBillerId = "";
+  String? fieldName = "";
   String fieldValue = "";
   String mobileNumber = "";
   String refId = "";
   String amount = "";
-  String mainWalletBalance = "";
+  String? mainWalletBalance = "";
 
-  TextEditingController fieldController;
-  TextEditingController mobileNumberController;
+  TextEditingController? fieldController;
+  TextEditingController? mobileNumberController;
 
   bool _isFetchingBill = false;
   bool _isBillFetched = false;
   bool _billPayInProgress = false;
-  BBPSBillFetchResponseModel billModel;
+  bool _showBillerFetchProgress = true;
+  late BBPSBillFetchResponseModel billModel;
 
   @override
   void initState() {
     super.initState();
 
-    listOfBillers = List();
+    listOfBillers = [];
     fieldController = TextEditingController();
     mobileNumberController = TextEditingController();
     SharedPreferences.getInstance().then((sharedPrefs) {
@@ -61,8 +62,8 @@ class _BBPSElectricityRechargeScreenState
 
   @override
   void dispose() {
-    fieldController.dispose();
-    mobileNumberController.dispose();
+    fieldController!.dispose();
+    mobileNumberController!.dispose();
     super.dispose();
   }
 
@@ -132,49 +133,54 @@ class _BBPSElectricityRechargeScreenState
                       fontSize: 18,
                     ),
                   ),
-                  Container(
-                    child: listOfBillers.isNotEmpty
-                        ? DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              items: listOfBillers.map((biller) {
-                                return DropdownMenuItem(
-                                  child: Text(
-                                    biller.cateName,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                  value: biller.cateName,
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedBillerName = value;
-                                  fieldController.clear();
-                                  _isBillFetched = false;
-
-                                  listOfBillers.forEach((biller) {
-                                    if (biller.cateName == value) {
+                  _showBillerFetchProgress
+                      ? Container(
+                          child: CircularProgressIndicator(),
+                          alignment: Alignment.center,
+                        )
+                      : Container(
+                          child: listOfBillers!.isNotEmpty
+                              ? DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    items: listOfBillers!.map((biller) {
+                                      return DropdownMenuItem(
+                                        child: Text(
+                                          biller.cateName!,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        value: biller.cateName,
+                                      );
+                                    }).toList(),
+                                    onChanged: (dynamic value) {
                                       setState(() {
-                                        fieldName = biller.field;
-                                        selectedBillerId = biller.value;
+                                        selectedBillerName = value;
+                                        fieldController!.clear();
+                                        _isBillFetched = false;
+
+                                        listOfBillers!.forEach((biller) {
+                                          if (biller.cateName == value) {
+                                            setState(() {
+                                              fieldName = biller.field;
+                                              selectedBillerId = biller.value;
+                                            });
+                                          }
+                                        });
                                       });
-                                    }
-                                  });
-                                });
-                              },
-                              value: selectedBillerName,
-                              isExpanded: true,
-                            ),
-                          )
-                        : Container(),
-                  ),
+                                    },
+                                    value: selectedBillerName,
+                                    isExpanded: true,
+                                  ),
+                                )
+                              : Container(),
+                        ),
                   SizedBox(
                     height: 20,
                   ),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? Text(
-                          fieldName,
+                          fieldName!,
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 18,
@@ -184,7 +190,7 @@ class _BBPSElectricityRechargeScreenState
                   SizedBox(
                     height: 8,
                   ),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? TextField(
                           style: TextStyle(
                             color: Colors.black,
@@ -221,7 +227,7 @@ class _BBPSElectricityRechargeScreenState
                   SizedBox(
                     height: 20,
                   ),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? Text(
                           "Customer Mobile Number",
                           style: TextStyle(
@@ -230,12 +236,12 @@ class _BBPSElectricityRechargeScreenState
                           ),
                         )
                       : Container(),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? SizedBox(
                           height: 8,
                         )
                       : Container(),
-                  fieldName.isNotEmpty
+                  fieldName!.isNotEmpty
                       ? TextField(
                           keyboardType: TextInputType.number,
                           style: TextStyle(
@@ -282,11 +288,11 @@ class _BBPSElectricityRechargeScreenState
                           child: !_isFetchingBill
                               ? MaterialButton(
                                   onPressed: () {
-                                    fieldValue = fieldController.text.trim();
+                                    fieldValue = fieldController!.text.trim();
                                     mobileNumber =
-                                        mobileNumberController.text.trim();
+                                        mobileNumberController!.text.trim();
 
-                                    if (selectedBillerName.isNotEmpty &&
+                                    if (selectedBillerName!.isNotEmpty &&
                                         fieldValue.isNotEmpty &&
                                         mobileNumber.length == 10) {
                                       setState(() {
@@ -294,7 +300,7 @@ class _BBPSElectricityRechargeScreenState
                                       });
                                       fetchBill();
                                     } else {
-                                      if (selectedBillerName.isEmpty)
+                                      if (selectedBillerName!.isEmpty)
                                         showErrorDialog(
                                             'Please select a biller');
                                       else if (fieldValue.isNotEmpty)
@@ -344,7 +350,8 @@ class _BBPSElectricityRechargeScreenState
                                         width: 20,
                                       ),
                                       Text(
-                                        billModel.data.billerDetails.billerId,
+                                        billModel
+                                            .data!.billerDetails!.billerId!,
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                       )
@@ -369,7 +376,7 @@ class _BBPSElectricityRechargeScreenState
                                         width: 150,
                                         child: Text(
                                           billModel
-                                              .data.billDetails.customerName,
+                                              .data!.billDetails!.customerName!,
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 14),
@@ -395,7 +402,7 @@ class _BBPSElectricityRechargeScreenState
                                         width: 20,
                                       ),
                                       Text(
-                                        billModel.data.billDetails.dueDate,
+                                        billModel.data!.billDetails!.dueDate!,
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                       )
@@ -417,7 +424,7 @@ class _BBPSElectricityRechargeScreenState
                                         width: 20,
                                       ),
                                       Text(
-                                        'Rs.${billModel.data.billDetails.amount.toString()}',
+                                        'Rs.${billModel.data!.billDetails!.amount.toString()}',
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 14),
                                       )
@@ -430,8 +437,8 @@ class _BBPSElectricityRechargeScreenState
                                       ? CircularProgressIndicator()
                                       : MaterialButton(
                                           onPressed: () {
-                                            double balance =
-                                                double.parse(mainWalletBalance);
+                                            double balance = double.parse(
+                                                mainWalletBalance!);
                                             double amt = double.parse(amount);
                                             if (balance > amt) {
                                               payBill();
@@ -487,7 +494,7 @@ class _BBPSElectricityRechargeScreenState
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -514,7 +521,7 @@ class _BBPSElectricityRechargeScreenState
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -544,7 +551,7 @@ class _BBPSElectricityRechargeScreenState
     }
   }
 
-  void showSuccess(String message) {
+  void showSuccess(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -572,7 +579,7 @@ class _BBPSElectricityRechargeScreenState
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(fontSize: 18, fontFamily: ''),
                         textAlign: TextAlign.center,
                       ),
@@ -600,18 +607,21 @@ class _BBPSElectricityRechargeScreenState
   }
 
   void fetchElectricityBillers() {
-    HTTPService().fetchBBPSBillers(authToken, '4').then((response) {
+    HTTPService().fetchBBPSBillers(authToken!, '4').then((response) {
+      setState(() {
+        _showBillerFetchProgress = false;
+      });
       if (response.statusCode == 200) {
         BillerListResponseModel responseModel =
             BillerListResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           if (mounted) {
             setState(() {
               listOfBillers = responseModel.data;
 
-              selectedBillerName = listOfBillers[0].cateName;
-              fieldName = listOfBillers[0].field;
-              selectedBillerId = listOfBillers[0].value;
+              selectedBillerName = listOfBillers![0].cateName;
+              fieldName = listOfBillers![0].field;
+              selectedBillerId = listOfBillers![0].value;
             });
           }
         } else {}
@@ -625,7 +635,7 @@ class _BBPSElectricityRechargeScreenState
     refId = (DateTime.now().millisecondsSinceEpoch).toString();
 
     HTTPService()
-        .bbpsBillFetch(refId, fieldValue, selectedBillerId, agentToken,
+        .bbpsBillFetch(refId, fieldValue, selectedBillerId, agentToken!,
             mobileNumber, fieldName)
         .then((response) {
       setState(() {
@@ -634,11 +644,11 @@ class _BBPSElectricityRechargeScreenState
       if (response.statusCode == 200) {
         BBPSBillFetchResponseModel responseModel =
             BBPSBillFetchResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status.toLowerCase() == "success") {
+        if (responseModel.status!.toLowerCase() == "success") {
           setState(() {
             _isBillFetched = true;
             billModel = responseModel;
-            amount = billModel.data.billDetails.amount.toString();
+            amount = billModel.data!.billDetails!.amount.toString();
           });
         } else {
           BBPSBillFetchFailed responseModel =
@@ -662,13 +672,13 @@ class _BBPSElectricityRechargeScreenState
 
     HTTPService()
         .payElectricityBill(
-            agentToken,
+            agentToken!,
             billModel.refId,
             "",
             "",
             mobileNumber,
             amount,
-            billModel.data.billerDetails.billerId,
+            billModel.data!.billerDetails!.billerId,
             fieldName,
             fieldValue)
         .then((response) {
@@ -698,13 +708,13 @@ class _BBPSElectricityRechargeScreenState
     String txnId = (DateTime.now().millisecondsSinceEpoch).toString();
 
     HTTPService()
-        .bbpsBillPay(authToken, refId, selectedBillerName, amount,
+        .bbpsBillPay(authToken!, refId, selectedBillerName, amount,
             selectedBillerId, txnId, status)
         .then((response) {
       if (response.statusCode == 200) {
         BBPSServicesResponseModel responseModel =
             BBPSServicesResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           // do nothing
           print('Transaction updated in the server');
         } else {

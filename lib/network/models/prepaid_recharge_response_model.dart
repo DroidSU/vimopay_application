@@ -1,6 +1,6 @@
 class PrepaidRechargeResponseModel {
-  String error;
-  PrepaidRechargeResponseData data;
+  String? error;
+  PrepaidRechargeResponseData? data;
 
   PrepaidRechargeResponseModel({this.error, this.data});
 
@@ -15,18 +15,18 @@ class PrepaidRechargeResponseModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['error'] = this.error;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class PrepaidRechargeResponseData {
-  int trnxId;
-  String status;
-  String operatorId;
-  String message;
-  String msg;
+  int? trnxId;
+  String? status;
+  String? operatorId;
+  String? message;
+  String? msg;
 
   PrepaidRechargeResponseData(
       {this.trnxId, this.status, this.operatorId, this.message, this.msg});

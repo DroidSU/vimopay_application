@@ -1,5 +1,5 @@
 class PasswordChangeResponseData {
-  String password;
+  String? password;
 
   PasswordChangeResponseData({this.password});
 

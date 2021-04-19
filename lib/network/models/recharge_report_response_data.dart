@@ -1,12 +1,12 @@
 class RechargeReportResponseData {
-  String createDate;
-  String mobileNo;
-  String amount;
-  String trxnId;
-  String status;
-  String type;
-  String pK_Id;
-  String operatorName;
+  String? createDate;
+  String? mobileNo;
+  String? amount;
+  String? trxnId;
+  String? status;
+  String? type;
+  String? pK_Id;
+  String? operatorName;
 
   RechargeReportResponseData(
       {this.createDate,

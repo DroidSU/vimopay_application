@@ -1,7 +1,7 @@
 class BBPSBillFetchFailed {
-  String status;
-  String message;
-  String errorCode;
+  String? status;
+  String? message;
+  String? errorCode;
 
   BBPSBillFetchFailed({this.status, this.message, this.errorCode});
 

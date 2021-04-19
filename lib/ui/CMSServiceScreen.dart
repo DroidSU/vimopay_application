@@ -20,16 +20,16 @@ class CMSServiceScreen extends StatefulWidget {
 
 class _CMSServiceScreenState extends State<CMSServiceScreen> {
   String partnerId = Constants.SHARED_PREF_CMS_PARTNER_ID;
-  List<String> listOfOperators = List();
-  List<Billers> listOfBillers = List();
-  List<TextEditingController> listOfControllers = List();
-  List<TextEditingController> billDetailsControllerList = List();
-  List<String> listOfPostKeys = List();
-  List<String> billDetailsPostKeys = List();
+  List<String?> listOfOperators = [];
+  List<Billers>? listOfBillers = [];
+  List<TextEditingController> listOfControllers = [];
+  List<TextEditingController> billDetailsControllerList = [];
+  List<String?> listOfPostKeys = [];
+  List<String?> billDetailsPostKeys = [];
 
-  String selectedBillerUrl = "";
-  String selectedBillerName = "";
-  Billers selectedBiller;
+  String? selectedBillerUrl = "";
+  String? selectedBillerName = "";
+  Billers? selectedBiller;
 
   bool _showBillerDetails = false;
   bool _showDetailsProgress = false;
@@ -37,17 +37,17 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
   bool _showPaymentProgress = false;
   bool _showBillDetails = false;
 
-  List<Fields> listOfFields = List();
-  List<BillDetailsField> billDetailsFields = List();
-  String mainWalletBalance = "";
-  String authToken = "";
+  List<Fields> listOfFields = [];
+  List<BillDetailsField> billDetailsFields = [];
+  String? mainWalletBalance = "";
+  String? authToken = "";
   String sessionId = "";
-  String billActionType = "";
+  String? billActionType = "";
 
   String partnerTxnId = "";
   String hash = "";
 
-  CMSBillDetailsResponseData _billDetailsResponseData;
+  CMSBillDetailsResponseData? _billDetailsResponseData;
 
   @override
   void initState() {
@@ -139,20 +139,20 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                         DropdownButton(
                             isExpanded: true,
                             value: selectedBiller,
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 selectedBiller = value;
 
-                                selectedBillerUrl = selectedBiller.fetchUrl;
-                                selectedBillerName = selectedBiller.name;
+                                selectedBillerUrl = selectedBiller!.fetchUrl;
+                                selectedBillerName = selectedBiller!.name;
 
                                 fetchBillerDetails(selectedBillerUrl);
                               });
                             },
-                            items: listOfBillers.map((biller) {
+                            items: listOfBillers!.map((biller) {
                               return DropdownMenuItem(
                                 child: Text(
-                                  biller.name,
+                                  biller.name!,
                                   style: TextStyle(
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black),
@@ -184,7 +184,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                                           fetchBillDetails();
                                       },
                                       child: Text(
-                                        billActionType,
+                                        billActionType!,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -251,14 +251,14 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
         CMSBillersResponseModel responseModel =
             CMSBillersResponseModel.fromJson(json.decode(response.body));
         if (responseModel.data != null) {
-          responseModel.data.billers.forEach((biller) {
+          responseModel.data!.billers!.forEach((biller) {
             listOfOperators.add(biller.name);
           });
           setState(() {
-            listOfBillers = responseModel.data.billers;
-            selectedBiller = listOfBillers[0];
-            selectedBillerUrl = listOfBillers[0].fetchUrl;
-            selectedBillerName = listOfBillers[0].name;
+            listOfBillers = responseModel.data!.billers;
+            selectedBiller = listOfBillers![0];
+            selectedBillerUrl = listOfBillers![0].fetchUrl;
+            selectedBillerName = listOfBillers![0].name;
 
             fetchBillerDetails(selectedBillerUrl);
           });
@@ -280,7 +280,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                     listOfFields[index].type != "FETCH" &&
                             listOfFields[index].type != "SUBMIT"
                         ? Text(
-                            listOfFields[index].label,
+                            listOfFields[index].label!,
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 18,
@@ -335,7 +335,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
     );
   }
 
-  void fetchBillerDetails(String billerURL) {
+  void fetchBillerDetails(String? billerURL) {
     setState(() {
       _showDetailsProgress = true;
 
@@ -353,9 +353,9 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
         BillerDetailsResponseModel responseModel =
             BillerDetailsResponseModel.fromJson(json.decode(response.body));
 
-        List<Fields> list = List();
+        List<Fields> list = [];
 
-        responseModel.data.fields.forEach((field) {
+        responseModel.data!.fields!.forEach((field) {
           TextEditingController textEditingController = TextEditingController();
           if (field.type != "SUBMIT" &&
               field.type != "FETCH" &&
@@ -385,13 +385,13 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
 
     // partnerTxnId = DateTime.now().microsecondsSinceEpoch.toString();
 
-    HashMap<String, String> bodyMap = HashMap();
+    HashMap<String?, String?> bodyMap = HashMap();
 
     for (int i = 0; i < listOfFields.length; i++) {
       Fields field = listOfFields[i];
       TextEditingController textEditingController = listOfControllers[i];
 
-      Map<String, String> map = Map();
+      Map<String?, String?> map = Map();
       if (textEditingController.text.isEmpty)
         map[field.postKey] = field.value;
       else
@@ -420,9 +420,9 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
     bodyMap.addAll(partnerIdMap);
 
     selectedBillerUrl =
-        "/billers${selectedBillerUrl.substring(selectedBillerUrl.lastIndexOf("/"))}";
+        "/billers${selectedBillerUrl!.substring(selectedBillerUrl!.lastIndexOf("/"))}";
 
-    List<BillDetailsField> list = List();
+    List<BillDetailsField> list = [];
 
     HTTPService()
         .fetchBillDetails(partnerId, selectedBillerUrl, jsonEncode(bodyMap))
@@ -431,15 +431,15 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
         CMSBillDetailsResponseModel responseModel =
             CMSBillDetailsResponseModel.fromJson(json.decode(response.body));
         _billDetailsResponseData = responseModel.data;
-        if (responseModel.meta.status == "0") {
-          responseModel.data.fields.forEach((field) {
+        if (responseModel.meta!.status == "0") {
+          responseModel.data!.fields!.forEach((field) {
             TextEditingController textEditingController =
                 TextEditingController();
             if (field.type != "SUBMIT" &&
                 field.type != "FETCH" &&
                 field.isVisible == "true") {
               list.add(field);
-              textEditingController.text = field.value;
+              textEditingController.text = field.value!;
               billDetailsControllerList.add(textEditingController);
               billDetailsPostKeys.add(field.postKey);
             }
@@ -457,8 +457,8 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
             });
           });
         } else {
-          showErrorDialog(responseModel.meta.description);
-          print('Error code : ${responseModel.meta.code}');
+          showErrorDialog(responseModel.meta!.description);
+          print('Error code : ${responseModel.meta!.code}');
         }
       } else {
         setState(() {
@@ -491,7 +491,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
     return sha512Result.toString();
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -524,7 +524,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -558,7 +558,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
     }
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -591,7 +591,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -640,7 +640,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
                       billDetailsFields[index].type != "FETCH" &&
                               billDetailsFields[index].type != "SUBMIT"
                           ? Text(
-                              billDetailsFields[index].label,
+                              billDetailsFields[index].label!,
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 18,
@@ -702,14 +702,14 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
 
     // partnerTxnId = DateTime.now().microsecondsSinceEpoch.toString();
 
-    HashMap<String, String> bodyMap = HashMap();
+    HashMap<String?, String?> bodyMap = HashMap();
 
     for (int i = 0; i < billDetailsFields.length; i++) {
       BillDetailsField field = billDetailsFields[i];
       TextEditingController textEditingController =
           billDetailsControllerList[i];
 
-      Map<String, String> map = Map();
+      Map<String?, String?> map = Map();
       if (textEditingController.text.isEmpty)
         map[field.postKey] = field.value;
       else
@@ -746,7 +746,7 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
     bodyMap.addAll(partnerIdMap);
 
     selectedBillerUrl =
-        "/billers${selectedBillerUrl.substring(selectedBillerUrl.lastIndexOf("/"))}";
+        "/billers${selectedBillerUrl!.substring(selectedBillerUrl!.lastIndexOf("/"))}";
 
     HTTPService()
         .payBill(partnerId, selectedBillerUrl, jsonEncode(bodyMap))
@@ -758,10 +758,10 @@ class _CMSServiceScreenState extends State<CMSServiceScreen> {
       if (response.statusCode == 200) {
         CMSBillPaidResponseModel responseModel =
             CMSBillPaidResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.meta.status == "0")
-          showSuccessDialog(context, responseModel.meta.description);
+        if (responseModel.meta!.status == "0")
+          showSuccessDialog(context, responseModel.meta!.description);
         else
-          showErrorDialog(responseModel.meta.description);
+          showErrorDialog(responseModel.meta!.description);
       } else {
         showErrorDialog("Payment failed!");
       }

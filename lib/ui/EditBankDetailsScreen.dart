@@ -18,12 +18,12 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
   String accountNumber = "";
   String IFSC = "";
   String accountHolderName = "";
-  String authToken = "";
+  String? authToken = "";
 
-  TextEditingController bankNameController;
-  TextEditingController accountNumberController;
-  TextEditingController ifscController;
-  TextEditingController holderNameController;
+  TextEditingController? bankNameController;
+  TextEditingController? accountNumberController;
+  TextEditingController? ifscController;
+  TextEditingController? holderNameController;
 
   bool _showProgress = false;
   bool _showFetchingDetails = true;
@@ -40,10 +40,10 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
 
   @override
   void dispose() {
-    bankNameController.dispose();
-    accountNumberController.dispose();
-    ifscController.dispose();
-    holderNameController.dispose();
+    bankNameController!.dispose();
+    accountNumberController!.dispose();
+    ifscController!.dispose();
+    holderNameController!.dispose();
     super.dispose();
   }
 
@@ -342,10 +342,10 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
   }
 
   void updateBankDetails() {
-    bankName = bankNameController.text.trim();
-    accountNumber = accountNumberController.text.trim();
-    IFSC = ifscController.text.trim();
-    accountHolderName = holderNameController.text.trim();
+    bankName = bankNameController!.text.trim();
+    accountNumber = accountNumberController!.text.trim();
+    IFSC = ifscController!.text.trim();
+    accountHolderName = holderNameController!.text.trim();
 
     setState(() {
       _showProgress = true;
@@ -353,7 +353,7 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
 
     HTTPService()
         .updateBankDetails(
-            authToken, bankName, accountNumber, IFSC, accountHolderName)
+            authToken!, bankName, accountNumber, IFSC, accountHolderName)
         .then((response) {
       setState(() {
         _showProgress = false;
@@ -363,7 +363,7 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
         BasicResponseModel basicResponseModel =
             BasicResponseModel.fromJson(json.decode(response.body));
 
-        if (basicResponseModel.status) {
+        if (basicResponseModel.status!) {
           // JUST SHOW DIALOG. UPDATE STORED VALUES WHEN DATA FETCHED FROM API
           showSuccessDialog(
               context, 'Bank details update waiting to be approved by user');
@@ -376,7 +376,7 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -516,7 +516,7 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
     SharedPreferences.getInstance().then((sharedPrefs) {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
 
-      HTTPService().getBankDetails(authToken).then((response) {
+      HTTPService().getBankDetails(authToken!).then((response) {
         setState(() {
           _showFetchingDetails = false;
         });
@@ -524,22 +524,22 @@ class _EditBankDetailScreenState extends State<EditBankDetailScreen> {
         if (response.statusCode == 200) {
           GetBankDetailsResponseModel responseModel =
               GetBankDetailsResponseModel.fromJson(json.decode(response.body));
-          if (responseModel.status) {
+          if (responseModel.status!) {
             setState(() {
               SharedPreferences.getInstance().then((sharedPrefs) {
                 sharedPrefs.setString(Constants.SHARED_PREF_BANK_NAME,
-                    responseModel.data.bankname);
+                    responseModel.data!.bankname!);
                 sharedPrefs.setString(Constants.SHARED_PREF_ACCOUNT_NUMBER,
-                    responseModel.data.acno);
+                    responseModel.data!.acno!);
                 sharedPrefs.setString(
-                    Constants.SHARED_PREF_IFSC_CODE, responseModel.data.ifsc);
+                    Constants.SHARED_PREF_IFSC_CODE, responseModel.data!.ifsc!);
                 sharedPrefs.setString(Constants.SHARED_PREF_HOLDER_NAME,
-                    responseModel.data.acholder);
+                    responseModel.data!.acholder!);
 
-                bankNameController.text = responseModel.data.bankname;
-                accountNumberController.text = responseModel.data.acno;
-                ifscController.text = responseModel.data.ifsc;
-                holderNameController.text = responseModel.data.acholder;
+                bankNameController!.text = responseModel.data!.bankname!;
+                accountNumberController!.text = responseModel.data!.acno!;
+                ifscController!.text = responseModel.data!.ifsc!;
+                holderNameController!.text = responseModel.data!.acholder!;
               });
             });
           } else {

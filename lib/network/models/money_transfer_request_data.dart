@@ -1,5 +1,5 @@
 class MoneyTransferRequestData {
-  Data data;
+  Data? data;
 
   MoneyTransferRequestData({this.data});
 
@@ -10,14 +10,14 @@ class MoneyTransferRequestData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  TransferRequest transferRequest;
+  TransferRequest? transferRequest;
 
   Data({this.transferRequest});
 
@@ -30,34 +30,34 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.transferRequest != null) {
-      data['transfer_request'] = this.transferRequest.toJson();
+      data['transfer_request'] = this.transferRequest!.toJson();
     }
     return data;
   }
 }
 
 class TransferRequest {
-  String id;
-  String uniqueRequestNumber;
-  String failureReason;
-  String beneficiaryId;
-  String createdAt;
-  String uniqueTransactionReference;
-  String paymentMode;
-  double amount;
-  String currency;
-  String narration;
-  String beneficiaryBankName;
-  String beneficiaryAccountName;
-  String beneficiaryAccountNumber;
-  String beneficiaryAccountIfsc;
+  String? id;
+  String? uniqueRequestNumber;
+  String? failureReason;
+  String? beneficiaryId;
+  String? createdAt;
+  String? uniqueTransactionReference;
+  String? paymentMode;
+  double? amount;
+  String? currency;
+  String? narration;
+  String? beneficiaryBankName;
+  String? beneficiaryAccountName;
+  String? beneficiaryAccountNumber;
+  String? beneficiaryAccountIfsc;
   Null beneficiaryUpiHandle;
-  double serviceCharge;
-  double gstAmount;
-  double serviceChargeWithGst;
-  String status;
-  bool queueOnLowBalance;
-  String transferDate;
+  double? serviceCharge;
+  double? gstAmount;
+  double? serviceChargeWithGst;
+  String? status;
+  bool? queueOnLowBalance;
+  String? transferDate;
   Null udf1;
   Null udf2;
   Null udf3;

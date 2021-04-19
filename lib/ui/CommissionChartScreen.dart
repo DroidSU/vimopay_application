@@ -14,9 +14,9 @@ class CommissionChartScreen extends StatefulWidget {
 }
 
 class _CommissionChartScreenState extends State<CommissionChartScreen> {
-  String authToken = "";
+  String? authToken = "";
 
-  List<CommissionChartResponseData> listOfCommissions = List();
+  List<CommissionChartResponseData>? listOfCommissions = [];
   bool _showProgress = false;
 
   @override
@@ -83,7 +83,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                       ),
                     ),
                     !_showProgress
-                        ? listOfCommissions.isNotEmpty
+                        ? listOfCommissions!.isNotEmpty
                             ? ListView.builder(
                                 padding: EdgeInsets.all(5),
                                 itemBuilder: (context, index) {
@@ -140,8 +140,8 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               ),
                                             ),
                                             Text(
-                                              listOfCommissions[index]
-                                                  .serviceType,
+                                              listOfCommissions![index]
+                                                  .serviceType!,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -168,8 +168,8 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               ),
                                             ),
                                             Text(
-                                              listOfCommissions[index]
-                                                  .providerName,
+                                              listOfCommissions![index]
+                                                  .providerName!,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -196,8 +196,8 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               ),
                                             ),
                                             Text(
-                                              listOfCommissions[index]
-                                                  .commisisontype,
+                                              listOfCommissions![index]
+                                                  .commisisontype!,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -224,8 +224,8 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               ),
                                             ),
                                             Text(
-                                              listOfCommissions[index]
-                                                  .percentage,
+                                              listOfCommissions![index]
+                                                  .percentage!,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -252,7 +252,8 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               ),
                                             ),
                                             Text(
-                                              listOfCommissions[index].flatform,
+                                              listOfCommissions![index]
+                                                  .flatform!,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -279,7 +280,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               ),
                                             ),
                                             Text(
-                                              listOfCommissions[index].flatto,
+                                              listOfCommissions![index].flatto!,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -306,7 +307,8 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                               ),
                                             ),
                                             Text(
-                                              listOfCommissions[index].flatamnt,
+                                              listOfCommissions![index]
+                                                  .flatamnt!,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -318,7 +320,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                                     ),
                                   );
                                 },
-                                itemCount: listOfCommissions.length,
+                                itemCount: listOfCommissions!.length,
                                 shrinkWrap: true,
                               )
                             : Container(
@@ -354,7 +356,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
       _showProgress = true;
     });
 
-    HTTPService().getCommissionChart(authToken).then((response) {
+    HTTPService().getCommissionChart(authToken!).then((response) {
       setState(() {
         _showProgress = false;
       });
@@ -362,7 +364,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
       if (response.statusCode == 200) {
         CommissionChartResponseModel responseModel =
             CommissionChartResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             listOfCommissions = responseModel.data;
           });
@@ -375,7 +377,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -408,7 +410,7 @@ class _CommissionChartScreenState extends State<CommissionChartScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

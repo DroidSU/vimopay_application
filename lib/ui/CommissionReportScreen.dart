@@ -20,8 +20,8 @@ class CommissionReportScreen extends StatefulWidget {
 class _CommissionReportScreenState extends State<CommissionReportScreen> {
   bool _showProgresss = false;
 
-  List<CommissionReportResponseData> commissionReportList = List();
-  String authToken = "";
+  List<CommissionReportResponseData>? commissionReportList = [];
+  String? authToken = "";
 
   List<String> listOfProducts = [
     'Mobile Prepaid',
@@ -40,18 +40,18 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
     'Mobile Postpaid',
     'Water',
   ];
-  String selectedProducts = 'Mobile Prepaid';
+  String? selectedProducts = 'Mobile Prepaid';
 
   String currentDateAsString = "";
-  DateTime currentDate;
+  DateTime? currentDate;
   String fromDateAsString = "";
   String toDateAsString = "";
-  DateTime fromDate;
-  DateTime toDate;
+  DateTime? fromDate;
+  DateTime? toDate;
 
-  String complainStatus = "";
+  String? complainStatus = "";
   String complainDescription = "";
-  TextEditingController descController;
+  TextEditingController? descController;
   bool _showComplaintProgress = false;
   List<String> listOfStatus = [
     'Please Refund',
@@ -67,7 +67,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
 
     currentDate = DateTime.now();
     currentDateAsString =
-        '${currentDate.day}/${currentDate.month}/${currentDate.year}';
+        '${currentDate!.day}/${currentDate!.month}/${currentDate!.year}';
     fromDateAsString = currentDateAsString;
     toDateAsString = currentDateAsString;
     fromDate = currentDate;
@@ -180,11 +180,11 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                             onTap: () {
                                               showDatePicker(
                                                       context: context,
-                                                      initialDate: fromDate,
-                                                      firstDate: fromDate
+                                                      initialDate: fromDate!,
+                                                      firstDate: fromDate!
                                                           .subtract(Duration(
                                                               days: 365)),
-                                                      lastDate: currentDate)
+                                                      lastDate: currentDate!)
                                                   .then((selectedDate) {
                                                 if (selectedDate != null) {
                                                   setState(() {
@@ -192,7 +192,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                                     fromDateAsString =
                                                         '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
 
-                                                    commissionReportList
+                                                    commissionReportList!
                                                         .clear();
                                                   });
                                                   fetchCommissionList();
@@ -245,14 +245,14 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                             onTap: () {
                                               showDatePicker(
                                                       context: context,
-                                                      initialDate: toDate,
+                                                      initialDate: toDate!,
                                                       firstDate:
-                                                          toDate.subtract(
+                                                          toDate!.subtract(
                                                         Duration(
                                                           days: 365,
                                                         ),
                                                       ),
-                                                      lastDate: toDate)
+                                                      lastDate: toDate!)
                                                   .then((selectedDate) {
                                                 if (selectedDate != null) {
                                                   setState(() {
@@ -260,7 +260,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                                     toDateAsString =
                                                         '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
 
-                                                    commissionReportList
+                                                    commissionReportList!
                                                         .clear();
                                                   });
 
@@ -305,10 +305,10 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                               value: product,
                                             );
                                           }).toList(),
-                                          onChanged: (value) {
+                                          onChanged: (dynamic value) {
                                             setState(() {
                                               selectedProducts = value;
-                                              commissionReportList.clear();
+                                              commissionReportList!.clear();
                                             });
                                             fetchCommissionList();
                                           },
@@ -326,7 +326,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                           ? Center(
                               child: CircularProgressIndicator(),
                             )
-                          : commissionReportList.isEmpty
+                          : commissionReportList!.isEmpty
                               ? Expanded(
                                   child: Container(
                                     child: Center(
@@ -361,9 +361,9 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                                 children: [
                                                   Expanded(
                                                     child: Text(
-                                                      commissionReportList[
+                                                      commissionReportList![
                                                               index]
-                                                          .product,
+                                                          .product!,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontWeight:
@@ -376,9 +376,9 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                                         EdgeInsets.fromLTRB(
                                                             10, 0, 10, 0),
                                                     child: Text(
-                                                      commissionReportList[
+                                                      commissionReportList![
                                                               index]
-                                                          .type,
+                                                          .type!,
                                                       style: TextStyle(
                                                           color: Colors.green,
                                                           fontWeight:
@@ -387,7 +387,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    '\u20B9${commissionReportList[index].commissionAmount}',
+                                                    '\u20B9${commissionReportList![index].commissionAmount}',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontWeight:
@@ -406,7 +406,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                                       MaterialButton(
                                                         onPressed: () {
                                                           printReceipt(
-                                                              commissionReportList[
+                                                              commissionReportList![
                                                                   index]);
                                                         },
                                                         child: Row(
@@ -467,7 +467,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                       ),
                                     );
                                   },
-                                  itemCount: commissionReportList.length,
+                                  itemCount: commissionReportList!.length,
                                   shrinkWrap: true,
                                 ),
                     ],
@@ -488,7 +488,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
 
     HTTPService()
         .getCommissionReport(
-            authToken, fromDateAsString, toDateAsString, selectedProducts)
+            authToken!, fromDateAsString, toDateAsString, selectedProducts)
         .then((response) {
       setState(() {
         _showProgresss = false;
@@ -496,7 +496,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
       if (response.statusCode == 200) {
         CommissionReportResponseModel responseModel =
             CommissionReportResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             commissionReportList = responseModel.data;
           });
@@ -509,7 +509,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -542,7 +542,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -605,7 +605,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                       pw.Text('Transaction Amount'),
                       pw.Text(
                           commissionReport.commissionAmount != null
-                              ? commissionReport.commissionAmount
+                              ? commissionReport.commissionAmount!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,
@@ -620,7 +620,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                       pw.Text(
                           commissionReport.cratedate != null
                               ? UtilityMethods()
-                                  .beautifyDateTime(commissionReport.cratedate)
+                                  .beautifyDateTime(commissionReport.cratedate!)
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,
@@ -667,7 +667,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                         Container(
                           child: DropdownButton(
                             isExpanded: true,
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 complainStatus = value;
                               });
@@ -734,7 +734,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                 child: MaterialButton(
                                   onPressed: () {
                                     complainDescription =
-                                        descController.text.trim();
+                                        descController!.text.trim();
                                     if (listOfStatus.contains(complainStatus) &&
                                         complainDescription.isNotEmpty) {
                                       setState(() {
@@ -743,7 +743,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
 
                                       HTTPService()
                                           .sendReportComplain(
-                                              authToken,
+                                              authToken!,
                                               complainStatus,
                                               complainDescription,
                                               index.toString())
@@ -758,9 +758,9 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                                           BasicResponseModel responseModel =
                                               BasicResponseModel.fromJson(
                                                   json.decode(response.body));
-                                          if (responseModel.status) {
+                                          if (responseModel.status!) {
                                             setState(() {
-                                              descController.text = "";
+                                              descController!.text = "";
                                             });
 
                                             showSuccessDialog(
@@ -796,7 +796,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
         });
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -829,7 +829,7 @@ class _CommissionReportScreenState extends State<CommissionReportScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

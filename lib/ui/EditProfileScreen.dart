@@ -14,30 +14,30 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  String companyName = "";
-  String emailAddress = "";
-  String mobileNumber = "";
-  String fullName = "";
-  String address = "";
-  String city = "";
-  String state = "";
-  String pincode = "";
-  String aadharNumber = "";
-  String panNumber = "";
-  String gstNumber = "";
-  String authToken = "";
+  String? companyName = "";
+  String? emailAddress = "";
+  String? mobileNumber = "";
+  String? fullName = "";
+  String? address = "";
+  String? city = "";
+  String? state = "";
+  String? pincode = "";
+  String? aadharNumber = "";
+  String? panNumber = "";
+  String? gstNumber = "";
+  String? authToken = "";
 
-  TextEditingController companyController;
-  TextEditingController emailController;
-  TextEditingController mobileController;
-  TextEditingController nameController;
-  TextEditingController addressController;
-  TextEditingController cityController;
-  TextEditingController stateController;
-  TextEditingController pincodeController;
-  TextEditingController aadharController;
-  TextEditingController panController;
-  TextEditingController gstController;
+  TextEditingController? companyController;
+  TextEditingController? emailController;
+  TextEditingController? mobileController;
+  TextEditingController? nameController;
+  TextEditingController? addressController;
+  TextEditingController? cityController;
+  TextEditingController? stateController;
+  TextEditingController? pincodeController;
+  TextEditingController? aadharController;
+  TextEditingController? panController;
+  TextEditingController? gstController;
 
   bool _showProgress = false;
 
@@ -61,17 +61,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
-    companyController.dispose();
-    emailController.dispose();
-    mobileController.dispose();
-    nameController.dispose();
-    addressController.dispose();
-    cityController.dispose();
-    stateController.dispose();
-    pincodeController.dispose();
-    aadharController.dispose();
-    panController.dispose();
-    gstController.dispose();
+    companyController!.dispose();
+    emailController!.dispose();
+    mobileController!.dispose();
+    nameController!.dispose();
+    addressController!.dispose();
+    cityController!.dispose();
+    stateController!.dispose();
+    pincodeController!.dispose();
+    aadharController!.dispose();
+    panController!.dispose();
+    gstController!.dispose();
 
     super.dispose();
   }
@@ -268,12 +268,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               enabled: false,
                             )
                           : Container(),
-                      fullName.isNotEmpty
+                      fullName!.isNotEmpty
                           ? SizedBox(
                               height: 20,
                             )
                           : Container(),
-                      fullName.isNotEmpty
+                      fullName!.isNotEmpty
                           ? TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -703,16 +703,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void updateProfileDetails() {
-    address = addressController.text.trim();
-    city = cityController.text.trim();
-    state = stateController.text.trim();
-    pincode = pincodeController.text.trim();
-    aadharNumber = aadharController.text.trim();
-    panNumber = panController.text.trim();
-    fullName = nameController.text.trim();
-    emailAddress = emailController.text.trim();
-    companyName = companyController.text.trim();
-    mobileNumber = mobileController.text.trim();
+    address = addressController!.text.trim();
+    city = cityController!.text.trim();
+    state = stateController!.text.trim();
+    pincode = pincodeController!.text.trim();
+    aadharNumber = aadharController!.text.trim();
+    panNumber = panController!.text.trim();
+    fullName = nameController!.text.trim();
+    emailAddress = emailController!.text.trim();
+    companyName = companyController!.text.trim();
+    mobileNumber = mobileController!.text.trim();
 
     // if (fullName.isNotEmpty &&
     //     address.isNotEmpty &&
@@ -729,7 +729,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
 
     HTTPService()
-        .updateProfileDetails(authToken, fullName, address, city, state,
+        .updateProfileDetails(authToken!, fullName, address, city, state,
             pincode, aadharNumber, panNumber, gstNumber)
         .then((response) {
       setState(() {
@@ -738,19 +738,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (response.statusCode == 200) {
         BasicResponseModel basicResponseBody =
             BasicResponseModel.fromJson(json.decode(response.body));
-        if (basicResponseBody.status) {
+        if (basicResponseBody.status!) {
           SharedPreferences.getInstance().then((sharedPrefs) {
-            sharedPrefs.setString(Constants.SHARED_PREF_NAME, fullName);
-            sharedPrefs.setString(Constants.SHARED_PREF_EMAIL, emailAddress);
-            sharedPrefs.setString(Constants.SHARED_PREF_MOBILE, mobileNumber);
-            sharedPrefs.setString(Constants.SHARED_PREF_ADDRESS, address);
-            sharedPrefs.setString(Constants.SHARED_PREF_CITY, city);
-            sharedPrefs.setString(Constants.SHARED_PREF_STATE, state);
-            sharedPrefs.setString(Constants.SHARED_PREF_PINCODE, pincode);
+            sharedPrefs.setString(Constants.SHARED_PREF_NAME, fullName!);
+            sharedPrefs.setString(Constants.SHARED_PREF_EMAIL, emailAddress!);
+            sharedPrefs.setString(Constants.SHARED_PREF_MOBILE, mobileNumber!);
+            sharedPrefs.setString(Constants.SHARED_PREF_ADDRESS, address!);
+            sharedPrefs.setString(Constants.SHARED_PREF_CITY, city!);
+            sharedPrefs.setString(Constants.SHARED_PREF_STATE, state!);
+            sharedPrefs.setString(Constants.SHARED_PREF_PINCODE, pincode!);
             sharedPrefs.setString(
-                Constants.SHARED_PREF_AADHAR_NUMBER, aadharNumber);
-            sharedPrefs.setString(Constants.SHARED_PREF_PAN_NUMBER, panNumber);
-            sharedPrefs.setString(Constants.COMPANY_NAME, companyName);
+                Constants.SHARED_PREF_AADHAR_NUMBER, aadharNumber!);
+            sharedPrefs.setString(Constants.SHARED_PREF_PAN_NUMBER, panNumber!);
+            sharedPrefs.setString(Constants.COMPANY_NAME, companyName!);
           });
 
           showSuccessDialog(context, 'Profile details changed!');
@@ -780,16 +780,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       gstNumber = sharedPrefs.getString(Constants.SHARED_PREF_GST_NUMBER);
 
       setState(() {
-        companyController.text = companyName;
-        emailController.text = emailAddress;
-        mobileController.text = mobileNumber;
-        nameController.text = fullName;
-        addressController.text = address;
-        cityController.text = city;
-        stateController.text = state;
-        pincodeController.text = pincode;
-        aadharController.text = aadharNumber;
-        panController.text = panNumber;
+        companyController!.text = companyName!;
+        emailController!.text = emailAddress!;
+        mobileController!.text = mobileNumber!;
+        nameController!.text = fullName!;
+        addressController!.text = address!;
+        cityController!.text = city!;
+        stateController!.text = state!;
+        pincodeController!.text = pincode!;
+        aadharController!.text = aadharNumber!;
+        panController!.text = panNumber!;
       });
     });
   }

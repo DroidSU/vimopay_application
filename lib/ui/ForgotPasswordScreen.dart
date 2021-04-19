@@ -18,11 +18,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     with TickerProviderStateMixin {
-  TextEditingController mobileController;
-  AnimationController _controller;
+  TextEditingController? mobileController;
+  late AnimationController _controller;
 
   bool _showProgress = false;
-  Timer timer;
+  late Timer timer;
 
   /*
     pagerState: 0 - do not show otp fields
@@ -47,12 +47,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       startTimer();
     }
 
-    if (mobile.isNotEmpty) mobileController.text = mobile;
+    if (mobile.isNotEmpty) mobileController!.text = mobile;
   }
 
   @override
   void dispose() {
-    mobileController.dispose();
+    mobileController!.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -195,7 +195,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             child: !_showProgress
                 ? RaisedButton(
                     onPressed: () {
-                      mobile = mobileController.text.trim();
+                      mobile = mobileController!.text.trim();
                       if (mobile != null &&
                           mobile.isNotEmpty &&
                           mobile.length == 10) {
@@ -490,7 +490,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                                   Navigator.of(context).pop();
 
                                   _controller.dispose();
-                                  mobileController.dispose();
+                                  mobileController!.dispose();
                                   Navigator.of(context).pushReplacement(
                                       ScaleRoute(page: SplashScreen()));
                                 } else {

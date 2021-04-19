@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SlideInTransition extends PageRouteBuilder {
-  final Widget page;
+  final Widget? page;
 
   SlideInTransition({this.page})
       : super(pageBuilder: (BuildContext buildContext,
             Animation<double> animation, Animation<double> secondAnimation) {
-          return page;
+          return page!;
         }, transitionsBuilder: (BuildContext context,
             Animation<double> animation,
             Animation<double> secondaryAnimation,

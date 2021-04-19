@@ -1,16 +1,16 @@
 class CommissionReportResponseData {
-  String _cratedate;
-  String _commissionAmount;
-  String _type;
-  String _comment;
-  String _product;
+  String? _cratedate;
+  String? _commissionAmount;
+  String? _type;
+  String? _comment;
+  String? _product;
 
   CommissionReportResponseData(
-      {String cratedate,
-      String commissionAmount,
-      String type,
-      String comment,
-      String product}) {
+      {String? cratedate,
+      String? commissionAmount,
+      String? type,
+      String? comment,
+      String? product}) {
     this._cratedate = cratedate;
     this._commissionAmount = commissionAmount;
     this._type = type;
@@ -18,17 +18,17 @@ class CommissionReportResponseData {
     this._product = product;
   }
 
-  String get cratedate => _cratedate;
-  set cratedate(String cratedate) => _cratedate = cratedate;
-  String get commissionAmount => _commissionAmount;
-  set commissionAmount(String commissionAmount) =>
+  String? get cratedate => _cratedate;
+  set cratedate(String? cratedate) => _cratedate = cratedate;
+  String? get commissionAmount => _commissionAmount;
+  set commissionAmount(String? commissionAmount) =>
       _commissionAmount = commissionAmount;
-  String get type => _type;
-  set type(String type) => _type = type;
-  String get comment => _comment;
-  set comment(String comment) => _comment = comment;
-  String get product => _product;
-  set product(String product) => _product = product;
+  String? get type => _type;
+  set type(String? type) => _type = type;
+  String? get comment => _comment;
+  set comment(String? comment) => _comment = comment;
+  String? get product => _product;
+  set product(String? product) => _product = product;
 
   CommissionReportResponseData.fromJson(Map<String, dynamic> json) {
     _cratedate = json['cratedate'];

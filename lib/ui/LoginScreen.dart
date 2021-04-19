@@ -18,14 +18,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController mobileNumberController;
-  TextEditingController passwordController;
+  TextEditingController? mobileNumberController;
+  TextEditingController? passwordController;
 
   bool _showProgress = false;
   bool _obscurePassword = true;
   String mobileNumber = "";
   String password = "";
-  String fcm_token = "";
+  String? fcm_token = "";
 
   @override
   void initState() {
@@ -41,8 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     super.dispose();
 
-    mobileNumberController.dispose();
-    passwordController.dispose();
+    mobileNumberController!.dispose();
+    passwordController!.dispose();
   }
 
   @override
@@ -161,8 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: !_showProgress
                       ? RaisedButton(
                           onPressed: () {
-                            mobileNumber = mobileNumberController.text.trim();
-                            password = passwordController.text.trim();
+                            mobileNumber = mobileNumberController!.text.trim();
+                            password = passwordController!.text.trim();
 
                             if (mobileNumber.isNotEmpty &&
                                 mobileNumber.length == 10) {
@@ -181,8 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   LoginResponseModel loginResponseModel =
                                       LoginResponseModel.fromJson(
                                           json.decode(response.body));
-                                  if (loginResponseModel.status) {
-                                    saveUserData(loginResponseModel.data);
+                                  if (loginResponseModel.status!) {
+                                    saveUserData(loginResponseModel.data!);
                                   } else {
                                     showErrorDialog(loginResponseModel.message);
                                   }
@@ -241,11 +241,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void saveUserData(LoginResponseData data) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(Constants.SHARED_PREF_NAME, data.name);
-    sharedPreferences.setString(Constants.SHARED_PREF_EMAIL, data.email);
-    sharedPreferences.setString(Constants.SHARED_PREF_MOBILE, data.mobile);
-    sharedPreferences.setString(Constants.SHARED_PREF_USER_ID, data.userid);
-    sharedPreferences.setString(Constants.SHARED_PREF_TOKEN, data.token);
+    sharedPreferences.setString(Constants.SHARED_PREF_NAME, data.name!);
+    sharedPreferences.setString(Constants.SHARED_PREF_EMAIL, data.email!);
+    sharedPreferences.setString(Constants.SHARED_PREF_MOBILE, data.mobile!);
+    sharedPreferences.setString(Constants.SHARED_PREF_USER_ID, data.userid!);
+    sharedPreferences.setString(Constants.SHARED_PREF_TOKEN, data.token!);
     sharedPreferences.setString(Constants.SHARED_PREF_PASSWORD, password);
     // sharedPreferences.setString(Constants.SHARED_PREF_PROFILE_IMAGE, data.profileimage);
 
@@ -257,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaleRoute(page: DashboardScreen()), (route) => false);
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -285,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,

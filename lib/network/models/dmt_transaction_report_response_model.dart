@@ -1,15 +1,15 @@
 class DMTTransactionsResponseModel {
-  List<DMTReportResponseData> data;
-  String message;
-  bool status;
+  List<DMTReportResponseData>? data;
+  String? message;
+  bool? status;
 
   DMTTransactionsResponseModel({this.data, this.message, this.status});
 
   DMTTransactionsResponseModel.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = new List<DMTReportResponseData>();
+      data = <DMTReportResponseData>[];
       json['data'].forEach((v) {
-        data.add(new DMTReportResponseData.fromJson(v));
+        data!.add(new DMTReportResponseData.fromJson(v));
       });
     }
     message = json['message'];
@@ -19,7 +19,7 @@ class DMTTransactionsResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     data['message'] = this.message;
     data['status'] = this.status;
@@ -28,22 +28,22 @@ class DMTTransactionsResponseModel {
 }
 
 class DMTReportResponseData {
-  String createDate;
-  String pKId;
+  String? createDate;
+  String? pKId;
   Null accNumber;
   Null accName;
   Null status;
   Null ifsc;
-  String amount;
-  String pMode;
+  String? amount;
+  String? pMode;
   Null uniqueReq;
   Null failureReson;
   Null beneficiaryId;
   Null narration;
   Null beneficiaryBranch;
-  String beneficiaryName;
-  String beneficiaryAccNo;
-  String beneficiaryIFSC;
+  String? beneficiaryName;
+  String? beneficiaryAccNo;
+  String? beneficiaryIFSC;
   Null serviceCharge;
   Null gsTAmt;
 

@@ -62,4 +62,7 @@ class APIConstants {
 
   static const ENDPOINT_INITIATE_PAYOUT =
       "https://staging-dashboard.paytm.com/bpay/api/v1/disburse/order/bank";
+
+  static String ENDPOINT_GET_COMMISSION_PLAN =
+      BASE_URL + "Dashboard/GetCommisionDetails_PDF";
 }

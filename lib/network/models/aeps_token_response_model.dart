@@ -1,7 +1,7 @@
 class AEPSTokenResponseModel {
-  String message;
-  String statusCode;
-  String result;
+  String? message;
+  String? statusCode;
+  String? result;
 
   AEPSTokenResponseModel({this.message, this.statusCode, this.result});
 

@@ -1,7 +1,7 @@
 class MainTransactionsResponseModel {
-  String message;
-  bool status;
-  List<MainTransactionResponseData> data;
+  String? message;
+  bool? status;
+  List<MainTransactionResponseData>? data;
 
   MainTransactionsResponseModel({this.message, this.status, this.data});
 
@@ -9,9 +9,9 @@ class MainTransactionsResponseModel {
     message = json['message'];
     status = json['status'];
     if (json['data'] != null) {
-      data = new List<MainTransactionResponseData>();
+      data = <MainTransactionResponseData>[];
       json['data'].forEach((v) {
-        data.add(new MainTransactionResponseData.fromJson(v));
+        data!.add(new MainTransactionResponseData.fromJson(v));
       });
     }
   }
@@ -21,20 +21,20 @@ class MainTransactionsResponseModel {
     data['message'] = this.message;
     data['status'] = this.status;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class MainTransactionResponseData {
-  String transactionType;
-  String createDate;
-  double transactionAmt;
-  String extra1;
-  int isStatus;
-  String transactionId;
-  String comment;
+  String? transactionType;
+  String? createDate;
+  double? transactionAmt;
+  String? extra1;
+  int? isStatus;
+  String? transactionId;
+  String? comment;
 
   MainTransactionResponseData(
       {this.transactionType,

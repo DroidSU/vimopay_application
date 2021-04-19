@@ -26,24 +26,24 @@ class DMTReportScreen extends StatefulWidget {
 
 class _DMTReportScreenState extends State<DMTReportScreen> {
   int _pageState = 1;
-  String authToken = "";
+  String? authToken = "";
   bool _showProgress = false;
-  List<VerifiedAccountsResponseData> listOfVerifiedAccounts = List();
-  List<DMTReportResponseData> listOfReports = List();
+  List<VerifiedAccountsResponseData>? listOfVerifiedAccounts = [];
+  List<DMTReportResponseData>? listOfReports = [];
 
   String currentDateAsString = "";
-  DateTime currentDate;
+  DateTime? currentDate;
   String fromDateAsString = "";
   String toDateAsString = "";
-  DateTime fromDate;
-  DateTime toDate;
+  DateTime? fromDate;
+  DateTime? toDate;
 
   List<String> listOfStatus = ['Success', 'Fail', 'Pending'];
-  String selectedStatus = "Success";
+  String? selectedStatus = "Success";
 
-  String complainStatus = "Please Refund";
+  String? complainStatus = "Please Refund";
   String complainDescription = "";
-  TextEditingController descController;
+  TextEditingController? descController;
   bool _showComplaintProgress = false;
   List<String> listComplainStatus = [
     'Please Refund',
@@ -62,7 +62,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
 
     currentDate = DateTime.now();
     currentDateAsString =
-        '${currentDate.day}-${currentDate.month}-${currentDate.year}';
+        '${currentDate!.day}-${currentDate!.month}-${currentDate!.year}';
     fromDateAsString = currentDateAsString;
     toDateAsString = currentDateAsString;
     fromDate = currentDate;
@@ -167,10 +167,10 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                       onTap: () {
                                         showDatePicker(
                                                 context: context,
-                                                initialDate: fromDate,
-                                                firstDate: fromDate.subtract(
+                                                initialDate: fromDate!,
+                                                firstDate: fromDate!.subtract(
                                                     Duration(days: 365)),
-                                                lastDate: currentDate)
+                                                lastDate: currentDate!)
                                             .then((selectedDate) {
                                           if (selectedDate != null) {
                                             setState(() {
@@ -178,7 +178,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                               fromDateAsString =
                                                   '${selectedDate.day}-${selectedDate.month}-${selectedDate.year}';
 
-                                              listOfVerifiedAccounts.clear();
+                                              listOfVerifiedAccounts!.clear();
                                             });
 
                                             if (_pageState == 1) {
@@ -232,10 +232,10 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                       onTap: () {
                                         showDatePicker(
                                                 context: context,
-                                                initialDate: toDate,
-                                                firstDate: toDate.subtract(
+                                                initialDate: toDate!,
+                                                firstDate: toDate!.subtract(
                                                     Duration(days: 365)),
-                                                lastDate: toDate)
+                                                lastDate: toDate!)
                                             .then((selectedDate) {
                                           if (selectedDate != null) {
                                             setState(() {
@@ -243,7 +243,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                               toDateAsString =
                                                   '${selectedDate.day}-${selectedDate.month}-${selectedDate.year}';
 
-                                              listOfVerifiedAccounts.clear();
+                                              listOfVerifiedAccounts!.clear();
                                             });
 
                                             if (_pageState == 1) {
@@ -289,11 +289,11 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                 value: status,
                               );
                             }).toList(),
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 selectedStatus = value;
 
-                                listOfVerifiedAccounts.clear();
+                                listOfVerifiedAccounts!.clear();
                               });
 
                               if (_pageState == 1) {
@@ -388,7 +388,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                             ),
                           )
                         : _pageState == 1
-                            ? listOfVerifiedAccounts.isNotEmpty
+                            ? listOfVerifiedAccounts!.isNotEmpty
                                 ? ListView.builder(
                                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     itemBuilder: (context, index) {
@@ -420,7 +420,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         ),
                                                         Container(
                                                           child: Text(
-                                                            '${listOfVerifiedAccounts[index].accNumber}',
+                                                            '${listOfVerifiedAccounts![index].accNumber}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -448,7 +448,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         ),
                                                         Container(
                                                           child: Text(
-                                                            '${listOfVerifiedAccounts[index].accName}',
+                                                            '${listOfVerifiedAccounts![index].accName}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -476,7 +476,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         ),
                                                         Container(
                                                           child: Text(
-                                                            '${listOfVerifiedAccounts[index].ifsc}',
+                                                            '${listOfVerifiedAccounts![index].ifsc}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -506,9 +506,9 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                           child: Text(
                                                             UtilityMethods()
                                                                 .beautifyDateTime(
-                                                                    listOfVerifiedAccounts[
+                                                                    listOfVerifiedAccounts![
                                                                             index]
-                                                                        .createDate),
+                                                                        .createDate!),
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -531,7 +531,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         MaterialButton(
                                                           onPressed: () {
                                                             printReceipt(
-                                                                listOfVerifiedAccounts[
+                                                                listOfVerifiedAccounts![
                                                                     index]);
                                                           },
                                                           child: Row(
@@ -596,7 +596,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                               )));
                                     },
                                     shrinkWrap: true,
-                                    itemCount: listOfVerifiedAccounts.length,
+                                    itemCount: listOfVerifiedAccounts!.length,
                                   )
                                 : Container(
                                     child: Center(
@@ -607,7 +607,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                       ),
                                     ),
                                   )
-                            : listOfReports.isNotEmpty
+                            : listOfReports!.isNotEmpty
                                 ? ListView.builder(
                                     itemBuilder: (context, index) {
                                       return Container(
@@ -640,7 +640,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         ),
                                                         Container(
                                                           child: Text(
-                                                            '${listOfReports[index].beneficiaryName}',
+                                                            '${listOfReports![index].beneficiaryName}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -671,7 +671,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         ),
                                                         Container(
                                                           child: Text(
-                                                            '${listOfReports[index].accName}',
+                                                            '${listOfReports![index].accName}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -702,7 +702,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         ),
                                                         Container(
                                                           child: Text(
-                                                            '${listOfReports[index].beneficiaryIFSC}',
+                                                            '${listOfReports![index].beneficiaryIFSC}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -733,7 +733,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         ),
                                                         Container(
                                                           child: Text(
-                                                            '${listOfReports[index].pMode}',
+                                                            '${listOfReports![index].pMode}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -766,9 +766,9 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                           child: Text(
                                                             UtilityMethods()
                                                                 .beautifyDateTime(
-                                                                    listOfReports[
+                                                                    listOfReports![
                                                                             index]
-                                                                        .createDate),
+                                                                        .createDate!),
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -791,7 +791,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                                         MaterialButton(
                                                           onPressed: () {
                                                             printReceiptForReport(
-                                                                listOfReports[
+                                                                listOfReports![
                                                                     index]);
                                                           },
                                                           child: Row(
@@ -856,7 +856,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                               )));
                                     },
                                     shrinkWrap: true,
-                                    itemCount: listOfReports.length,
+                                    itemCount: listOfReports!.length,
                                   )
                                 : Container(
                                     child: Center(
@@ -898,11 +898,11 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
   void fetchVerifiedAccounts() {
     setState(() {
       _showProgress = true;
-      listOfVerifiedAccounts.clear();
+      listOfVerifiedAccounts!.clear();
     });
     HTTPService()
         .getVerifiedAccounts(
-            authToken, fromDateAsString, toDateAsString, selectedStatus)
+            authToken!, fromDateAsString, toDateAsString, selectedStatus)
         .then((response) {
       setState(() {
         _showProgress = false;
@@ -939,7 +939,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                         Container(
                           child: DropdownButton(
                             isExpanded: true,
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 complainStatus = value;
                               });
@@ -1006,7 +1006,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                 child: MaterialButton(
                                   onPressed: () {
                                     complainDescription =
-                                        descController.text.trim();
+                                        descController!.text.trim();
                                     if (listComplainStatus
                                             .contains(complainStatus) &&
                                         complainDescription.isNotEmpty) {
@@ -1016,7 +1016,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
 
                                       HTTPService()
                                           .sendReportComplain(
-                                              authToken,
+                                              authToken!,
                                               complainStatus,
                                               complainDescription,
                                               index.toString())
@@ -1031,9 +1031,9 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                                           BasicResponseModel responseModel =
                                               BasicResponseModel.fromJson(
                                                   json.decode(response.body));
-                                          if (responseModel.status) {
+                                          if (responseModel.status!) {
                                             setState(() {
-                                              descController.text = "";
+                                              descController!.text = "";
                                             });
 
                                             showSuccessDialog(
@@ -1069,7 +1069,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
         });
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -1102,7 +1102,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -1136,7 +1136,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
     }
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
         context: context,
@@ -1169,7 +1169,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
                     child: Container(
                       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -1207,11 +1207,11 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
   void fetchReports() {
     setState(() {
       _showProgress = true;
-      listOfVerifiedAccounts.clear();
+      listOfVerifiedAccounts!.clear();
     });
     HTTPService()
         .getDMTReports(
-            authToken, fromDateAsString, toDateAsString, selectedStatus)
+            authToken!, fromDateAsString, toDateAsString, selectedStatus)
         .then((response) {
       setState(() {
         _showProgress = false;
@@ -1219,7 +1219,7 @@ class _DMTReportScreenState extends State<DMTReportScreen> {
       if (response.statusCode == 200) {
         DMTTransactionsResponseModel responseModel =
             DMTTransactionsResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             listOfReports = responseModel.data;
           });

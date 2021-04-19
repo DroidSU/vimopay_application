@@ -14,15 +14,15 @@ class AddMoneyWalletScreen extends StatefulWidget {
 }
 
 class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
-  String authToken = "";
+  String? authToken = "";
 
-  List<AdminListResponseData> listOfAdmins = List();
-  List<String> listOfModes = List();
-  AdminListResponseData selectedAdmin;
-  String selectedMode = "";
-  TextEditingController refNumberController;
-  TextEditingController amountController;
-  TextEditingController noteController;
+  List<AdminListResponseData>? listOfAdmins = [];
+  List<String> listOfModes = [];
+  AdminListResponseData? selectedAdmin;
+  String? selectedMode = "";
+  TextEditingController? refNumberController;
+  TextEditingController? amountController;
+  TextEditingController? noteController;
   bool _showProgress = false;
   String referenceNumber = "";
   String amount = "";
@@ -46,22 +46,22 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
 
   @override
   void dispose() {
-    refNumberController.dispose();
-    amountController.dispose();
-    noteController.dispose();
+    refNumberController!.dispose();
+    amountController!.dispose();
+    noteController!.dispose();
     super.dispose();
   }
 
   void getAdminList() {
-    HTTPService().getAdminList(authToken).then((response) {
+    HTTPService().getAdminList(authToken!).then((response) {
       if (response.statusCode == 200) {
         AdminListResponseModel responseModel =
             AdminListResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             listOfAdmins = responseModel.data;
 
-            selectedAdmin = listOfAdmins[0];
+            selectedAdmin = listOfAdmins![0];
           });
         } else {
           showErrorDialog(responseModel.message);
@@ -131,7 +131,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
                       ),
                     ),
                     DropdownButton(
-                      items: listOfAdmins.map((element) {
+                      items: listOfAdmins!.map((element) {
                         return DropdownMenuItem(
                           child: Text(
                             '${element.adminname} (${element.admintype})',
@@ -140,7 +140,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
                           value: element,
                         );
                       }).toList(),
-                      onChanged: (value) {
+                      onChanged: (dynamic value) {
                         setState(() {
                           selectedAdmin = value;
                         });
@@ -169,7 +169,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
                           value: element,
                         );
                       }).toList(),
-                      onChanged: (value) {
+                      onChanged: (dynamic value) {
                         setState(() {
                           selectedMode = value;
                         });
@@ -311,9 +311,9 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
                                 height: 40,
                                 onPressed: () {
                                   referenceNumber =
-                                      refNumberController.text.trim();
-                                  amount = amountController.text.trim();
-                                  note = noteController.text.trim();
+                                      refNumberController!.text.trim();
+                                  amount = amountController!.text.trim();
+                                  note = noteController!.text.trim();
 
                                   if (referenceNumber != null &&
                                       referenceNumber.isNotEmpty &&
@@ -354,7 +354,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
     return true;
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -387,7 +387,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -441,8 +441,8 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
     });
     HTTPService()
         .addMoneyRetailer(
-            authToken: authToken,
-            adminId: selectedAdmin.adminid.toString(),
+            authToken: authToken!,
+            adminId: selectedAdmin!.adminid.toString(),
             amount: amount,
             mode: selectedMode,
             note: note,
@@ -454,7 +454,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
       if (response.statusCode == 200) {
         BasicResponseModel responseModel =
             BasicResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           resetUI();
           showSuccessDialog(context, responseModel.message);
         } else {
@@ -466,7 +466,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
     });
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -499,7 +499,7 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -535,11 +535,11 @@ class _AddMoneyWalletScreenState extends State<AddMoneyWalletScreen> {
 
   void resetUI() {
     setState(() {
-      refNumberController.text = '';
+      refNumberController!.text = '';
       referenceNumber = "";
-      amountController.text = "";
+      amountController!.text = "";
       amount = "";
-      noteController.text = "";
+      noteController!.text = "";
       note = "";
     });
   }

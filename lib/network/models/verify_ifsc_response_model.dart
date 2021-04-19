@@ -1,11 +1,11 @@
-class MoneyTransferResponseModel {
+class VerifyIFSCResponseModel {
   String? message;
   bool? status;
   Null data;
 
-  MoneyTransferResponseModel({this.message, this.status, this.data});
+  VerifyIFSCResponseModel({this.message, this.status, this.data});
 
-  MoneyTransferResponseModel.fromJson(Map<String, dynamic> json) {
+  VerifyIFSCResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
     data = json['data'];

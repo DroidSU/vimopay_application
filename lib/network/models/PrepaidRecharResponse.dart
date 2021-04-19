@@ -1,6 +1,6 @@
 class PrepaidRechargeResponse {
-  String message;
-  bool status;
+  String? message;
+  bool? status;
 
   PrepaidRechargeResponse({this.message, this.status});
 

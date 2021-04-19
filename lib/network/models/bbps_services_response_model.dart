@@ -1,6 +1,6 @@
 class BBPSServicesResponseModel {
-  String message;
-  bool status;
+  String? message;
+  bool? status;
   Null data;
 
   BBPSServicesResponseModel({this.message, this.status, this.data});

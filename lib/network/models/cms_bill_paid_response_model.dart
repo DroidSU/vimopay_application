@@ -1,5 +1,5 @@
 class CMSBillPaidResponseModel {
-  CMSBillPaidMeta meta;
+  CMSBillPaidMeta? meta;
 
   CMSBillPaidResponseModel({this.meta});
 
@@ -12,16 +12,16 @@ class CMSBillPaidResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.meta != null) {
-      data['meta'] = this.meta.toJson();
+      data['meta'] = this.meta!.toJson();
     }
     return data;
   }
 }
 
 class CMSBillPaidMeta {
-  String code;
-  String description;
-  String status;
+  String? code;
+  String? description;
+  String? status;
 
   CMSBillPaidMeta({this.code, this.description, this.status});
 

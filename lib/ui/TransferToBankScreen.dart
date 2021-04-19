@@ -8,28 +8,28 @@ import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/get_bank_details_response_model.dart';
 
 class TransferToBankScreen extends StatefulWidget {
-  String walletBalance;
+  String? walletBalance;
 
-  TransferToBankScreen({@required this.walletBalance});
+  TransferToBankScreen({required this.walletBalance});
 
   @override
   _TransferToBankScreenState createState() => _TransferToBankScreenState();
 }
 
 class _TransferToBankScreenState extends State<TransferToBankScreen> {
-  String walletBalance = "";
-  String holderName = "";
-  String bankName = "";
+  String? walletBalance = "";
+  String? holderName = "";
+  String? bankName = "";
   String accountNumber = "";
   String ifscCode = "";
-  String authToken = "";
-  String phoneNumber = "";
+  String? authToken = "";
+  String? phoneNumber = "";
 
   bool _fetchBankDetailsProgress = false;
   bool _transferProgress = false;
 
   String selectedTransferMethod = "IMPS";
-  TextEditingController _amountController;
+  TextEditingController? _amountController;
   String amountToTransfer = "";
 
   @override
@@ -44,7 +44,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
 
   @override
   void dispose() {
-    _amountController.dispose();
+    _amountController!.dispose();
     super.dispose();
   }
 
@@ -215,7 +215,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
                                           ),
                                           Text(
                                             holderName != null
-                                                ? holderName
+                                                ? holderName!
                                                 : 'Manoj',
                                             style: TextStyle(
                                               color: Colors.black,
@@ -242,7 +242,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
                                           ),
                                           Text(
                                             bankName != null
-                                                ? bankName
+                                                ? bankName!
                                                 : 'HDFC',
                                             style: TextStyle(
                                               color: Colors.black,
@@ -450,7 +450,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
                                   : MaterialButton(
                                       onPressed: () {
                                         amountToTransfer =
-                                            _amountController.text.trim();
+                                            _amountController!.text.trim();
                                         startTransfer();
                                       },
                                       child: Text(
@@ -495,7 +495,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
           _fetchBankDetailsProgress = true;
         });
 
-        HTTPService().getBankDetails(authToken).then((response) {
+        HTTPService().getBankDetails(authToken!).then((response) {
           setState(() {
             _fetchBankDetailsProgress = false;
           });
@@ -503,19 +503,19 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
             GetBankDetailsResponseModel responseModel =
                 GetBankDetailsResponseModel.fromJson(
                     json.decode(response.body));
-            if (responseModel.status) {
-              sharedPrefs.setString(
-                  Constants.SHARED_PREF_BANK_NAME, responseModel.data.bankname);
+            if (responseModel.status!) {
+              sharedPrefs.setString(Constants.SHARED_PREF_BANK_NAME,
+                  responseModel.data!.bankname!);
               sharedPrefs.setString(Constants.SHARED_PREF_ACCOUNT_NUMBER,
-                  responseModel.data.acno);
+                  responseModel.data!.acno!);
               sharedPrefs.setString(
-                  Constants.SHARED_PREF_IFSC_CODE, responseModel.data.ifsc);
+                  Constants.SHARED_PREF_IFSC_CODE, responseModel.data!.ifsc!);
               sharedPrefs.setString(Constants.SHARED_PREF_HOLDER_NAME,
-                  responseModel.data.acholder);
+                  responseModel.data!.acholder!);
 
               setState(() {
-                holderName = responseModel.data.acholder;
-                bankName = responseModel.data.bankname;
+                holderName = responseModel.data!.acholder;
+                bankName = responseModel.data!.bankname;
                 // accountNumber = responseModel.data.acno;
                 // ifscCode = responseModel.data.ifsc;
 
@@ -609,7 +609,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
   }
 
   void startTransfer() {
-    if (double.parse(amountToTransfer) <= double.parse(walletBalance)) {
+    if (double.parse(amountToTransfer) <= double.parse(walletBalance!)) {
       String orderId = "";
 
       setState(() {
@@ -617,7 +617,7 @@ class _TransferToBankScreenState extends State<TransferToBankScreen> {
       });
 
       HTTPService()
-          .getChecksum(authToken, accountNumber, ifscCode, amountToTransfer)
+          .getChecksum(authToken!, accountNumber, ifscCode, amountToTransfer)
           .then((response) {
         setState(() {
           _transferProgress = false;

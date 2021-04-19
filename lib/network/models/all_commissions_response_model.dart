@@ -1,7 +1,7 @@
 class AllCommissionsResponseModel {
-  String message;
-  bool status;
-  AllCommissionsResponseData data;
+  String? message;
+  bool? status;
+  AllCommissionsResponseData? data;
 
   AllCommissionsResponseModel({this.message, this.status, this.data});
 
@@ -18,16 +18,16 @@ class AllCommissionsResponseModel {
     data['message'] = this.message;
     data['status'] = this.status;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class AllCommissionsResponseData {
-  String youearned;
-  String transcationcount;
-  String totaltxn;
+  String? youearned;
+  String? transcationcount;
+  String? totaltxn;
 
   AllCommissionsResponseData(
       {this.youearned, this.transcationcount, this.totaltxn});

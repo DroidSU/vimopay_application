@@ -17,7 +17,7 @@ class AppTheme {
         primary: Colors.blue,
         onPrimary: Colors.blueAccent,
         primaryVariant: Color(0xff00A2E7),
-        secondary: Colors.deepPurple[400],
+        secondary: Colors.deepPurple[400]!,
       ),
       cardTheme: CardTheme(
         color: Colors.white,

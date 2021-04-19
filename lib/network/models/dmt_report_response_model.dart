@@ -7,17 +7,17 @@
  */
 
 class VerifiedAccountResponseModel {
-  List<VerifiedAccountsResponseData> data;
-  String message;
-  bool status;
+  List<VerifiedAccountsResponseData>? data;
+  String? message;
+  bool? status;
 
   VerifiedAccountResponseModel({this.data, this.message, this.status});
 
   VerifiedAccountResponseModel.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = new List<VerifiedAccountsResponseData>();
+      data = <VerifiedAccountsResponseData>[];
       json['data'].forEach((v) {
-        data.add(new VerifiedAccountsResponseData.fromJson(v));
+        data!.add(new VerifiedAccountsResponseData.fromJson(v));
       });
     }
     message = json['message'];
@@ -27,7 +27,7 @@ class VerifiedAccountResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     data['message'] = this.message;
     data['status'] = this.status;
@@ -36,24 +36,24 @@ class VerifiedAccountResponseModel {
 }
 
 class VerifiedAccountsResponseData {
-  String createDate;
-  String pKId;
-  String accNumber;
-  String accName;
-  String status;
-  String ifsc;
-  String amount;
-  String pMode;
-  String uniqueReq;
-  String failureReson;
-  String beneficiaryId;
-  String narration;
-  String beneficiaryBranch;
-  String beneficiaryName;
-  String beneficiaryAccNo;
-  String beneficiaryIFSC;
-  String serviceCharge;
-  String gsTAmt;
+  String? createDate;
+  String? pKId;
+  String? accNumber;
+  String? accName;
+  String? status;
+  String? ifsc;
+  String? amount;
+  String? pMode;
+  String? uniqueReq;
+  String? failureReson;
+  String? beneficiaryId;
+  String? narration;
+  String? beneficiaryBranch;
+  String? beneficiaryName;
+  String? beneficiaryAccNo;
+  String? beneficiaryIFSC;
+  String? serviceCharge;
+  String? gsTAmt;
 
   VerifiedAccountsResponseData(
       {this.createDate,

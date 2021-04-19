@@ -1,6 +1,6 @@
 class TransferToWalletResponseModel {
-  String message;
-  bool status;
+  String? message;
+  bool? status;
 
   TransferToWalletResponseModel({this.message, this.status});
 

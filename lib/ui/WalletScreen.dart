@@ -22,37 +22,37 @@ import 'ReportScreenUI.dart';
 import 'SupportScreen.dart';
 
 class WalletScreen extends StatefulWidget {
-  final String comingFrom;
+  final String? comingFrom;
   final int selectedWallet;
 
-  WalletScreen({this.comingFrom, @required this.selectedWallet});
+  WalletScreen({this.comingFrom, required this.selectedWallet});
 
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  String authToken = "";
-  String mainWalletBalance = "";
-  String atmWalletBalance = "";
+  String? authToken = "";
+  String? mainWalletBalance = "";
+  String? atmWalletBalance = "";
 
   List<String> walletNames = ['Atm Wallet', 'Main Wallet'];
-  List<String> balances = List();
-  List<String> backgroundImageList = List();
-  List<String> walletIconList = List();
+  List<String?> balances = [];
+  List<String> backgroundImageList = [];
+  List<String> walletIconList = [];
 
-  List<MainTransactionResponseData> mainTransactionsList = List();
+  List<MainTransactionResponseData>? mainTransactionsList = [];
 
-  LinearGradient mainWalletGradient;
-  LinearGradient atmWalletGradient;
+  LinearGradient? mainWalletGradient;
+  LinearGradient? atmWalletGradient;
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
 
   int selectedWallet = 0;
   int currentIndex = 1;
   bool _showProgress = true;
   bool _showTransactionProgress = false;
-  String _comingFrom = "";
+  String? _comingFrom = "";
 
   @override
   void initState() {
@@ -91,9 +91,9 @@ class _WalletScreenState extends State<WalletScreen> {
 
     getUserDetails();
 
-    _scrollController.addListener(() {
+    _scrollController!.addListener(() {
       int index =
-          (_scrollController.offset / (MediaQuery.of(context).size.width))
+          (_scrollController!.offset / (MediaQuery.of(context).size.width))
                   .round() +
               1;
 
@@ -105,7 +105,8 @@ class _WalletScreenState extends State<WalletScreen> {
         if (index == 1) {
           fetchATMWalletTransactions();
         } else {
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+          _scrollController!
+              .jumpTo(_scrollController!.position.maxScrollExtent);
           fetchMainWalletTransactions();
         }
       }
@@ -116,7 +117,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollController!.dispose();
     super.dispose();
   }
 
@@ -125,7 +126,7 @@ class _WalletScreenState extends State<WalletScreen> {
     // After 1 second, it takes you to the end of the ListView
     if (currentIndex == 2) {
       Timer(Duration(seconds: 1), () {
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        _scrollController!.jumpTo(_scrollController!.position.maxScrollExtent);
       });
     }
 
@@ -344,7 +345,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                                   width: 20,
                                                 ),
                                                 Text(
-                                                  balances[index],
+                                                  balances[index]!,
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 20),
@@ -405,7 +406,7 @@ class _WalletScreenState extends State<WalletScreen> {
     SharedPreferences.getInstance().then((sharedPrefs) {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
 
-      HTTPService().getWallets(authToken).then((response) {
+      HTTPService().getWallets(authToken!).then((response) {
         setState(() {
           _showProgress = false;
         });
@@ -413,22 +414,22 @@ class _WalletScreenState extends State<WalletScreen> {
           GetWalletsResponseModel walletsResponseModel =
               GetWalletsResponseModel.fromJson(json.decode(response.body));
 
-          if (walletsResponseModel.status) {
-            GetWalletResponseData getWalletResponseData =
+          if (walletsResponseModel.status!) {
+            GetWalletResponseData? getWalletResponseData =
                 walletsResponseModel.data;
 
             setState(() {
-              mainWalletBalance = getWalletResponseData.wBalance;
+              mainWalletBalance = getWalletResponseData!.wBalance;
               atmWalletBalance = getWalletResponseData.aBalance;
 
               balances.add(atmWalletBalance);
               balances.add(mainWalletBalance);
             });
             SharedPreferences.getInstance().then((sharedPrefs) {
+              sharedPrefs.setString(Constants.SHARED_PREF_MAIN_WALLET_BALANCE,
+                  mainWalletBalance!);
               sharedPrefs.setString(
-                  Constants.SHARED_PREF_MAIN_WALLET_BALANCE, mainWalletBalance);
-              sharedPrefs.setString(
-                  Constants.SHARED_PREF_ATM_BALANCE, atmWalletBalance);
+                  Constants.SHARED_PREF_ATM_BALANCE, atmWalletBalance!);
             });
           } else {
             showErrorDialog(walletsResponseModel.message);
@@ -474,10 +475,10 @@ class _WalletScreenState extends State<WalletScreen> {
     setState(() {
       _showTransactionProgress = true;
       selectedWallet = 1;
-      mainTransactionsList.clear();
+      mainTransactionsList!.clear();
     });
 
-    HTTPService().getMainWalletTransactions(authToken).then((response) {
+    HTTPService().getMainWalletTransactions(authToken!).then((response) {
       setState(() {
         _showTransactionProgress = false;
       });
@@ -485,16 +486,16 @@ class _WalletScreenState extends State<WalletScreen> {
       if (response.statusCode == 200) {
         MainTransactionsResponseModel responseModel =
             MainTransactionsResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
-            mainTransactionsList.clear();
+            mainTransactionsList!.clear();
             mainTransactionsList = responseModel.data;
           });
         } else {
-          mainTransactionsList.clear();
+          mainTransactionsList!.clear();
         }
       } else {
-        mainTransactionsList.clear();
+        mainTransactionsList!.clear();
       }
     });
   }
@@ -503,10 +504,10 @@ class _WalletScreenState extends State<WalletScreen> {
     setState(() {
       selectedWallet = 0;
       _showTransactionProgress = true;
-      mainTransactionsList.clear();
+      mainTransactionsList!.clear();
     });
 
-    HTTPService().getWalletTransactions(authToken).then((response) {
+    HTTPService().getWalletTransactions(authToken!).then((response) {
       setState(() {
         _showTransactionProgress = false;
       });
@@ -515,21 +516,21 @@ class _WalletScreenState extends State<WalletScreen> {
       if (response.statusCode == 200) {
         MainTransactionsResponseModel responseModel =
             MainTransactionsResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
-            mainTransactionsList.clear();
+            mainTransactionsList!.clear();
             mainTransactionsList = responseModel.data;
           });
         } else {
-          mainTransactionsList.clear();
+          mainTransactionsList!.clear();
         }
       } else {
-        mainTransactionsList.clear();
+        mainTransactionsList!.clear();
       }
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -562,7 +563,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -598,7 +599,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   Widget buildTransactionWidget() {
     if (selectedWallet == 0 || selectedWallet == 1) {
-      if (mainTransactionsList.isNotEmpty) {
+      if (mainTransactionsList!.isNotEmpty) {
         return ListView.builder(
           itemBuilder: (context, index) {
             return Container(
@@ -619,7 +620,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       Row(
                         children: [
                           Text(
-                            mainTransactionsList[index].transactionType,
+                            mainTransactionsList![index].transactionType!,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -627,7 +628,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           ),
                           Expanded(
                             child: Text(
-                              '\u20B9 ${mainTransactionsList[index].transactionAmt.toString()}',
+                              '\u20B9 ${mainTransactionsList![index].transactionAmt.toString()}',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 18,
@@ -644,34 +645,35 @@ class _WalletScreenState extends State<WalletScreen> {
                         height: 10,
                       ),
                       Text(
-                        mainTransactionsList[index].transactionId == null
+                        mainTransactionsList![index].transactionId == null
                             ? 'Txn Id:'
-                            : 'Txn Id: ${mainTransactionsList[index].transactionId}',
+                            : 'Txn Id: ${mainTransactionsList![index].transactionId}',
                         style: TextStyle(color: Colors.black54),
                       ),
                       Row(
                         children: [
                           Text(
-                            'Date: ${mainTransactionsList[index].createDate.substring(0, 10)} ${UtilityMethods().beautifyTime(mainTransactionsList[index].createDate.substring(11))}',
+                            'Date: ${mainTransactionsList![index].createDate!.substring(0, 10)} ${UtilityMethods().beautifyTime(mainTransactionsList![index].createDate!.substring(11))}',
                             style: TextStyle(
                               color: Colors.black,
                             ),
                           ),
                           Expanded(
                             child: Text(
-                              mainTransactionsList[index].isStatus == 1
+                              mainTransactionsList![index].isStatus == 1
                                   ? 'Pending'
-                                  : mainTransactionsList[index].isStatus == 2
+                                  : mainTransactionsList![index].isStatus == 2
                                       ? 'Success'
                                       : 'Failed',
                               style: TextStyle(
-                                  color: mainTransactionsList[index].isStatus ==
-                                          1
-                                      ? Color(0xff133374)
-                                      : mainTransactionsList[index].isStatus ==
-                                              2
-                                          ? Colors.green
-                                          : Colors.red,
+                                  color:
+                                      mainTransactionsList![index].isStatus == 1
+                                          ? Color(0xff133374)
+                                          : mainTransactionsList![index]
+                                                      .isStatus ==
+                                                  2
+                                              ? Colors.green
+                                              : Colors.red,
                                   fontWeight: FontWeight.bold),
                               textAlign: TextAlign.end,
                             ),
@@ -684,7 +686,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       Container(
                         padding: EdgeInsets.all(5),
                         child: Text(
-                          'Comment : ${mainTransactionsList[index].comment}',
+                          'Remarks : ${mainTransactionsList![index].comment}',
                           style: TextStyle(
                             color: Colors.black,
                           ),
@@ -696,7 +698,7 @@ class _WalletScreenState extends State<WalletScreen> {
               ),
             );
           },
-          itemCount: mainTransactionsList.length,
+          itemCount: mainTransactionsList!.length,
           shrinkWrap: true,
         );
       } else {
@@ -844,7 +846,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   fontWeight: FontWeight.normal),
                             ),
                             Text(
-                              atmWalletBalance,
+                              atmWalletBalance!,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 18,
@@ -913,9 +915,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                     String amount =
                                         amountController.text.trim();
                                     if (double.parse(amount) <=
-                                        double.parse(atmWalletBalance)) {
+                                        double.parse(atmWalletBalance!)) {
                                       HTTPService()
-                                          .transferToWallet(authToken, amount)
+                                          .transferToWallet(authToken!, amount)
                                           .then((response) {
                                         stateSetter(() {
                                           _showTransferProgress = false;
@@ -928,10 +930,10 @@ class _WalletScreenState extends State<WalletScreen> {
                                               TransferToWalletResponseModel
                                                   .fromJson(json
                                                       .decode(response.body));
-                                          if (responseModel.status) {
+                                          if (responseModel.status!) {
                                             setState(() {
                                               atmWalletBalance = (double.parse(
-                                                          atmWalletBalance) -
+                                                          atmWalletBalance!) -
                                                       double.parse(amount))
                                                   .toString();
                                             });
@@ -974,7 +976,7 @@ class _WalletScreenState extends State<WalletScreen> {
     }
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -1007,7 +1009,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

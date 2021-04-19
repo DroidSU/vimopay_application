@@ -1,10 +1,10 @@
 class LoginResponseData {
-  String name;
-  String mobile;
-  String email;
-  String profileimage;
-  String userid;
-  String token;
+  String? name;
+  String? mobile;
+  String? email;
+  String? profileimage;
+  String? userid;
+  String? token;
 
   LoginResponseData(
       {this.name,

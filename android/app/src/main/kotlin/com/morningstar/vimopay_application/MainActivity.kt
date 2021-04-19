@@ -85,7 +85,7 @@ class MainActivity: FlutterActivity() {
             val packageManager: PackageManager = context.packageManager
             if (isPackageInstalled("org.egram.microatm", packageManager)) {
                 val intent: Intent = Intent()
-                intent.setComponent(ComponentName("org.egram.microatm", "org.egram.microatm.BluetoothMacSearchActivity"))
+                intent.component = ComponentName("org.egram.microatm", "org.egram.microatm.BluetoothMacSearchActivity")
                 intent.putExtra("saltkey", "8C3327E8D9D5CE419247DC3826806427")
                 intent.putExtra("secretkey", "AAA8D3D121422181CC8C05B2555DAAE04B4FFE88")
                 intent.putExtra("bcid", "BC319061250")
@@ -153,7 +153,8 @@ class MainActivity: FlutterActivity() {
                         })
                         alertDialog.show()
                     }
-                } else {
+                }
+                else {
                     Toast.makeText(this, "Location Permission Denied", Toast.LENGTH_SHORT).show()
                     MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
                         if (call.method == "Mini ATM") {
@@ -165,7 +166,8 @@ class MainActivity: FlutterActivity() {
             }
         }
     }
-    fun isPackageInstalled(packagename: String?, packageManager: PackageManager): Boolean {
+
+    private fun isPackageInstalled(packagename: String?, packageManager: PackageManager): Boolean {
         return try {
             packageManager.getPackageInfo(packagename!!, 0)
             true
@@ -188,60 +190,87 @@ class MainActivity: FlutterActivity() {
             Log.e("Check one", "" + data!!.getStringExtra("Message"))
         }
         else if(requestCode == 10){
+            Log.d("TAG", "Result Code : $resultCode")
+
             if(resultCode == RESULT_OK){
                 Log.d("TAG", "Result Code : $resultCode Response: ${data.toString()}")
 
-                val respCode = data!!.getStringExtra("respcode")
+                try {
+                    val respCode = data!!.getStringExtra("respcode")
+                    if(respCode == "999"){
+                        val requesttxn = data.getStringExtra("requesttxn ")
+                        val refstan = data.getStringExtra("refstan")
+                        val txnamount = data.getStringExtra("txnamount")
+                        val mid = data.getStringExtra("mid")
+                        val tid = data.getStringExtra("tid")
+                        val clientrefid = data.getStringExtra("clientrefid")
+                        val vendorid = data.getStringExtra("vendorid")
+                        val udf1 = data.getStringExtra("udf1")
+                        val udf2 = data.getStringExtra("udf2")
+                        val udf3 = data.getStringExtra("udf3")
+                        val udf4 = data.getStringExtra("udf4")
+                        val date = data.getStringExtra("date")
 
-                if(respCode == "999"){
-                    val requesttxn = data.getStringExtra("requesttxn ")
-                    val refstan = data.getStringExtra("refstan")
-                    val txnamount = data.getStringExtra("txnamount")
-                    val mid = data.getStringExtra("mid")
-                    val tid = data.getStringExtra("tid")
-                    val clientrefid = data.getStringExtra("clientrefid")
-                    val vendorid = data.getStringExtra("vendorid")
-                    val udf1 = data.getStringExtra("udf1")
-                    val udf2 = data.getStringExtra("udf2")
-                    val udf3 = data.getStringExtra("udf3")
-                    val udf4 = data.getStringExtra("udf4")
-                    val date = data.getStringExtra("date")
-                }
-                else{
-                    val requesttxn = data.getStringExtra("requesttxn ")
-                    val bankremarks = data.getStringExtra("msg")
-                    val refstan = data.getStringExtra("refstan")
-                    val cardno = data.getStringExtra("cardno")
-                    val date = data.getStringExtra("date")
-                    val amount = data.getStringExtra("amount")
-                    val invoicenumber = data.getStringExtra("invoicenumber")
-                    val mid = data.getStringExtra("mid")
-                    val tid = data.getStringExtra("tid")
-                    val clientrefid = data.getStringExtra("clientrefid")
-                    val vendorid = data.getStringExtra("vendorid")
-                    val udf1 = data.getStringExtra("udf1")
-                    val udf2 = data.getStringExtra("udf2")
-                    val udf3 = data.getStringExtra("udf3")
-                    val udf4 = data.getStringExtra("udf4")
-                    val txnamount = data.getStringExtra("txnamount")
-                    val rrn = data.getStringExtra("rrn")
+                        MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+                            result.success(data.toString())
+                        }
+                    }
+                    else{
+                        val requesttxn = data.getStringExtra("requesttxn ")
+                        val bankremarks = data.getStringExtra("msg")
+                        val refstan = data.getStringExtra("refstan")
+                        val cardno = data.getStringExtra("cardno")
+                        val date = data.getStringExtra("date")
+                        val amount = data.getStringExtra("amount")
+                        val invoicenumber = data.getStringExtra("invoicenumber")
+                        val mid = data.getStringExtra("mid")
+                        val tid = data.getStringExtra("tid")
+                        val clientrefid = data.getStringExtra("clientrefid")
+                        val vendorid = data.getStringExtra("vendorid")
+                        val udf1 = data.getStringExtra("udf1")
+                        val udf2 = data.getStringExtra("udf2")
+                        val udf3 = data.getStringExtra("udf3")
+                        val udf4 = data.getStringExtra("udf4")
+                        val txnamount = data.getStringExtra("txnamount")
+                        val rrn = data.getStringExtra("rrn")
+
+                        MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+                            result.success(data.toString())
+                        }
+                    }
+                }catch (ex : Exception){
+                    MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+                        result.error(requestCode.toString(), "Failed", "")
+                    }
                 }
             }
             else{
-                data!!.getStringExtra("statuscode");
-                data.getStringExtra("message");
-                if (data.getStringExtra("statuscode").equals("111")){
-                    try {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=org.egram.microatm")))
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                try{
+                    val status = data!!.getStringExtra("statuscode")
+                    val message = data.getStringExtra("message")
+                    Log.e("TAG", "Failed : $message")
+                    if (status.equals("111")){
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=org.egram.microatm")))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }else{
+                        MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+                            result.error(requestCode.toString(), "Failed : $message", "")
+                        }
                     }
-                }else{
-//                util().snackBar(ParentLayout, "" + data.getStringExtra("message"), SnackBarBackGroundColor)
+                }catch (ex : Exception){
+                    MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+                        result.error(requestCode.toString(), "Failed", "")
+                    }
                 }
             }
-        }else{
-
+        }
+        else{
+            MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+                result.error(requestCode.toString(), "Failed", "")
+            }
         }
     }
 

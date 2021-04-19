@@ -21,23 +21,23 @@ class ATMTransactionReportScreen extends StatefulWidget {
 class _ATMTransactionReportScreenState
     extends State<ATMTransactionReportScreen> {
   bool _showProgress = false;
-  String authToken = "";
-  List<ATMRechargeReportData> atmTransactionsList = List();
+  String? authToken = "";
+  List<ATMRechargeReportData>? atmTransactionsList = [];
 
   List<String> listOfTxnStatus = ['Success', 'Fail', 'Pending'];
   String txnStatus = "1";
-  String selectedStatus = "Success";
+  String? selectedStatus = "Success";
 
   String currentDateAsString = "";
-  DateTime currentDate;
+  DateTime? currentDate;
   String fromDateAsString = "";
   String toDateAsString = "";
-  DateTime fromDate;
-  DateTime toDate;
+  DateTime? fromDate;
+  DateTime? toDate;
 
-  String complainStatus = "";
+  String? complainStatus = "";
   String complainDescription = "";
-  TextEditingController descController;
+  TextEditingController? descController;
   bool _showComplaintProgress = false;
 
   List<String> listOfStatus = [
@@ -58,7 +58,7 @@ class _ATMTransactionReportScreenState
 
     currentDate = DateTime.now();
     currentDateAsString =
-        '${currentDate.day}/${currentDate.month}/${currentDate.year}';
+        '${currentDate!.day}/${currentDate!.month}/${currentDate!.year}';
     fromDateAsString = currentDateAsString;
     toDateAsString = currentDateAsString;
     fromDate = currentDate;
@@ -165,10 +165,10 @@ class _ATMTransactionReportScreenState
                                     onTap: () {
                                       showDatePicker(
                                               context: context,
-                                              initialDate: fromDate,
-                                              firstDate: fromDate.subtract(
+                                              initialDate: fromDate!,
+                                              firstDate: fromDate!.subtract(
                                                   Duration(days: 365)),
-                                              lastDate: currentDate)
+                                              lastDate: currentDate!)
                                           .then((selectedDate) {
                                         if (selectedDate != null) {
                                           setState(() {
@@ -176,7 +176,7 @@ class _ATMTransactionReportScreenState
                                             fromDateAsString =
                                                 '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
 
-                                            atmTransactionsList.clear();
+                                            atmTransactionsList!.clear();
                                           });
 
                                           fetchATMTransactions();
@@ -226,10 +226,10 @@ class _ATMTransactionReportScreenState
                                     onTap: () {
                                       showDatePicker(
                                               context: context,
-                                              initialDate: toDate,
-                                              firstDate: toDate.subtract(
+                                              initialDate: toDate!,
+                                              firstDate: toDate!.subtract(
                                                   Duration(days: 365)),
-                                              lastDate: toDate)
+                                              lastDate: toDate!)
                                           .then((selectedDate) {
                                         if (selectedDate != null) {
                                           setState(() {
@@ -237,7 +237,7 @@ class _ATMTransactionReportScreenState
                                             toDateAsString =
                                                 '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
 
-                                            atmTransactionsList.clear();
+                                            atmTransactionsList!.clear();
                                           });
 
                                           fetchATMTransactions();
@@ -279,7 +279,7 @@ class _ATMTransactionReportScreenState
                               value: status,
                             );
                           }).toList(),
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             setState(() {
                               if (value == "Success")
                                 txnStatus = '1';
@@ -287,7 +287,7 @@ class _ATMTransactionReportScreenState
                                 txnStatus = '2';
                               else if (value == "Fail") txnStatus = '3';
 
-                              atmTransactionsList.clear();
+                              atmTransactionsList!.clear();
                               selectedStatus = value;
                             });
 
@@ -303,7 +303,7 @@ class _ATMTransactionReportScreenState
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : atmTransactionsList.isEmpty
+                  : atmTransactionsList!.isEmpty
                       ? Expanded(
                           child: Container(
                             height: MediaQuery.of(context).size.height,
@@ -345,12 +345,12 @@ class _ATMTransactionReportScreenState
                                           ),
                                           Expanded(
                                             child: Text(
-                                              atmTransactionsList[index]
+                                              atmTransactionsList![index]
                                                           .trxnId ==
                                                       null
                                                   ? ''
-                                                  : atmTransactionsList[index]
-                                                      .trxnId,
+                                                  : atmTransactionsList![index]
+                                                      .trxnId!,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -378,12 +378,12 @@ class _ATMTransactionReportScreenState
                                           ),
                                           Expanded(
                                             child: Text(
-                                              atmTransactionsList[index]
+                                              atmTransactionsList![index]
                                                           .mobileNo ==
                                                       null
                                                   ? ''
-                                                  : atmTransactionsList[index]
-                                                      .mobileNo,
+                                                  : atmTransactionsList![index]
+                                                      .mobileNo!,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.normal,
@@ -408,11 +408,11 @@ class _ATMTransactionReportScreenState
                                           ),
                                           Expanded(
                                             child: Text(
-                                              atmTransactionsList[index]
+                                              atmTransactionsList![index]
                                                           .amount ==
                                                       null
                                                   ? ''
-                                                  : '\u20B9${atmTransactionsList[index].amount}',
+                                                  : '\u20B9${atmTransactionsList![index].amount}',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -437,11 +437,11 @@ class _ATMTransactionReportScreenState
                                           ),
                                           Expanded(
                                             child: Text(
-                                              atmTransactionsList[index]
+                                              atmTransactionsList![index]
                                                           .createDate ==
                                                       null
                                                   ? ''
-                                                  : '${atmTransactionsList[index].createDate.substring(0, 10)} ${UtilityMethods().beautifyTime(atmTransactionsList[index].createDate.substring(12))}',
+                                                  : '${atmTransactionsList![index].createDate!.substring(0, 10)} ${UtilityMethods().beautifyTime(atmTransactionsList![index].createDate!.substring(12))}',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.normal,
@@ -455,13 +455,13 @@ class _ATMTransactionReportScreenState
                                         padding:
                                             EdgeInsets.fromLTRB(5, 10, 5, 0),
                                         child: Text(
-                                          atmTransactionsList[index].status ==
+                                          atmTransactionsList![index].status ==
                                                   '2'
                                               ? 'Success'
                                               : 'Failed',
                                           style: TextStyle(
-                                              color: atmTransactionsList[index]
-                                                          .status
+                                              color: atmTransactionsList![index]
+                                                          .status!
                                                           .toLowerCase() ==
                                                       '2'
                                                   ? Colors.green
@@ -479,7 +479,7 @@ class _ATMTransactionReportScreenState
                                               MaterialButton(
                                                 onPressed: () {
                                                   printReceipt(
-                                                      atmTransactionsList[
+                                                      atmTransactionsList![
                                                           index]);
                                                 },
                                                 child: Row(
@@ -534,7 +534,7 @@ class _ATMTransactionReportScreenState
                               ),
                             );
                           },
-                          itemCount: atmTransactionsList.length,
+                          itemCount: atmTransactionsList!.length,
                           shrinkWrap: true,
                         ),
             ],
@@ -555,7 +555,7 @@ class _ATMTransactionReportScreenState
 
     HTTPService()
         .getATMReportsScreen(
-            authToken, fromDateAsString, toDateAsString, txnStatus)
+            authToken!, fromDateAsString, toDateAsString, txnStatus)
         .then((response) {
       setState(() {
         _showProgress = false;
@@ -563,7 +563,7 @@ class _ATMTransactionReportScreenState
       if (response.statusCode == 200) {
         ATMReportResponseModel responseModel =
             ATMReportResponseModel.fromJson(json.decode(response.body));
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             atmTransactionsList = responseModel.data;
           });
@@ -576,7 +576,7 @@ class _ATMTransactionReportScreenState
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -609,7 +609,7 @@ class _ATMTransactionReportScreenState
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -665,7 +665,7 @@ class _ATMTransactionReportScreenState
                         Container(
                           child: DropdownButton(
                             isExpanded: true,
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 complainStatus = value;
                               });
@@ -732,7 +732,7 @@ class _ATMTransactionReportScreenState
                                 child: MaterialButton(
                                   onPressed: () {
                                     complainDescription =
-                                        descController.text.trim();
+                                        descController!.text.trim();
                                     if (listOfStatus.contains(complainStatus) &&
                                         complainDescription.isNotEmpty) {
                                       setState(() {
@@ -741,7 +741,7 @@ class _ATMTransactionReportScreenState
 
                                       HTTPService()
                                           .sendReportComplain(
-                                              authToken,
+                                              authToken!,
                                               complainStatus,
                                               complainDescription,
                                               index.toString())
@@ -756,9 +756,9 @@ class _ATMTransactionReportScreenState
                                           BasicResponseModel responseModel =
                                               BasicResponseModel.fromJson(
                                                   json.decode(response.body));
-                                          if (responseModel.status) {
+                                          if (responseModel.status!) {
                                             setState(() {
-                                              descController.text = "";
+                                              descController!.text = "";
                                             });
 
                                             showSuccessDialog(
@@ -795,7 +795,7 @@ class _ATMTransactionReportScreenState
         });
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -828,7 +828,7 @@ class _ATMTransactionReportScreenState
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -891,7 +891,7 @@ class _ATMTransactionReportScreenState
                       pw.Text('Transaction Id'),
                       pw.Text(
                           atmTransactionsList.trxnId != null
-                              ? atmTransactionsList.trxnId
+                              ? atmTransactionsList.trxnId!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,
@@ -905,7 +905,7 @@ class _ATMTransactionReportScreenState
                       pw.Text('Transaction Amount'),
                       pw.Text(
                           atmTransactionsList.amount != null
-                              ? atmTransactionsList.amount
+                              ? atmTransactionsList.amount!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,
@@ -920,7 +920,7 @@ class _ATMTransactionReportScreenState
                       pw.Text(
                           atmTransactionsList.createDate != null
                               ? UtilityMethods().beautifyDateTime(
-                                  atmTransactionsList.createDate)
+                                  atmTransactionsList.createDate!)
                               : '',
                           style: pw.TextStyle(
                             fontSize: 18,

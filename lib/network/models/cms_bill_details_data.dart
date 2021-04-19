@@ -1,8 +1,8 @@
 class CMSBillDetailsResponseData {
-  String id;
-  String actionUrl;
-  String action;
-  List<BillDetailsField> fields;
+  String? id;
+  String? actionUrl;
+  String? action;
+  List<BillDetailsField>? fields;
 
   CMSBillDetailsResponseData(
       {this.id, this.actionUrl, this.action, this.fields});
@@ -12,9 +12,9 @@ class CMSBillDetailsResponseData {
     actionUrl = json['actionUrl'];
     action = json['action'];
     if (json['fields'] != null) {
-      fields = new List<BillDetailsField>();
+      fields = <BillDetailsField>[];
       json['fields'].forEach((v) {
-        fields.add(new BillDetailsField.fromJson(v));
+        fields!.add(new BillDetailsField.fromJson(v));
       });
     }
   }
@@ -25,34 +25,34 @@ class CMSBillDetailsResponseData {
     data['actionUrl'] = this.actionUrl;
     data['action'] = this.action;
     if (this.fields != null) {
-      data['fields'] = this.fields.map((v) => v.toJson()).toList();
+      data['fields'] = this.fields!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class BillDetailsField {
-  String id;
-  String formId;
-  String label;
-  String orderId;
-  String value;
-  String type;
-  String isEditable;
-  String isVisible;
-  Validation validation;
-  String postKey;
-  String url;
-  String actionUrl;
-  String isDynamic;
-  String parentId;
-  String isRequired;
-  String subLabel;
-  String identifier;
-  String subHeader;
-  String fieldLayout;
-  String smsLabel;
-  String isUniqueRef;
+  String? id;
+  String? formId;
+  String? label;
+  String? orderId;
+  String? value;
+  String? type;
+  String? isEditable;
+  String? isVisible;
+  Validation? validation;
+  String? postKey;
+  String? url;
+  String? actionUrl;
+  String? isDynamic;
+  String? parentId;
+  String? isRequired;
+  String? subLabel;
+  String? identifier;
+  String? subHeader;
+  String? fieldLayout;
+  String? smsLabel;
+  String? isUniqueRef;
 
   BillDetailsField(
       {this.id,
@@ -114,7 +114,7 @@ class BillDetailsField {
     data['isEditable'] = this.isEditable;
     data['isVisible'] = this.isVisible;
     if (this.validation != null) {
-      data['validation'] = this.validation.toJson();
+      data['validation'] = this.validation!.toJson();
     }
     data['postKey'] = this.postKey;
     data['url'] = this.url;
@@ -133,11 +133,11 @@ class BillDetailsField {
 }
 
 class Validation {
-  String max;
-  String min;
-  String regex;
-  String maxValue;
-  String minValue;
+  String? max;
+  String? min;
+  String? regex;
+  String? maxValue;
+  String? minValue;
 
   Validation({this.max, this.min, this.regex, this.maxValue, this.minValue});
 

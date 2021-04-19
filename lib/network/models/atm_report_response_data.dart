@@ -1,15 +1,15 @@
 class ATMRechargeReportData {
-  String createDate;
-  String pkAEPSWallet;
-  String transactionAmt;
-  String transactionType;
-  String nowBalance;
-  String comment;
-  String mobileNo;
-  String amount;
-  String trxnId;
-  String status;
-  String type;
+  String? createDate;
+  String? pkAEPSWallet;
+  String? transactionAmt;
+  String? transactionType;
+  String? nowBalance;
+  String? comment;
+  String? mobileNo;
+  String? amount;
+  String? trxnId;
+  String? status;
+  String? type;
 
   ATMRechargeReportData(
       {this.createDate,

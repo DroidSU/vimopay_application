@@ -18,18 +18,18 @@ class TransactionReportScreen extends StatefulWidget {
 }
 
 class _TransactionReportScreenState extends State<TransactionReportScreen> {
-  String authToken = "";
-  String bcID = "";
+  String? authToken = "";
+  String? bcID = "";
 
-  List<TransactionReportResponseData> transactionList;
+  List<TransactionReportResponseData>? transactionList;
   bool _showProgress = true;
 
   List<String> listOfTxnStatus = ['Success', 'Fail', 'Pending'];
-  String selectedTxn = 'Success';
+  String? selectedTxn = 'Success';
 
-  String complainStatus = "";
+  String? complainStatus = "";
   String complainDescription = "";
-  TextEditingController descController;
+  TextEditingController? descController;
   bool _showComplaintProgress = false;
   List<String> listOfStatus = [
     'Please Refund',
@@ -56,27 +56,27 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
     'Mobile Postpaid',
     'Water',
   ];
-  String selectedProducts = 'Mobile Prepaid';
+  String? selectedProducts = 'Mobile Prepaid';
 
   String currentDateAsString = "";
-  DateTime currentDate;
+  DateTime? currentDate;
   String fromDateAsString = "";
   String toDateAsString = "";
-  DateTime fromDate;
-  DateTime toDate;
+  DateTime? fromDate;
+  DateTime? toDate;
 
   @override
   void initState() {
     super.initState();
 
-    transactionList = List();
+    transactionList = [];
     complainStatus = listOfStatus[0];
 
     descController = TextEditingController();
 
     currentDate = DateTime.now();
     currentDateAsString =
-        '${currentDate.day}-${currentDate.month}-${currentDate.year}';
+        '${currentDate!.day}-${currentDate!.month}-${currentDate!.year}';
     fromDateAsString = currentDateAsString;
     toDateAsString = currentDateAsString;
     fromDate = currentDate;
@@ -86,7 +86,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
       authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
       bcID = sharedPrefs.getString(Constants.SHARED_PREF_USER_ID);
 
-      transactionList.clear();
+      transactionList!.clear();
       getTransactionDetails();
     });
   }
@@ -185,10 +185,10 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                       onTap: () {
                                         showDatePicker(
                                                 context: context,
-                                                initialDate: fromDate,
-                                                firstDate: fromDate.subtract(
+                                                initialDate: fromDate!,
+                                                firstDate: fromDate!.subtract(
                                                     Duration(days: 365)),
-                                                lastDate: currentDate)
+                                                lastDate: currentDate!)
                                             .then((selectedDate) {
                                           if (selectedDate != null) {
                                             setState(() {
@@ -196,7 +196,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                               fromDateAsString =
                                                   '${selectedDate.day}-${selectedDate.month}-${selectedDate.year}';
 
-                                              transactionList.clear();
+                                              transactionList!.clear();
                                             });
                                             getTransactionDetails();
                                           }
@@ -245,10 +245,10 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                       onTap: () {
                                         showDatePicker(
                                                 context: context,
-                                                initialDate: toDate,
-                                                firstDate: toDate.subtract(
+                                                initialDate: toDate!,
+                                                firstDate: toDate!.subtract(
                                                     Duration(days: 365)),
-                                                lastDate: currentDate)
+                                                lastDate: currentDate!)
                                             .then((selectedDate) {
                                           if (selectedDate != null) {
                                             setState(() {
@@ -256,7 +256,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                               toDateAsString =
                                                   '${selectedDate.day}-${selectedDate.month}-${selectedDate.year}';
 
-                                              transactionList.clear();
+                                              transactionList!.clear();
                                             });
 
                                             getTransactionDetails();
@@ -299,10 +299,10 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                         value: status,
                                       );
                                     }).toList(),
-                                    onChanged: (value) {
+                                    onChanged: (dynamic value) {
                                       setState(() {
                                         selectedTxn = value;
-                                        transactionList.clear();
+                                        transactionList!.clear();
                                       });
 
                                       getTransactionDetails();
@@ -336,10 +336,10 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                         value: product,
                                       );
                                     }).toList(),
-                                    onChanged: (value) {
+                                    onChanged: (dynamic value) {
                                       setState(() {
                                         selectedProducts = value;
-                                        transactionList.clear();
+                                        transactionList!.clear();
                                       });
                                       getTransactionDetails();
                                     },
@@ -357,7 +357,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : transactionList.isEmpty
+                    : transactionList!.isEmpty
                         ? Container(
                             height: MediaQuery.of(context).size.height,
                             child: Center(
@@ -387,8 +387,8 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                         Row(
                                           children: [
                                             Text(
-                                              transactionList[index]
-                                                  .transactionType,
+                                              transactionList![index]
+                                                  .transactionType!,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 18,
@@ -396,7 +396,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                '\u20B9 ${transactionList[index].amount}',
+                                                '\u20B9 ${transactionList![index].amount}',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 18,
@@ -414,29 +414,29 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                           height: 10,
                                         ),
                                         Text(
-                                          transactionList[index]
+                                          transactionList![index]
                                                       .transactionId ==
                                                   null
                                               ? 'Txn Id:'
-                                              : 'Txn Id: ${transactionList[index].transactionId}',
+                                              : 'Txn Id: ${transactionList![index].transactionId}',
                                           style:
                                               TextStyle(color: Colors.black54),
                                         ),
                                         Row(
                                           children: [
                                             Text(
-                                              'Date: ${transactionList[index].createDate.substring(0, 10)} ${UtilityMethods().beautifyTime(transactionList[index].createDate.substring(11))}',
+                                              'Date: ${transactionList![index].createDate!.substring(0, 10)} ${UtilityMethods().beautifyTime(transactionList![index].createDate!.substring(11))}',
                                               style: TextStyle(
                                                 color: Colors.black,
                                               ),
                                             ),
                                             Expanded(
                                               child: Text(
-                                                transactionList[index].status,
+                                                transactionList![index].status!,
                                                 style: TextStyle(
-                                                    color: transactionList[
+                                                    color: transactionList![
                                                                     index]
-                                                                .status
+                                                                .status!
                                                                 .toLowerCase() ==
                                                             'fail'
                                                         ? Colors.red
@@ -463,7 +463,8 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                                 MaterialButton(
                                                   onPressed: () {
                                                     printReceipt(
-                                                        transactionList[index]);
+                                                        transactionList![
+                                                            index]);
                                                   },
                                                   child: Row(
                                                     children: [
@@ -519,7 +520,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                 ),
                               );
                             },
-                            itemCount: transactionList.length,
+                            itemCount: transactionList!.length,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                           ),
@@ -558,7 +559,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                       alignment: pw.Alignment.center,
                       child: pw.Text(
                           transactionList.status != null
-                              ? transactionList.status
+                              ? transactionList.status!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 30,
@@ -577,7 +578,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                           child: pw.Text('User BC ID',
                               style: pw.TextStyle(fontSize: 22)),
                           alignment: pw.Alignment.centerLeft),
-                      pw.Text(bcID,
+                      pw.Text(bcID!,
                           style: pw.TextStyle(
                             fontSize: 30,
                           )),
@@ -596,7 +597,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                           alignment: pw.Alignment.centerLeft),
                       pw.Text(
                           transactionList.transactionId != null
-                              ? transactionList.transactionId
+                              ? transactionList.transactionId!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 30,
@@ -617,7 +618,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                       pw.Text(
                           transactionList.createDate != null
                               ? UtilityMethods()
-                                  .beautifyDateTime(transactionList.createDate)
+                                  .beautifyDateTime(transactionList.createDate!)
                               : '',
                           style: pw.TextStyle(
                             fontSize: 28,
@@ -660,7 +661,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                           alignment: pw.Alignment.centerLeft),
                       pw.Text(
                           transactionList.operatorName != null
-                              ? transactionList.operatorName
+                              ? transactionList.operatorName!
                               : '',
                           style: pw.TextStyle(
                             fontSize: 30,
@@ -718,7 +719,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
     });
 
     HTTPService()
-        .fetchTransactionDetails(authToken, fromDateAsString, toDateAsString,
+        .fetchTransactionDetails(authToken!, fromDateAsString, toDateAsString,
             selectedTxn, selectedProducts)
         .then((response) {
       setState(() {
@@ -728,7 +729,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
         TransactionReportResponseModel responseModel =
             TransactionReportResponseModel.fromJson(json.decode(response.body));
 
-        if (responseModel.status) {
+        if (responseModel.status!) {
           setState(() {
             transactionList = responseModel.data;
           });
@@ -739,7 +740,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
     });
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
         context: context,
@@ -772,7 +773,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                     child: Container(
                       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                       child: Text(
-                        message,
+                        message!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -829,7 +830,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                         Container(
                           child: DropdownButton(
                             isExpanded: true,
-                            onChanged: (value) {
+                            onChanged: (dynamic value) {
                               setState(() {
                                 complainStatus = value;
                               });
@@ -896,7 +897,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                 child: MaterialButton(
                                   onPressed: () {
                                     complainDescription =
-                                        descController.text.trim();
+                                        descController!.text.trim();
                                     if (listOfStatus.contains(complainStatus) &&
                                         complainDescription.isNotEmpty) {
                                       setState(() {
@@ -905,7 +906,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
 
                                       HTTPService()
                                           .sendReportComplain(
-                                              authToken,
+                                              authToken!,
                                               complainStatus,
                                               complainDescription,
                                               index.toString())
@@ -920,9 +921,9 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                                           BasicResponseModel responseModel =
                                               BasicResponseModel.fromJson(
                                                   json.decode(response.body));
-                                          if (responseModel.status) {
+                                          if (responseModel.status!) {
                                             setState(() {
-                                              descController.text = "";
+                                              descController!.text = "";
                                             });
 
                                             showSuccessDialog(
@@ -958,7 +959,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
         });
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -991,7 +992,7 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

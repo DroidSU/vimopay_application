@@ -5,12 +5,12 @@ class GradientButton extends StatelessWidget {
   final Gradient gradient;
   final double width;
   final double height;
-  final Function onPressed;
+  final Function? onPressed;
 
   const GradientButton({
-    Key key,
-    @required this.child,
-    @required this.gradient,
+    Key? key,
+    required this.child,
+    required this.gradient,
     this.width = 50.0,
     this.height = 40.0,
     this.onPressed,
@@ -26,7 +26,7 @@ class GradientButton extends StatelessWidget {
       child: RaisedButton(
         color: Colors.transparent,
         child: child,
-        onPressed: onPressed,
+        onPressed: onPressed as void Function()?,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );

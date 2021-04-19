@@ -9,6 +9,7 @@ import 'package:vimopay_application/customs/custom_dialog.dart';
 import 'package:vimopay_application/customs/scale_route_transition.dart';
 import 'package:vimopay_application/network/http_service.dart';
 import 'package:vimopay_application/network/models/basic_response_model.dart';
+import 'package:vimopay_application/network/models/commission_plan_response_model.dart';
 import 'package:vimopay_application/ui/CommissionChartScreen.dart';
 import 'package:vimopay_application/ui/DashboardScreen.dart';
 import 'package:vimopay_application/ui/EditBankDetailsScreen.dart';
@@ -23,13 +24,13 @@ class ProfileScreenNew extends StatefulWidget {
 }
 
 class _ProfileScreenNewState extends State<ProfileScreenNew> {
-  String name = "";
-  String email = "";
-  String mobile = "";
-  String userId = "";
+  String? name = "";
+  String? email = "";
+  String? mobile = "";
+  String? userId = "";
 
-  File imageFile;
-  String authToken = "";
+  File? imageFile;
+  String? authToken = "";
   String oldPassword = '';
   String newPassword = '';
   String confirmPassword = '';
@@ -39,9 +40,9 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
 
-  TextEditingController oldPasswordController;
-  TextEditingController newPasswordController;
-  TextEditingController confirmPasswordController;
+  TextEditingController? oldPasswordController;
+  TextEditingController? newPasswordController;
+  TextEditingController? confirmPasswordController;
 
   @override
   void initState() {
@@ -84,24 +85,24 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
-                    Container(
-                      child: InkWell(
-                        child: Text(
-                          'Logout',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                        onTap: () {
-                          logoutUser();
-                        },
-                      ),
-                      width: 75,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    // Container(
+                    //   child: InkWell(
+                    //     child: Text(
+                    //       'Logout',
+                    //       style: TextStyle(
+                    //           color: Colors.white,
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 18),
+                    //     ),
+                    //     onTap: () {
+                    //       logoutUser();
+                    //     },
+                    //   ),
+                    //   width: 75,
+                    // ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
                   ],
                 ),
               ),
@@ -149,7 +150,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                             borderRadius:
                                                 BorderRadius.circular(40.0),
                                             child: Image.file(
-                                              imageFile,
+                                              imageFile!,
                                               width: 80.0,
                                               height: 80.0,
                                               fit: BoxFit.fill,
@@ -181,7 +182,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  userId,
+                                  userId!,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
@@ -191,21 +192,21 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                   height: 12,
                                 ),
                                 Text(
-                                  mobile,
+                                  mobile!,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                   ),
                                 ),
                                 Text(
-                                  name,
+                                  name!,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                   ),
                                 ),
                                 Text(
-                                  email,
+                                  email!,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
@@ -668,15 +669,15 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                                   : MaterialButton(
                                                       onPressed: () {
                                                         String password =
-                                                            oldPasswordController
+                                                            oldPasswordController!
                                                                 .text
                                                                 .trim();
                                                         newPassword =
-                                                            newPasswordController
+                                                            newPasswordController!
                                                                 .text
                                                                 .trim();
                                                         confirmPassword =
-                                                            confirmPasswordController
+                                                            confirmPasswordController!
                                                                 .text
                                                                 .trim();
 
@@ -694,7 +695,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                                           });
                                                           HTTPService()
                                                               .changePassword(
-                                                                  authToken,
+                                                                  authToken!,
                                                                   newPassword)
                                                               .then((response) {
                                                             setState(() {
@@ -712,7 +713,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                                                           response
                                                                               .body));
                                                               if (responseModel
-                                                                  .status) {
+                                                                  .status!) {
                                                                 showSuccessDialog(
                                                                     context,
                                                                     responseModel
@@ -846,50 +847,46 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                               )),
                         ),
                       ),
-                      // Container(
-                      //   margin: EdgeInsets.fromLTRB(10, 10, 20, 0),
-                      //   padding: EdgeInsets.all(5),
-                      //   child: Material(
-                      //     child: Container(
-                      //       child: Row(
-                      //         crossAxisAlignment: CrossAxisAlignment.center,
-                      //         mainAxisAlignment: MainAxisAlignment.start,
-                      //         children: [
-                      //           Image.asset(
-                      //             'images/ic_certificate.png',
-                      //             height: 30,
-                      //             width: 30,
-                      //           ),
-                      //           SizedBox(
-                      //             width: 15,
-                      //           ),
-                      //           Expanded(
-                      //             child: Text(
-                      //               'Certificate',
-                      //               style: TextStyle(
-                      //                   color: Colors.black,
-                      //                   fontSize: 20,
-                      //                   fontWeight: FontWeight.normal),
-                      //             ),
-                      //           ),
-                      //           Container(
-                      //             width: 50,
-                      //             child: Icon(
-                      //               Icons.navigate_next_sharp,
-                      //               color: Colors.black,
-                      //             ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //       margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                      //       padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
-                      //       decoration: BoxDecoration(
-                      //           borderRadius: BorderRadius.circular(15)),
-                      //     ),
-                      //     elevation: 10,
-                      //     borderRadius: BorderRadius.circular(15),
-                      //   ),
-                      // ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 10, 20, 0),
+                        padding: EdgeInsets.all(5),
+                        child: InkWell(
+                          child: Material(
+                            child: Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Download Commission Plan',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Icon(
+                                    Icons.download_rounded,
+                                    size: 22,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                              margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                              padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15)),
+                            ),
+                            elevation: 10,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          onTap: () {
+                            getDownloadURL();
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -914,7 +911,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
         authToken = sharedPrefs.getString(Constants.SHARED_PREF_TOKEN);
         userId = sharedPrefs.getString(Constants.SHARED_PREF_USER_ID);
 
-        String imagePath =
+        String? imagePath =
             sharedPrefs.getString(Constants.SHARED_PREF_USER_DP_PATH);
         if (imagePath != null) imageFile = File(imagePath);
       });
@@ -1040,7 +1037,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
         sharedPreferences.setString(
             Constants.SHARED_PREF_USER_DP_PATH, imagePath);
 
-        String _base64String = base64Encode(imageFile.readAsBytesSync());
+        String _base64String = base64Encode(imageFile!.readAsBytesSync());
 
         Navigator.of(context).pop();
 
@@ -1068,7 +1065,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
         sharedPreferences.setString(
             Constants.SHARED_PREF_USER_DP_PATH, imagePath);
 
-        String _base64String = base64Encode(imageFile.readAsBytesSync());
+        String _base64String = base64Encode(imageFile!.readAsBytesSync());
         print('Image string: $_base64String');
 
         Navigator.of(context).pop();
@@ -1085,7 +1082,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
     }
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String? message) {
     if (mounted) {
       showDialog(
           context: context,
@@ -1118,7 +1115,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -1152,7 +1149,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
     }
   }
 
-  void showSuccessDialog(BuildContext buildContext, String message) {
+  void showSuccessDialog(BuildContext buildContext, String? message) {
     if (mounted) {
       showDialog(
           context: buildContext,
@@ -1185,7 +1182,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Text(
-                          message,
+                          message!,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -1217,5 +1214,45 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
             );
           });
     }
+  }
+
+  void getDownloadURL() {
+    HTTPService().getCommissionPlanPDF(authToken!).then((response) {
+      if (response.statusCode == 200) {
+        CommissionPlanResponseModel responseModel =
+            CommissionPlanResponseModel.fromJson(json.decode(response.body));
+        if (responseModel.status!) {
+          String? url = responseModel.data!.pDF;
+
+          startDownload(url);
+        } else {
+          showErrorDialog("Access restricted to only Super Admins");
+        }
+      } else {
+        showErrorDialog("Error occurred!");
+      }
+    });
+  }
+
+  Future startDownload(String? url) async {
+    String storagePath = "";
+    // getExternalStorageDirectory().then((directory) {
+    //   storagePath =
+    //       '${directory.path}${Platform.pathSeparator}commission_plan.pdf';
+    //   // storagePath = directory.path;
+    //
+    //   print('Storing in : $storagePath');
+    //
+    //   FlutterDownloader.enqueue(
+    //     url: url,
+    //     savedDir: storagePath,
+    //     showNotification:
+    //         true, // show download progress in status bar (for Android)
+    //     openFileFromNotification:
+    //         true, // click on notification to open downloaded file (for Android)
+    //   ).then((taskResponse) {
+    //     print('Download response : $taskResponse');
+    //   });
+    // });
   }
 }

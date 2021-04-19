@@ -1,5 +1,5 @@
 class BillerDetailsResponseModel {
-  BillerDetailsResponseData data;
+  BillerDetailsResponseData? data;
 
   BillerDetailsResponseModel({this.data});
 
@@ -12,24 +12,24 @@ class BillerDetailsResponseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class BillerDetailsResponseData {
-  Meta meta;
-  List<Fields> fields;
+  Meta? meta;
+  List<Fields>? fields;
 
   BillerDetailsResponseData({this.meta, this.fields});
 
   BillerDetailsResponseData.fromJson(Map<String, dynamic> json) {
     meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
     if (json['fields'] != null) {
-      fields = new List<Fields>();
+      fields = <Fields>[];
       json['fields'].forEach((v) {
-        fields.add(new Fields.fromJson(v));
+        fields!.add(new Fields.fromJson(v));
       });
     }
   }
@@ -37,10 +37,10 @@ class BillerDetailsResponseData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.meta != null) {
-      data['meta'] = this.meta.toJson();
+      data['meta'] = this.meta!.toJson();
     }
     if (this.fields != null) {
-      data['fields'] = this.fields.map((v) => v.toJson()).toList();
+      data['fields'] = this.fields!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -79,14 +79,14 @@ class BillerDetailsResponseData {
 // }
 
 class Fields {
-  String label;
-  String orderId;
-  String type;
-  String value;
-  String isEditable;
-  String isVisible;
-  Validation validation;
-  String postKey;
+  String? label;
+  String? orderId;
+  String? type;
+  String? value;
+  String? isEditable;
+  String? isVisible;
+  Validation? validation;
+  String? postKey;
 
   Fields(
       {this.label,
@@ -120,7 +120,7 @@ class Fields {
     data['isEditable'] = this.isEditable;
     data['isVisible'] = this.isVisible;
     if (this.validation != null) {
-      data['validation'] = this.validation.toJson();
+      data['validation'] = this.validation!.toJson();
     }
     data['postKey'] = this.postKey;
     return data;
@@ -128,11 +128,11 @@ class Fields {
 }
 
 class Validation {
-  String regex;
-  String minLength;
-  String maxLength;
-  String minValue;
-  String maxValue;
+  String? regex;
+  String? minLength;
+  String? maxLength;
+  String? minValue;
+  String? maxValue;
 
   Validation(
       {this.regex,
@@ -161,10 +161,10 @@ class Validation {
 }
 
 class Meta {
-  String description;
-  String status;
-  String code;
-  String sessionId;
+  String? description;
+  String? status;
+  String? code;
+  String? sessionId;
 
   Meta({this.description, this.status, this.code, this.sessionId});
 

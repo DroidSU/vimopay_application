@@ -1,5 +1,5 @@
 class BBPSLoginResponseModel {
-  String token;
+  String? token;
 
   BBPSLoginResponseModel({this.token});
 
