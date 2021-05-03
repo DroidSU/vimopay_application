@@ -870,6 +870,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                 _isVerifiedIFSC = true;
                 showSuccess("Account is verified!");
               });
+              updateBeneficiaryName(status);
             } else {
               showErrorDialog(responseModel.message);
             }
@@ -1076,5 +1077,13 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
       else if (int.parse(amount) > balance)
         showErrorDialog('Not enough wallet balance');
     }
+  }
+
+  void updateBeneficiaryName(String response) {
+    var temp = json.decode(response)['data']['account_name'];
+    print(temp);
+    // beneficiaryName = json.decode(response)['data']['account_name'];
+    // print(beneficiaryName);
+    // beneficiaryController?.text = beneficiaryName;
   }
 }

@@ -254,7 +254,9 @@ class HTTPService {
               'refno': referenceNumber
             }))
         .timeout(Duration(minutes: 1))
-        .catchError((error) => {print('Exception: ${error.toString()}')});
+        .catchError((error) => {
+              print('Exception: ${error.toString()}')
+            }); // ignore: return_of_invalid_type_from_catch_error
 
     print('Add Money: ${response.body}');
     return response;
